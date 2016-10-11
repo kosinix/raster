@@ -1,0 +1,19 @@
+[package]
+name = "raster"
+version = "0.0.1"
+license = "MIT"
+authors = ["kosinix <kosinix@users.noreply.github.com>"]
+exclude = [
+    "src/main.rs",
+    "tests/out/*",
+]
+keywords = [
+    "image", "processing"
+]
+readme = "README.md"
+description = "Image processing lib for Rust"
+homepage = "https://github.com/kosinix/raster"
+repository = "https://github.com/kosinix/raster.git"
+
+[dependencies]
+image = "0.10.3"
