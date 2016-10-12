@@ -1,8 +1,11 @@
 extern crate image;
 
+// from rust
+use std::path::Path;
+
+// from external crate
 use self::image::GenericImage;
 
-use std::path::Path;
 
 pub struct Image<'a> {
     pub format: &'a str,    // is a Copy type. No need for borrowing.
@@ -40,8 +43,8 @@ impl<'a> Image<'a> {
     pub fn blank(w:u32, h:u32) -> Image<'a> {
         
         let mut pixels = Vec::new();
-        for y in 0..h {
-            for x in 0..w {
+        for _ in 0..h {
+            for _ in 0..w {
                 pixels.push(255);
                 pixels.push(255);
                 pixels.push(255);
@@ -63,10 +66,23 @@ impl<'a> Image<'a> {
         let sx = (y * &self.width) + x;
         let start = sx * rgba;
         let end = start + rgba;
-        //println!("{} {}-{}",sx, start,end);
         
         &self.pixels[start as usize..end as usize]
     }
+
+    /// Get pixels vector
+    /// TODO: sanity checks
+    pub fn set_pixel(&mut self, x: u32, y:u32, pixel: &[u8]) {
+        let rgba = 4; // length
+        let sx = (y * &self.width) + x;
+        let start = sx * rgba;
+        
+        self.pixels[start as usize] = pixel[0];
+        self.pixels[start as usize + 1] = pixel[1];
+        self.pixels[start as usize + 2] = pixel[2];
+        self.pixels[start as usize + 3] = pixel[3];
+    }
+
     pub fn pixels(&self) -> &Vec<u8> {
         &self.pixels
     }
@@ -94,8 +110,4 @@ impl<'a> Image<'a> {
             _ => "UNKNOWN", 
         }
     }
-}
-
-pub fn hello() {
-    println!("Hello");
 }

@@ -1,11 +1,11 @@
 [package]
 name = "raster"
-version = "0.0.1"
+version = "0.0.2"
 license = "MIT"
 authors = ["kosinix <kosinix@users.noreply.github.com>"]
 exclude = [
     "src/main.rs",
-    "tests/out/*",
+    "tests/*",
 ]
 keywords = [
     "image", "processing"
