@@ -1,20 +1,23 @@
+//!  Image module for representing a raster image.
+
+// crates
 extern crate image;
 
 // from rust
-use std::path::Path;
+
 
 // from external crate
 use self::image::GenericImage;
 
-
-pub struct Image<'a> {
-    pub format: &'a str,    // is a Copy type. No need for borrowing.
-    pub width: u32,         // is a Copy type. No need for borrowing.
-    pub height: u32,        // is a Copy type. No need for borrowing.
+/// A struct for easily representing a raster image.
+#[derive(Debug)]
+pub struct Image {
+    pub width: i32,         // is a Copy type. No need for borrowing.
+    pub height: i32,        // is a Copy type. No need for borrowing.
     pub pixels: Vec<u8>,    // Store pixels in RGBA format
 }
 
-impl<'a> Image<'a> {
+impl<'a> Image {
     
     /// Create an image from file
     pub fn from_file(file: &'a str) -> Image {
@@ -31,37 +34,66 @@ impl<'a> Image<'a> {
                 pixels.push(p.data[3]);
             }
         }
-        let path = Path::new(file);
         Image{ 
-            format: Image::ext_to_format(path.extension().unwrap().to_str().unwrap()),
-            width: w,
-            height: h,
+            width: w as i32,
+            height: h as i32,
             pixels: pixels
         }
     }
     
-    pub fn blank(w:u32, h:u32) -> Image<'a> {
+    /// Create a blank image.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use raster::image::Image;
+    ///
+    /// let image = Image::blank(2, 2);
+    /// 
+    /// println!("{:?}", image.pixels);
+    ///
+    /// assert_eq!(image.width, 2);
+    /// assert_eq!(image.height, 2);
+    /// ```
+    pub fn blank(w:i32, h:i32) -> Image {
         
         let mut pixels = Vec::new();
         for _ in 0..h {
             for _ in 0..w {
-                pixels.push(255);
-                pixels.push(255);
-                pixels.push(255);
+                pixels.push(0);
+                pixels.push(0);
+                pixels.push(0);
                 pixels.push(255);
             }
         }
         Image { 
-            format: "UNKNOWN",
             width: w,
             height: h,
             pixels: pixels
         }
     }
 
-    /// Get pixels vector
+    /// Get pixel in a given x and y location.
     /// TODO: sanity checks
-    pub fn get_pixel(&self, x: u32, y:u32) -> &[u8] {
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use raster::image::Image;
+    ///
+    /// let mut image = Image::blank(2, 2);
+    ///
+    /// for y in 0..image.height {
+    ///     for x in 0..image.width {
+    ///         image.set_pixel( x, y, &[0,0,0,255]);
+    ///         let pixel = image.get_pixel(x, y);
+    ///         println!("get pixel in ({},{}) = {:?}", x, y, pixel);
+    ///     }
+    /// }
+    /// assert_eq!(image.width, 2);
+    /// assert_eq!(image.height, 2);
+    /// ```
+    pub fn get_pixel(&self, x: i32, y:i32) -> &[u8] {
         let rgba = 4;
         let sx = (y * &self.width) + x;
         let start = sx * rgba;
@@ -70,9 +102,21 @@ impl<'a> Image<'a> {
         &self.pixels[start as usize..end as usize]
     }
 
+    pub fn check_pixel(&self, x: i32, y:i32) -> bool {
+        
+        if y < 0 || y > self.height { // TODO: check on actual vectors and not just width and height?
+            return false;
+
+        } else if x < 0 || x > self.width {
+            return false;
+        }
+
+        true
+    }
+
     /// Get pixels vector
     /// TODO: sanity checks
-    pub fn set_pixel(&mut self, x: u32, y:u32, pixel: &[u8]) {
+    pub fn set_pixel(&mut self, x: i32, y:i32, pixel: &[u8]) {
         let rgba = 4; // length
         let sx = (y * &self.width) + x;
         let start = sx * rgba;
@@ -83,31 +127,5 @@ impl<'a> Image<'a> {
         self.pixels[start as usize + 3] = pixel[3];
     }
 
-    pub fn pixels(&self) -> &Vec<u8> {
-        &self.pixels
-    }
-
-    pub fn set_pixels(&mut self, pixels: Vec<u8>) {
-        self.pixels = pixels;
-    }
-
-    pub fn set_width(&mut self, w: u32) {
-        self.width = w;
-    }
-
-    pub fn set_height(&mut self, h: u32) {
-        self.height = h;
-    }
-
-    /// Get file extension
-    fn ext_to_format(ext: &str) -> &str {
-        let lowercase = ext.to_string().to_lowercase();
-        let ext = &*lowercase;
-        match ext {
-            "jpg" => "JPEG",
-            "png" => "PNG",
-            "gif" => "GIF",
-            _ => "UNKNOWN", 
-        }
-    }
+    
 }
