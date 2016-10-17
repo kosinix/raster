@@ -14,6 +14,24 @@ use blend;
 use image::Image;
 use position::Position;
 
+/// Blend 2 images into one. The image1 is the base and image2 is the top. 
+/// Supported blend modes: normal, multiply, overlay, screen.
+///
+/// # Examples
+/// ```
+/// use raster::image::Image;
+/// use raster::editor;
+///
+/// // Create a images from file
+/// let image1 = Image::from_file("tests/image/sample.jpg");
+/// let image2 = Image::from_file("tests/image/watermark.png");
+/// 
+/// // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
+/// let image3 = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0);
+///
+/// // Save it
+/// editor::save(&image3, "tests/out/test_blend_normal.png");
+/// ```
 pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, alpha: f32, position: &str, offset_x: i32, offset_y: i32) -> Image {
     
     // Turn into positioner struct
@@ -81,11 +99,24 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, alpha: f32, p
             blend::screen( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, alpha )
         },
         _ => {
-            panic!(format!("Invalid blend type {}.", &*blend_mode)) // TODO: Error handling
+            panic!(format!("Invalid blend type {}.", &*blend_mode)) // TODO: Proper error handling
         }
     }
 }
 
+/// Create a copy of an image as another image.
+///
+/// # Examples
+/// ```
+/// use raster::image::Image;
+/// use raster::editor;
+///
+/// // Create a images from file
+/// let original = Image::from_file("tests/image/sample.jpg");
+///
+/// // Copy it
+/// let copy = editor::copy(&original);
+/// ```
 pub fn copy(src: &Image) -> Image {
     let mut dest = Image::blank(src.width, src.height);
 
@@ -103,6 +134,26 @@ pub fn copy(src: &Image) -> Image {
     dest
 }
 
+pub fn crop(){
+
+}
+
+/// Fill an image with color.
+///
+/// # Examples
+/// ```
+/// use raster::image::Image;
+/// use raster::editor;
+///
+/// // Create a 100x100 image
+/// let image = Image::blank(100, 100);
+///
+/// // Fill it with red by passing an RGBA slice
+/// let image = editor::fill(&image, &[255, 0, 0, 255]);
+///
+/// // Save it
+/// editor::save(&image, "tests/out/test_fill.png");
+/// ```
 pub fn fill(src: &Image, color: &[u8]) -> Image {
 
     let mut dest = Image::blank(src.width, src.height);
@@ -136,55 +187,21 @@ pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Image {
     dest
 }
 
-pub fn save(image: &Image, out: &str){
-    image::save_buffer(&Path::new(out), &image.pixels, image.width as u32, image.height as u32, image::RGBA(8)).unwrap();
+pub fn resize_exact(src: &Image, w: i32, h: i32) -> Image {
+
+    resample(&src, w, h, "bicubic")
+
 }
 
-pub fn slice(src: &mut Image, ox: i32, oy: i32, w2: i32, h2: i32) -> Image {
-    let src_w = src.width - ox; // Subtract x offset
-    let src_h = src.height - oy; // Subtract y offset
+pub fn resize_exact_height(){
 
-    let mut dest = Image::blank(w2, h2);
-
-    let x_ratio: f64 = src_w as f64 / w2 as f64;
-    let y_ratio: f64 = src_h as f64 / h2 as f64;
-
-    for y in 0..h2 {
-        for x in 0..w2 {
-            let px: i32 = ( x as f64 * x_ratio ).floor() as i32;
-            let py: i32 = ( y as f64 * y_ratio ).floor() as i32;
-            let p = src.get_pixel(px+ox, py+oy);
-            let r = p[0];
-            let g = p[1];
-            let b = p[2];
-            let a = p[3];
-            dest.set_pixel(x, y, &[r,g,b,a]);
-        }
-    }
-    
-    dest
 }
 
+pub fn resize_exact_width(){
 
-
-pub fn resample(src: &Image, w: i32, h: i32, interpolation: &str) -> Image {
-    
-    let dest = match interpolation {
-        "bilinear" => {
-            interpolate_nearest(&src, w, h) // TODO
-        },
-        "bicubic" => {
-            interpolate_nearest(&src, w, h) // TODO
-        },
-        _ => {
-            interpolate_nearest(&src, w, h)
-        },
-    };
-    
-    dest
 }
 
-pub fn crop(){
+pub fn resize_fill(){
 
 }
 
@@ -205,15 +222,14 @@ pub fn resize_fit(src: &Image, w: i32, h: i32) -> Image {
     resample(&src, resize_width, resize_height, "bicubic")
 }
 
-pub fn resize_exact(src: &Image, w: i32, h: i32) -> Image {
-    
-    resample(&src, w, h, "bicubic")
+pub fn save(image: &Image, out: &str){
+    image::save_buffer(&Path::new(out), &image.pixels, image.width as u32, image.height as u32, image::RGBA(8)).unwrap();
 }
 
-pub fn resize_fill(){
 
-}
+// Private functions
 
+// Interpolate using nearest neighbor.
 fn interpolate_nearest(src: &Image, w: i32, h: i32) -> Image {
     
     let x_ratio: f64 = src.width as f64 / w as f64;
@@ -237,4 +253,20 @@ fn interpolate_nearest(src: &Image, w: i32, h: i32) -> Image {
     dest
 }
 
-
+// Resample an image into a new size.
+fn resample(src: &Image, w: i32, h: i32, interpolation: &str) -> Image {
+    
+    let dest = match interpolation {
+        "bilinear" => {
+            interpolate_nearest(&src, w, h) // TODO
+        },
+        "bicubic" => {
+            interpolate_nearest(&src, w, h) // TODO
+        },
+        _ => {
+            interpolate_nearest(&src, w, h)
+        },
+    };
+    
+    dest
+}

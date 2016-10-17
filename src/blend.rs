@@ -13,6 +13,7 @@ extern crate image;
 use editor;
 use image::Image;
 
+
 pub fn multiply(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, loop_start_x:i32, loop_end_x:i32, offset_x:i32, offset_y:i32, opacity:f32) -> Image {
 
     let mut canvas = editor::copy(&image1);

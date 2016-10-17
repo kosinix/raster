@@ -1,4 +1,4 @@
-//!  Image module for representing a raster image.
+//!  Image module for handling a raster image.
 
 // crates
 extern crate image;
@@ -9,37 +9,23 @@ extern crate image;
 // from external crate
 use self::image::GenericImage;
 
+// from local crate
+
+
 /// A struct for easily representing a raster image.
 #[derive(Debug)]
 pub struct Image {
-    pub width: i32,         // is a Copy type. No need for borrowing.
-    pub height: i32,        // is a Copy type. No need for borrowing.
-    pub pixels: Vec<u8>,    // Store pixels in RGBA format
+    /// Width of image in pixels. i32 type is used as computation with negative integers is common.
+    pub width: i32,         
+    
+    /// Height of image in pixels. i32 type is used as computation with negative integers is common.
+    pub height: i32,    
+
+    /// Vector containing sequence of bytes in RGBA format.
+    pub pixels: Vec<u8>,
 }
 
 impl<'a> Image {
-    
-    /// Create an image from file
-    pub fn from_file(file: &'a str) -> Image {
-        
-        let src = image::open(file).unwrap(); // Returns image::DynamicImage
-        let (w,h) = src.dimensions();
-        let mut pixels = Vec::new();
-        for y in 0..h {
-            for x in 0..w {
-                let p = src.get_pixel(x, y);
-                pixels.push(p.data[0]);
-                pixels.push(p.data[1]);
-                pixels.push(p.data[2]);
-                pixels.push(p.data[3]);
-            }
-        }
-        Image{ 
-            width: w as i32,
-            height: h as i32,
-            pixels: pixels
-        }
-    }
     
     /// Create a blank image.
     ///
@@ -73,35 +59,18 @@ impl<'a> Image {
         }
     }
 
-    /// Get pixel in a given x and y location.
-    /// TODO: sanity checks
+    /// Check if there is a pixel at this location given by x and y.
     ///
     /// # Examples
     ///
     /// ```
     /// use raster::image::Image;
     ///
-    /// let mut image = Image::blank(2, 2);
-    ///
-    /// for y in 0..image.height {
-    ///     for x in 0..image.width {
-    ///         image.set_pixel( x, y, &[0,0,0,255]);
-    ///         let pixel = image.get_pixel(x, y);
-    ///         println!("get pixel in ({},{}) = {:?}", x, y, pixel);
-    ///     }
-    /// }
-    /// assert_eq!(image.width, 2);
-    /// assert_eq!(image.height, 2);
+    /// let image = Image::blank(2, 2);
+    /// 
+    /// assert_eq!(image.check_pixel(0, 0), true);
+    /// assert_eq!(image.check_pixel(3, 3), false);
     /// ```
-    pub fn get_pixel(&self, x: i32, y:i32) -> &[u8] {
-        let rgba = 4;
-        let sx = (y * &self.width) + x;
-        let start = sx * rgba;
-        let end = start + rgba;
-        
-        &self.pixels[start as usize..end as usize]
-    }
-
     pub fn check_pixel(&self, x: i32, y:i32) -> bool {
         
         if y < 0 || y > self.height { // TODO: check on actual vectors and not just width and height?
@@ -114,8 +83,83 @@ impl<'a> Image {
         true
     }
 
-    /// Get pixels vector
-    /// TODO: sanity checks
+    /// Create an image from an image file.
+    ///
+    /// # Examples
+    /// 
+    /// ```
+    /// use raster::image::Image;
+    ///
+    /// // Create an image from file
+    /// let image = Image::from_file("tests/image/sample.png");
+    /// println!("{:?}", image.pixels);
+    /// ```
+    pub fn from_file(file: &'a str) -> Image {
+        
+        let src = image::open(file).unwrap(); // Returns image::DynamicImage
+        let (w,h) = src.dimensions();
+        let mut pixels = Vec::new();
+        for y in 0..h {
+            for x in 0..w {
+                let p = src.get_pixel(x, y);
+                pixels.push(p.data[0]);
+                pixels.push(p.data[1]);
+                pixels.push(p.data[2]);
+                pixels.push(p.data[3]);
+            }
+        }
+        Image{ 
+            width: w as i32,
+            height: h as i32,
+            pixels: pixels
+        }
+    }
+
+    // TODO: sanity checks
+    /// Get pixel in a given x and y location of an image.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use raster::image::Image;
+    ///
+    /// let mut image = Image::blank(2, 2);
+    ///
+    /// for y in 0..image.height {
+    ///     for x in 0..image.width {
+    ///         image.set_pixel( x, y, &[0,0,0,255]);
+    ///         let pixel = image.get_pixel(x, y);
+    ///         println!("pixel in ({},{}) = {:?}", x, y, pixel);
+    ///     }
+    /// }
+    /// ```
+    pub fn get_pixel(&self, x: i32, y:i32) -> &[u8] {
+        let rgba = 4;
+        let sx = (y * &self.width) + x;
+        let start = sx * rgba;
+        let end = start + rgba;
+        
+        &self.pixels[start as usize..end as usize]
+    }
+
+    // TODO: sanity checks
+    /// Set pixel in a given x and y location of an image.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use raster::image::Image;
+    ///
+    /// let mut image = Image::blank(2, 2);
+    ///
+    /// for y in 0..image.height {
+    ///     for x in 0..image.width {
+    ///         image.set_pixel( x, y, &[0,0,0,255]);
+    ///         let pixel = image.get_pixel(x, y);
+    ///         println!("pixel in ({},{}) = {:?}", x, y, pixel);
+    ///     }
+    /// }
+    /// ```
     pub fn set_pixel(&mut self, x: i32, y:i32, pixel: &[u8]) {
         let rgba = 4; // length
         let sx = (y * &self.width) + x;
@@ -126,6 +170,4 @@ impl<'a> Image {
         self.pixels[start as usize + 2] = pixel[2];
         self.pixels[start as usize + 3] = pixel[3];
     }
-
-    
 }
