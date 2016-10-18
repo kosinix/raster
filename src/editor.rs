@@ -26,7 +26,7 @@ use position::Position;
 /// use raster::image::Image;
 /// use raster::editor;
 ///
-/// // Create a images from file
+/// // Create images from file
 /// let image1 = Image::from_file("tests/image/sample.jpg");
 /// let image2 = Image::from_file("tests/image/watermark.png");
 /// 
@@ -125,7 +125,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// use raster::image::Image;
 /// use raster::editor;
 ///
-/// // Create a images from file
+/// // Create image from file
 /// let original = Image::from_file("tests/image/sample.jpg");
 ///
 /// // Copy it
@@ -149,8 +149,55 @@ pub fn copy(src: &Image) -> Image {
 }
 
 /// Crop the image to the given dimension and position.
-pub fn crop(){
+///
+/// # Examples
+/// ```
+/// use raster::image::Image;
+/// use raster::editor;
+///
+/// // Create image from file
+/// let src = Image::from_file("tests/image/sample.gif");
+/// 
+/// // Crop it
+/// let top_left = editor::crop(&src, 250, 128, "top-left", 0, 0);
+/// let top_right = editor::crop(&src, 250, 128, "top-right", 0, 0);
+/// let center = editor::crop(&src, 250, 128, "center", 0, 0);
+///
+/// // Save it
+/// editor::save(&top_left, "tests/out/test_crop_top_left.png");
+/// editor::save(&top_right, "tests/out/test_crop_top_right.png");
+/// editor::save(&center, "tests/out/test_crop_center.png");
+/// ```
+pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Image {
 
+    // Turn into positioner struct
+    let positioner = Position::new(position, offset_x, offset_y);
+
+    let (offset_x, offset_y) = positioner.get_x_y( src.width, src.height, crop_width, crop_height);
+    let offset_x = if offset_x < 0 { 0 } else { offset_x };
+    let offset_y = if offset_y < 0 { 0 } else { offset_y };
+
+
+    let mut height2 = offset_y + crop_height;
+    if height2 > src.height { 
+        height2 = src.height 
+    }
+
+    let mut width2 = offset_x + crop_width;
+    if width2 > src.width { 
+        width2 = src.width 
+    }
+
+    let mut dest = Image::blank(width2-offset_x, height2-offset_y);
+
+    for y in 0..dest.height {
+        for x in 0..dest.width {
+            let rgba = src.get_color(offset_x + x, offset_y + y);
+            
+            dest.set_pixel(x, y, &[rgba.r, rgba.g, rgba.b, rgba.a]);
+        }
+    }
+    dest
 }
 
 /// Fill an image with color.
@@ -190,14 +237,20 @@ pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Image {
         "exact" => {
             resize_exact(&src, w, h)
         }
+        "exact_width" => {
+            resize_exact_width(&src, w)
+        }
+        "exact_height" => {
+            resize_exact_height(&src, h)
+        }
         "fit" => {
-            resample(&src, w, h, "bicubic")
+            resize_fit(&src, w, h)
         },
         "fill" => {
-            resample(&src, w, h, "bicubic")
+            resize_fill(&src, w, h)
         },
         _ => {
-            resize_fit(&src, w, h)
+            panic!("Invalid resize mode.")
         },
     };
     
@@ -214,19 +267,49 @@ pub fn resize_exact(src: &Image, w: i32, h: i32) -> Image {
 
 /// Resize image to exact height. Width is auto calculated.
 /// Useful for creating row of images with the same height.
-pub fn resize_exact_height(){
+pub fn resize_exact_height(src: &Image, h: i32) -> Image {
 
+    let width = src.width;
+    let height = src.height;
+    let ratio = width as f32 / height as f32;
+
+    let resize_height = h;
+    let resize_width = (h as f32 * ratio) as i32;
+
+    resample(&src, resize_width, resize_height, "bicubic")
 }
 
 /// Resize image to exact width. Height is auto calculated. 
 /// Useful for creating column of images with the same width.
-pub fn resize_exact_width(){
+pub fn resize_exact_width(src: &Image, w: i32) -> Image {
+    let width  = src.width;
+    let height = src.height;
+    let ratio  = width as f32 / height as f32;
 
+    let resize_width  = w;
+    let resize_height = (w as f32 / ratio).round() as i32;
+
+    resample(&src, resize_width, resize_height, "bicubic")
 }
 
 /// Resize image to fill all the space in the given dimension. Excess parts are removed.
-pub fn resize_fill(){
+pub fn resize_fill(src: &Image, w: i32, h: i32) -> Image {
+    let width  = src.width;
+    let height = src.height;
+    let ratio  = width as f32 / height as f32;
 
+    // Base optimum size on new width
+    let mut optimum_width  = w;
+    let mut optimum_height = (w as f32 / ratio).round() as i32;
+
+    if (optimum_width < w) || (optimum_height < h) { // Oops, where trying to fill and there are blank areas
+        // So base optimum size on height instead
+        optimum_width  = (h as f32 * ratio) as i32;
+        optimum_height = h;
+    }
+
+    let resized = resample(&src, optimum_width, optimum_height, "bicubic");
+    crop(&resized, w, h, "top-left", 0, 0) // Trim excess parts
 }
 
 /// Resize an image to fit within the given width and height. 
