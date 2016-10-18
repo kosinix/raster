@@ -15,7 +15,11 @@ use image::Image;
 use position::Position;
 
 /// Blend 2 images into one. The image1 is the base and image2 is the top. 
-/// Supported blend modes: normal, multiply, overlay, screen.
+/// 
+/// Supported blend modes: "normal", "difference", multiply", "overlay", "screen"
+/// Position: "top-left", "top-center", "top-right", "center-left", "center", "center-right", "bottom-left", "bottom-center", "bottom-right"
+/// Opacity is any value from 0.0 - 1.0
+/// offset_x and offset_y are added to the final position. Can also be negative offsets.
 ///
 /// # Examples
 /// ```
@@ -32,8 +36,15 @@ use position::Position;
 /// // Save it
 /// editor::save(&image3, "tests/out/test_blend_normal.png");
 /// ```
-pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, alpha: f32, position: &str, offset_x: i32, offset_y: i32) -> Image {
+pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32, position: &str, offset_x: i32, offset_y: i32) -> Image {
     
+    let mut opacity = opacity;
+    if opacity > 1.0 {
+        opacity = 1.0
+    } else if opacity < 0.0 {
+        opacity = 0.0
+    }
+
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
 
@@ -87,16 +98,19 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, alpha: f32, p
     let blend_mode = blend_mode.to_lowercase();
     match &*blend_mode {
         "normal" => {
-            blend::normal( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, alpha )
+            blend::normal( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
+        },
+        "difference" => {
+            blend::difference( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
         },
         "multiply" => {
-            blend::multiply( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, alpha )
+            blend::multiply( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
         },
         "overlay" => {
-            blend::overlay( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, alpha )
+            blend::overlay( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
         },
         "screen" => {
-            blend::screen( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, alpha )
+            blend::screen( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
         },
         _ => {
             panic!(format!("Invalid blend type {}.", &*blend_mode)) // TODO: Proper error handling
@@ -134,6 +148,7 @@ pub fn copy(src: &Image) -> Image {
     dest
 }
 
+/// Crop the image to the given dimension and position.
 pub fn crop(){
 
 }
@@ -167,6 +182,8 @@ pub fn fill(src: &Image, color: &[u8]) -> Image {
     dest
 }
 
+/// Wrapper function for the resizeXXX family of functions. 
+/// Resize an image to a given width, height and mode.
 pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Image {
     
     let dest = match mode {
@@ -187,24 +204,34 @@ pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Image {
     dest
 }
 
+/// Resize image to exact dimensions ignoring aspect ratio. 
+/// Useful if you want to force exact width and height.
 pub fn resize_exact(src: &Image, w: i32, h: i32) -> Image {
 
     resample(&src, w, h, "bicubic")
 
 }
 
+/// Resize image to exact height. Width is auto calculated.
+/// Useful for creating row of images with the same height.
 pub fn resize_exact_height(){
 
 }
 
+/// Resize image to exact width. Height is auto calculated. 
+/// Useful for creating column of images with the same width.
 pub fn resize_exact_width(){
 
 }
 
+/// Resize image to fill all the space in the given dimension. Excess parts are removed.
 pub fn resize_fill(){
 
 }
 
+/// Resize an image to fit within the given width and height. 
+/// The re-sized image will not exceed the given dimension. 
+/// Preserves the aspect ratio.
 pub fn resize_fit(src: &Image, w: i32, h: i32) -> Image {
     
     let ratio: f64 = src.width as f64 / src.height as f64;
@@ -213,7 +240,7 @@ pub fn resize_fit(src: &Image, w: i32, h: i32) -> Image {
     let mut resize_width  = w;
     let mut resize_height = (w as f64 / ratio).round() as i32;
 
-    if (resize_width > w) || (resize_height > h) { // Oops, either witdh or height does not fit
+    if (resize_width > w) || (resize_height > h) { // Oops, either width or height does not fit
         // So base on height instead
         resize_height = h;
         resize_width  = (h as f64 * ratio).round() as i32;
@@ -222,6 +249,7 @@ pub fn resize_fit(src: &Image, w: i32, h: i32) -> Image {
     resample(&src, resize_width, resize_height, "bicubic")
 }
 
+/// Save an image into a file.
 pub fn save(image: &Image, out: &str){
     image::save_buffer(&Path::new(out), &image.pixels, image.width as u32, image.height as u32, image::RGBA(8)).unwrap();
 }
