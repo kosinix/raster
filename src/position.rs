@@ -9,18 +9,6 @@
 // from external crate
 
 
-// pub enum PositionName {
-//     TopLeft,
-// 	TopCenter,
-// 	TopRight,
-// 	CenterLeft,
-// 	Center,
-// 	CenterRight,
-// 	BottomLeft,
-// 	BottomCenter,
-// 	BottomRight,
-// }
-
 pub struct Position<'a> {
     position: &'a str,
     offset_x: i32,
@@ -81,7 +69,7 @@ impl<'a> Position<'a> {
                 (x, y)
             },
             _ => {
-                panic!(format!("Invalid position {}.", self.position)) // TODO: Error handling
+                panic!(format!("Invalid position {}.", self.position)) // TODO: Proper error handling
             }
         }
     }
