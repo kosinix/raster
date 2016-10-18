@@ -37,7 +37,7 @@
 //! use raster::image::Image;
 //! use raster::editor;
 //!
-//! // Create a images from file
+//! // Create images from file
 //! let image1 = Image::from_file("tests/image/sample.jpg");
 //! let image2 = Image::from_file("tests/image/watermark.png");
 //! 
@@ -51,6 +51,7 @@
 
 pub mod editor;
 pub mod image;
+pub mod color;
 mod position;
 mod blend;
 
