@@ -1,6 +1,6 @@
 [package]
 name = "raster"
-version = "0.0.3"
+version = "0.0.4"
 license = "MIT"
 authors = ["kosinix <kosinix@users.noreply.github.com>"]
 exclude = [
@@ -8,7 +8,7 @@ exclude = [
     "tests/*",
 ]
 keywords = [
-    "image", "processing"
+    "image", "image-processing"
 ]
 readme = "README.md"
 description = "Image processing lib for Rust"
