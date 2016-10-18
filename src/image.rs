@@ -10,15 +10,15 @@ extern crate image;
 use self::image::GenericImage;
 
 // from local crate
-
+use color::Color;
 
 /// A struct for easily representing a raster image.
 #[derive(Debug)]
 pub struct Image {
-    /// Width of image in pixels. i32 type is used as computation with negative integers is common.
-    pub width: i32,         
+    /// Width of image in pixels.
+    pub width: i32, //  i32 type is used as computation with negative integers is common.
     
-    /// Height of image in pixels. i32 type is used as computation with negative integers is common.
+    /// Height of image in pixels.
     pub height: i32,    
 
     /// Vector containing sequence of bytes in RGBA format.
@@ -140,6 +140,21 @@ impl<'a> Image {
         let end = start + rgba;
         
         &self.pixels[start as usize..end as usize]
+    }
+
+    pub fn get_color(&self, x: i32, y:i32) -> Color {
+        let rgba = 4;
+        let sx = (y * &self.width) + x;
+        let start = sx * rgba;
+        let end = start + rgba;
+        
+        let slice = &self.pixels[start as usize..end as usize];
+        Color {
+            r: slice[0],
+            g: slice[1],
+            b: slice[2],
+            a: slice[3],
+        }
     }
 
     // TODO: sanity checks
