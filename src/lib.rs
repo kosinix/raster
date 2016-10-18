@@ -1,7 +1,7 @@
 //! # Raster
 //!
 //! Raster is an image processing crate for raster images. 
-//! It provides an easy-to-use api for image processing.
+//! It provides a simplified API for image processing.
 //! 
 //! ## Creating Images
 //! 
