@@ -8,7 +8,7 @@
 
 // from local crate
 
-/// A struct for representing an RGBA color.
+/// A struct for representing and creating color.
 #[derive(Debug)]
 pub struct Color {
     /// Red channel 0 - 255
