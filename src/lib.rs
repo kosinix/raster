@@ -46,7 +46,7 @@
 //! // Save it
 //! editor::save(&image3, "tests/out/test_blend_normal.png");
 //! ```
-//! See editor module for more info.
+//! See the modules, more specifically the editor module for more info.
 
 pub mod editor;
 pub mod image;

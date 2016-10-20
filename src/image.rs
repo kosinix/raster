@@ -1,4 +1,4 @@
-//!  Image module for handling a raster image.
+//!  A module for handling a raster image.
 
 // crates
 extern crate image;

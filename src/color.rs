@@ -1,4 +1,4 @@
-//!  Image module for handling colors.
+//!  A module for handling colors.
 
 // crates
 
