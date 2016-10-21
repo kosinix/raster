@@ -397,3 +397,11 @@ fn resample(src: &Image, w: i32, h: i32, interpolation: &str) -> Result<Image, S
         }
     }
 }
+
+fn _bilinear(a: u8, b: u8, c: u8, d: u8, x_diff: f64, y_diff: f64) -> u8 {
+    // Y = A(1-w)(1-h) + B(w)(1-h) + C(h)(1-w) + Dwh
+    (
+        a as f64 * (1.0 - x_diff) * (1.0 - y_diff) + b as f64 * (x_diff) * (1.0 - y_diff) +
+        c as f64  * (y_diff) * (1.0 - x_diff) + d as f64  * (x_diff * y_diff)
+    ) as u8
+}
