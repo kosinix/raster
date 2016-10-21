@@ -48,9 +48,10 @@
 //! ```
 //! See the modules, more specifically the editor module for more info.
 
+pub mod color;
+pub mod compare;
 pub mod editor;
 pub mod image;
-pub mod color;
 mod position;
 mod blend;
 
