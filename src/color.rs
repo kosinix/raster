@@ -76,6 +76,7 @@ impl<'a> Color {
         }
     }
 
+    /// Clones a Color.
     pub fn clone(&self) -> Color {
         Color {
             r: self.r,
@@ -85,6 +86,7 @@ impl<'a> Color {
         }
     }
 
+    /// Returns a black Color.
     pub fn black() -> Color {
         Color {
             r: 0,
