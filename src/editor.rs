@@ -60,7 +60,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
     let positioner = Position::new(position, offset_x, offset_y);
 
     // Position is for image2, image1 is canvas.
-    let (offset_x, offset_y) = positioner.get_x_y( image1.width, image1.height, image2.width, image2.height);
+    let (offset_x, offset_y) = try!(positioner.get_x_y( image1.width, image1.height, image2.width, image2.height));
 
     let (w1, h1) = (image1.width, image1.height);
     let (w2, h2) = (image2.width, image2.height);
@@ -180,7 +180,7 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
 
-    let (offset_x, offset_y) = positioner.get_x_y( src.width, src.height, crop_width, crop_height);
+    let (offset_x, offset_y) = try!(positioner.get_x_y( src.width, src.height, crop_width, crop_height));
     let offset_x = if offset_x < 0 { 0 } else { offset_x };
     let offset_y = if offset_y < 0 { 0 } else { offset_y };
 
