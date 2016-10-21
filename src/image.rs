@@ -22,12 +22,12 @@ pub struct Image {
     pub height: i32,    
 
     /// Vector containing sequence of bytes in RGBA format.
-    pub pixels: Vec<u8>,
+    pub bytes: Vec<u8>,
 }
 
 impl<'a> Image {
     
-    /// Create a blank image.
+    /// Create a blank image. Default color is black.
     ///
     /// # Examples
     ///
@@ -36,26 +36,26 @@ impl<'a> Image {
     ///
     /// let image = Image::blank(2, 2);
     /// 
-    /// println!("{:?}", image.pixels);
+    /// println!("{:?}", image.bytes);
     ///
     /// assert_eq!(image.width, 2);
     /// assert_eq!(image.height, 2);
     /// ```
     pub fn blank(w:i32, h:i32) -> Image {
         
-        let mut pixels = Vec::new();
+        let mut bytes = Vec::new();
         for _ in 0..h {
             for _ in 0..w {
-                pixels.push(0);
-                pixels.push(0);
-                pixels.push(0);
-                pixels.push(255);
+                bytes.push(0);
+                bytes.push(0);
+                bytes.push(0);
+                bytes.push(255);
             }
         }
         Image { 
             width: w,
             height: h,
-            pixels: pixels
+            bytes: bytes
         }
     }
 
@@ -91,98 +91,100 @@ impl<'a> Image {
     /// use raster::image::Image;
     ///
     /// // Create an image from file
-    /// let image = Image::from_file("tests/image/sample.png");
-    /// println!("{:?}", image.pixels);
+    /// let image = Image::from_file("tests/image/sample.png").unwrap();
+    /// println!("{:?}", image.bytes);
     /// ```
-    pub fn from_file(file: &'a str) -> Image {
+    pub fn from_file(file: &'a str) -> Result<Image, String> {
         
         let src = image::open(file).unwrap(); // Returns image::DynamicImage
-        let (w,h) = src.dimensions();
-        let mut pixels = Vec::new();
+        let (w, h) = src.dimensions();
+        let mut bytes = Vec::new();
         for y in 0..h {
             for x in 0..w {
                 let p = src.get_pixel(x, y);
-                pixels.push(p.data[0]);
-                pixels.push(p.data[1]);
-                pixels.push(p.data[2]);
-                pixels.push(p.data[3]);
+                bytes.push(p.data[0]);
+                bytes.push(p.data[1]);
+                bytes.push(p.data[2]);
+                bytes.push(p.data[3]);
             }
         }
-        Image{ 
+        Ok(Image{ 
             width: w as i32,
             height: h as i32,
-            pixels: pixels
-        }
+            bytes: bytes
+        })
     }
 
-    // TODO: sanity checks
     /// Get pixel in a given x and y location of an image.
     ///
     /// # Examples
     ///
     /// ```
     /// use raster::image::Image;
+    /// use raster::color::Color;
     ///
-    /// let mut image = Image::blank(2, 2);
+    /// let mut image = Image::blank(2, 2); // Creates a 2x2 black image.
     ///
-    /// for y in 0..image.height {
-    ///     for x in 0..image.width {
-    ///         image.set_pixel( x, y, &[0,0,0,255]);
-    ///         let pixel = image.get_pixel(x, y);
-    ///         println!("pixel in ({},{}) = {:?}", x, y, pixel);
-    ///     }
-    /// }
+    /// let pixel = image.get_pixel(0, 0).unwrap();
+    ///
+    /// assert_eq!(0, pixel.r);
+    /// assert_eq!(0, pixel.g);
+    /// assert_eq!(0, pixel.b);
+    /// assert_eq!(255, pixel.a);
     /// ```
-    pub fn get_pixel(&self, x: i32, y:i32) -> &[u8] {
+    pub fn get_pixel(&self, x: i32, y:i32) -> Result<Color, String> {
         let rgba = 4;
-        let sx = (y * &self.width) + x;
-        let start = sx * rgba;
+        let start = (y * &self.width) + x;
+        let start = start * rgba;
         let end = start + rgba;
-        
-        &self.pixels[start as usize..end as usize]
-    }
+        let len = self.bytes.len();
 
-    pub fn get_color(&self, x: i32, y:i32) -> Color {
-        let rgba = 4;
-        let sx = (y * &self.width) + x;
-        let start = sx * rgba;
-        let end = start + rgba;
+        if start as usize > len || end as usize > len {
+            return Err("Getting a pixel that is out of bounds.".to_string());
+        }
         
-        let slice = &self.pixels[start as usize..end as usize];
-        Color {
+        let slice = &self.bytes[start as usize..end as usize];
+        Ok(Color {
             r: slice[0],
             g: slice[1],
             b: slice[2],
             a: slice[3],
-        }
+        })
     }
 
-    // TODO: sanity checks
     /// Set pixel in a given x and y location of an image.
     ///
     /// # Examples
     ///
     /// ```
     /// use raster::image::Image;
+    /// use raster::color::Color;
     ///
-    /// let mut image = Image::blank(2, 2);
+    /// let mut image = Image::blank(2, 2); // Creates a 2x2 black image.
     ///
-    /// for y in 0..image.height {
-    ///     for x in 0..image.width {
-    ///         image.set_pixel( x, y, &[0,0,0,255]);
-    ///         let pixel = image.get_pixel(x, y);
-    ///         println!("pixel in ({},{}) = {:?}", x, y, pixel);
-    ///     }
-    /// }
+    /// let _ = image.set_pixel(0, 0, Color::rgba(255, 0, 0, 255)); // Set first pixel to red
+    ///
+    /// let pixel = image.get_pixel(0, 0).unwrap();
+    ///
+    /// assert_eq!(255, pixel.r);
+    /// assert_eq!(0, pixel.g);
+    /// assert_eq!(0, pixel.b);
+    /// assert_eq!(255, pixel.a);
     /// ```
-    pub fn set_pixel(&mut self, x: i32, y:i32, pixel: &[u8]) {
+    pub fn set_pixel(&mut self, x: i32, y:i32, color: Color ) -> Result<(), String> {
         let rgba = 4; // length
-        let sx = (y * &self.width) + x;
-        let start = sx * rgba;
+        let start = (y * &self.width) + x;
+        let start = start * rgba;
         
-        self.pixels[start as usize] = pixel[0];
-        self.pixels[start as usize + 1] = pixel[1];
-        self.pixels[start as usize + 2] = pixel[2];
-        self.pixels[start as usize + 3] = pixel[3];
+        if x >= self.width || y >= self.height {
+            return Err("Setting a pixel that is out of bounds.".to_string());
+        }
+
+        self.bytes[start as usize] = color.r;
+        self.bytes[start as usize + 1] = color.g;
+        self.bytes[start as usize + 2] = color.b;
+        self.bytes[start as usize + 3] = color.a;
+
+        Ok(())
     }
 }

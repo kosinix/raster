@@ -13,6 +13,7 @@ use std::path::Path;
 use blend;
 use image::Image;
 use position::Position;
+use color::Color;
 
 /// Blend 2 images into one. The image1 is the base and image2 is the top. 
 /// 
@@ -27,16 +28,26 @@ use position::Position;
 /// use raster::editor;
 ///
 /// // Create images from file
-/// let image1 = Image::from_file("tests/image/sample.jpg");
-/// let image2 = Image::from_file("tests/image/watermark.png");
+/// let image1 = Image::from_file("tests/image/sample.jpg").unwrap();
+/// let image2 = Image::from_file("tests/image/watermark.png").unwrap();
 /// 
 /// // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
-/// let image3 = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0);
+/// let normal = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0).unwrap();
+///
+/// // All the other blend modes
+/// let difference = editor::blend(&image1, &image2, "difference", 1.0, "center", 0, 0).unwrap();
+/// let multiply = editor::blend(&image1, &image2, "multiply", 1.0, "center", 0, 0).unwrap();
+/// let overlay = editor::blend(&image1, &image2, "overlay", 1.0, "center", 0, 0).unwrap();
+/// let screen = editor::blend(&image1, &image2, "screen", 1.0, "center", 0, 0).unwrap();
 ///
 /// // Save it
-/// editor::save(&image3, "tests/out/test_blend_normal.png");
+/// let _ = editor::save(&normal, "tests/out/test_blend_normal.png");
+/// let _ = editor::save(&difference, "tests/out/test_blend_difference.png");
+/// let _ = editor::save(&multiply, "tests/out/test_blend_multiply.png");
+/// let _ = editor::save(&overlay, "tests/out/test_blend_overlay.png");
+/// let _ = editor::save(&screen, "tests/out/test_blend_screen.png");
 /// ```
-pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32, position: &str, offset_x: i32, offset_y: i32) -> Image {
+pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32, position: &str, offset_x: i32, offset_y: i32) -> Result<Image, String> {
     
     let mut opacity = opacity;
     if opacity > 1.0 {
@@ -60,7 +71,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
         (offset_y >= h1) ||
         (offset_y + h2 <= 0) {
 
-        panic!("Invalid blending. Image 2 is outside the canvas."); // TODO: Proper error handling
+        return Err("Invalid blending. Image 2 is outside the canvas.".to_string());
     }
 
     // Loop start X
@@ -98,22 +109,27 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
     let blend_mode = blend_mode.to_lowercase();
     match &*blend_mode {
         "normal" => {
-            blend::normal( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
+            let image3 = try!(blend::normal( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
+            Ok(image3)
         },
         "difference" => {
-            blend::difference( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
+            let image3 = try!(blend::difference( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
+            Ok(image3)
         },
         "multiply" => {
-            blend::multiply( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
+            let image3 = try!(blend::multiply( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
+            Ok(image3)
         },
         "overlay" => {
-            blend::overlay( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
+            let image3 = try!(blend::overlay( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
+            Ok(image3)
         },
         "screen" => {
-            blend::screen( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity )
+            let image3 = try!(blend::screen( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
+            Ok(image3)
         },
         _ => {
-            panic!(format!("Invalid blend type {}.", &*blend_mode)) // TODO: Proper error handling
+            Err(format!("Invalid blend type {}.", &*blend_mode))
         }
     }
 }
@@ -126,26 +142,17 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let original = Image::from_file("tests/image/sample.jpg");
+/// let original = Image::from_file("tests/image/sample.jpg").unwrap();
 ///
 /// // Copy it
 /// let copy = editor::copy(&original);
 /// ```
 pub fn copy(src: &Image) -> Image {
-    let mut dest = Image::blank(src.width, src.height);
-
-    for y in 0..dest.height {
-        for x in 0..dest.width {
-            let rgba = src.get_pixel(x, y);
-            let r = rgba[0];
-            let g = rgba[1];
-            let b = rgba[2];
-            let a = rgba[3];
-            dest.set_pixel(x, y, &[r, g, b, a]);
-        }
+    Image{
+        width: src.width,
+        height: src.height,
+        bytes: src.bytes.clone(),
     }
-
-    dest
 }
 
 /// Crop the image to the given dimension and position.
@@ -156,19 +163,19 @@ pub fn copy(src: &Image) -> Image {
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let src = Image::from_file("tests/image/sample.gif");
+/// let src = Image::from_file("tests/image/sample.gif").unwrap();
 /// 
 /// // Crop it
-/// let top_left = editor::crop(&src, 250, 128, "top-left", 0, 0);
-/// let top_right = editor::crop(&src, 250, 128, "top-right", 0, 0);
-/// let center = editor::crop(&src, 250, 128, "center", 0, 0);
+/// let top_left = editor::crop(&src, 250, 128, "top-left", 0, 0).unwrap();
+/// let top_right = editor::crop(&src, 250, 128, "top-right", 0, 0).unwrap();
+/// let center = editor::crop(&src, 250, 128, "center", 0, 0).unwrap();
 ///
 /// // Save it
-/// editor::save(&top_left, "tests/out/test_crop_top_left.png");
-/// editor::save(&top_right, "tests/out/test_crop_top_right.png");
-/// editor::save(&center, "tests/out/test_crop_center.png");
+/// let _ = editor::save(&top_left, "tests/out/test_crop_top_left.png");
+/// let _ = editor::save(&top_right, "tests/out/test_crop_top_right.png");
+/// let _ = editor::save(&center, "tests/out/test_crop_center.png");
 /// ```
-pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Image {
+pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Result<Image, String> {
 
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
@@ -192,12 +199,11 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
 
     for y in 0..dest.height {
         for x in 0..dest.width {
-            let rgba = src.get_color(offset_x + x, offset_y + y);
-            
-            dest.set_pixel(x, y, &[rgba.r, rgba.g, rgba.b, rgba.a]);
+            let pixel = try!(src.get_pixel(offset_x + x, offset_y + y));
+            try!(dest.set_pixel(x, y, Color::rgba(pixel.r, pixel.g, pixel.b, pixel.a)));
         }
     }
-    dest
+    Ok(dest)
 }
 
 /// Fill an image with color.
@@ -206,68 +212,72 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
 /// ```
 /// use raster::image::Image;
 /// use raster::editor;
+/// use raster::color::Color;
 ///
 /// // Create a 100x100 image
 /// let image = Image::blank(100, 100);
 ///
-/// // Fill it with red by passing an RGBA slice
-/// let image = editor::fill(&image, &[255, 0, 0, 255]);
+/// // Fill it with red
+/// let image = editor::fill(&image, Color::rgb(255, 0, 0)).unwrap();
 ///
 /// // Save it
-/// editor::save(&image, "tests/out/test_fill.png");
+/// let _ = editor::save(&image, "tests/out/test_fill.png");
 /// ```
-pub fn fill(src: &Image, color: &[u8]) -> Image {
+pub fn fill(src: &Image, color: Color) -> Result<Image, String> {
 
     let mut dest = Image::blank(src.width, src.height);
 
     for y in 0..dest.height {
         for x in 0..dest.width {
-            dest.set_pixel(x, y, color);
+            try!(dest.set_pixel(x, y, color.clone()));
         }
     }
 
-    dest
+    Ok(dest)
 }
 
 /// Wrapper function for the resizeXXX family of functions. 
 /// Resize an image to a given width, height and mode.
-pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Image {
+pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Result<Image, String> {
     
-    let dest = match mode {
+    match mode {
         "exact" => {
-            resize_exact(&src, w, h)
+            let dest = try!(resize_exact(&src, w, h));
+            Ok(dest)
         }
         "exact_width" => {
-            resize_exact_width(&src, w)
+            let dest = try!(resize_exact_width(&src, w));
+            Ok(dest)
         }
         "exact_height" => {
-            resize_exact_height(&src, h)
+            let dest = try!(resize_exact_height(&src, h));
+            Ok(dest)
         }
         "fit" => {
-            resize_fit(&src, w, h)
+            let dest = try!(resize_fit(&src, w, h));
+            Ok(dest)
         },
         "fill" => {
-            resize_fill(&src, w, h)
+            let dest = try!(resize_fill(&src, w, h));
+            Ok(dest)
         },
         _ => {
-            panic!("Invalid resize mode.")
+            Err(format!("Invalid resize mode '{}'.", mode))
         },
-    };
-    
-    dest
+    }
 }
 
 /// Resize image to exact dimensions ignoring aspect ratio. 
 /// Useful if you want to force exact width and height.
-pub fn resize_exact(src: &Image, w: i32, h: i32) -> Image {
+pub fn resize_exact(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 
-    resample(&src, w, h, "bicubic")
-
+    let result = try!(resample(&src, w, h, "bicubic"));
+    Ok(result)
 }
 
 /// Resize image to exact height. Width is auto calculated.
 /// Useful for creating row of images with the same height.
-pub fn resize_exact_height(src: &Image, h: i32) -> Image {
+pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
 
     let width = src.width;
     let height = src.height;
@@ -276,12 +286,13 @@ pub fn resize_exact_height(src: &Image, h: i32) -> Image {
     let resize_height = h;
     let resize_width = (h as f32 * ratio) as i32;
 
-    resample(&src, resize_width, resize_height, "bicubic")
+    let result = try!(resample(&src, resize_width, resize_height, "bicubic"));
+    Ok(result)
 }
 
 /// Resize image to exact width. Height is auto calculated. 
 /// Useful for creating column of images with the same width.
-pub fn resize_exact_width(src: &Image, w: i32) -> Image {
+pub fn resize_exact_width(src: &Image, w: i32) -> Result<Image, String> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -289,11 +300,12 @@ pub fn resize_exact_width(src: &Image, w: i32) -> Image {
     let resize_width  = w;
     let resize_height = (w as f32 / ratio).round() as i32;
 
-    resample(&src, resize_width, resize_height, "bicubic")
+    let result = try!(resample(&src, resize_width, resize_height, "bicubic"));
+    Ok(result)
 }
 
 /// Resize image to fill all the space in the given dimension. Excess parts are removed.
-pub fn resize_fill(src: &Image, w: i32, h: i32) -> Image {
+pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -308,14 +320,16 @@ pub fn resize_fill(src: &Image, w: i32, h: i32) -> Image {
         optimum_height = h;
     }
 
-    let resized = resample(&src, optimum_width, optimum_height, "bicubic");
-    crop(&resized, w, h, "top-left", 0, 0) // Trim excess parts
+    let resized = try!(resample(&src, optimum_width, optimum_height, "bicubic"));
+    let result = try!(crop(&resized, w, h, "top-left", 0, 0)); // Trim excess parts
+    
+    Ok(result)
 }
 
 /// Resize an image to fit within the given width and height. 
 /// The re-sized image will not exceed the given dimension. 
 /// Preserves the aspect ratio.
-pub fn resize_fit(src: &Image, w: i32, h: i32) -> Image {
+pub fn resize_fit(src: &Image, w: i32, h: i32) -> Result<Image, String> {
     
     let ratio: f64 = src.width as f64 / src.height as f64;
 
@@ -329,19 +343,20 @@ pub fn resize_fit(src: &Image, w: i32, h: i32) -> Image {
         resize_width  = (h as f64 * ratio).round() as i32;
     }
 
-    resample(&src, resize_width, resize_height, "bicubic")
+    let result = try!(resample(&src, resize_width, resize_height, "bicubic"));
+    Ok(result)
 }
 
 /// Save an image into a file.
 pub fn save(image: &Image, out: &str){
-    image::save_buffer(&Path::new(out), &image.pixels, image.width as u32, image.height as u32, image::RGBA(8)).unwrap();
+    image::save_buffer(&Path::new(out), &image.bytes, image.width as u32, image.height as u32, image::RGBA(8)).unwrap();
 }
 
 
 // Private functions
 
 // Interpolate using nearest neighbor.
-fn interpolate_nearest(src: &Image, w: i32, h: i32) -> Image {
+fn interpolate_nearest(src: &Image, w: i32, h: i32) -> Result<Image, String> {
     
     let x_ratio: f64 = src.width as f64 / w as f64;
     let y_ratio: f64 = src.height as f64 / h as f64;
@@ -352,32 +367,33 @@ fn interpolate_nearest(src: &Image, w: i32, h: i32) -> Image {
 
             let px: i32 = ( x as f64 * x_ratio ).floor() as i32;
             let py: i32 = ( y as f64 * y_ratio ).floor() as i32;
-            let p = src.get_pixel(px, py);
-            let r = p[0];
-            let g = p[1];
-            let b = p[2];
-            let a = p[3];
-            dest.set_pixel(x, y, &[r,g,b,a]);
+            let pixel = try!(src.get_pixel(px, py));
+            
+            try!(dest.set_pixel(x, y, pixel));
         }
     }
     
-    dest
+    Ok(dest)
 }
 
 // Resample an image into a new size.
-fn resample(src: &Image, w: i32, h: i32, interpolation: &str) -> Image {
+fn resample(src: &Image, w: i32, h: i32, interpolation: &str) -> Result<Image, String> {
     
-    let dest = match interpolation {
+    match interpolation {
         "bilinear" => {
-            interpolate_nearest(&src, w, h) // TODO
+            let result = try!(interpolate_nearest(&src, w, h)); // TODO
+            Ok(result)
         },
         "bicubic" => {
-            interpolate_nearest(&src, w, h) // TODO
+            let result = try!(interpolate_nearest(&src, w, h)); // TODO
+            Ok(result)
+        },
+        "nearest" => {
+            let result = try!(interpolate_nearest(&src, w, h));
+            Ok(result)
         },
         _ => {
-            interpolate_nearest(&src, w, h)
-        },
-    };
-    
-    dest
+            Err(format!("Invalid interpolation '{}'", interpolation))
+        }
+    }
 }
