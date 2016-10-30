@@ -269,6 +269,18 @@ pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Result<Image, String> 
 
 /// Resize image to exact dimensions ignoring aspect ratio. 
 /// Useful if you want to force exact width and height.
+///
+/// # Examples
+/// ```
+/// use raster::image::Image;
+/// use raster::editor;
+///
+/// // Create an image from file
+/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// 
+/// let image = editor::resize_exact(&image, 100, 100).unwrap();
+/// editor::save(&image, "tests/out/resize_exact.jpg");
+/// ```
 pub fn resize_exact(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 
     let result = try!(resample(&src, w, h, "bicubic"));
@@ -277,6 +289,18 @@ pub fn resize_exact(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 
 /// Resize image to exact height. Width is auto calculated.
 /// Useful for creating row of images with the same height.
+///
+/// # Examples
+/// ```
+/// use raster::image::Image;
+/// use raster::editor;
+///
+/// // Create an image from file
+/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// 
+/// let image = editor::resize_exact_height(&image, 200).unwrap();
+/// editor::save(&image, "tests/out/resize_exact_height.jpg");
+/// ```
 pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
 
     let width = src.width;
@@ -292,6 +316,18 @@ pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
 
 /// Resize image to exact width. Height is auto calculated. 
 /// Useful for creating column of images with the same width.
+///
+/// # Examples
+/// ```
+/// use raster::image::Image;
+/// use raster::editor;
+///
+/// // Create an image from file
+/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// 
+/// let image = editor::resize_exact_width(&image, 200).unwrap();
+/// editor::save(&image, "tests/out/resize_exact_width.jpg");
+/// ```
 pub fn resize_exact_width(src: &Image, w: i32) -> Result<Image, String> {
     let width  = src.width;
     let height = src.height;
@@ -305,6 +341,18 @@ pub fn resize_exact_width(src: &Image, w: i32) -> Result<Image, String> {
 }
 
 /// Resize image to fill all the space in the given dimension. Excess parts are removed.
+///
+/// # Examples
+/// ```
+/// use raster::image::Image;
+/// use raster::editor;
+///
+/// // Create an image from file
+/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// 
+/// let image = editor::resize_fill(&image, 200, 200).unwrap();
+/// editor::save(&image, "tests/out/resize_fill.jpg");
+/// ```
 pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
     let width  = src.width;
     let height = src.height;
@@ -329,6 +377,18 @@ pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 /// Resize an image to fit within the given width and height. 
 /// The re-sized image will not exceed the given dimension. 
 /// Preserves the aspect ratio.
+///
+/// # Examples
+/// ```
+/// use raster::image::Image;
+/// use raster::editor;
+///
+/// // Create an image from file
+/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// 
+/// let image = editor::resize_fit(&image, 200, 200).unwrap();
+/// editor::save(&image, "tests/out/resize_fit.jpg");
+/// ```
 pub fn resize_fit(src: &Image, w: i32, h: i32) -> Result<Image, String> {
     
     let ratio: f64 = src.width as f64 / src.height as f64;
