@@ -5,7 +5,7 @@ license = "MIT"
 authors = ["kosinix <kosinix@users.noreply.github.com>"]
 exclude = [
     "src/main.rs",
-    "tests/out/*",
+    "tests/*",
 ]
 keywords = [
     "image", "image-processing"
