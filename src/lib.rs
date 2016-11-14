@@ -6,13 +6,21 @@
 //! 
 //! ```
 //! use raster::image::Image;
+//! use raster::editor;
 //!
 //! // Create an image from file
 //! let image1 = Image::from_file("tests/image/sample.png").unwrap();
 //! 
 //! // Create a blank 100x100 image. Defaults to a black background.
 //! let image2 = Image::blank(100, 100);
+//!
+//! // Save blank
+//! editor::save(&image2, "tests/out/test_blank.png");
+//!
 //! ```
+//! A blank image:
+//!
+//! ![Blank](../out/test_blank.png)
 //! 
 //! ## Editing and Saving Images
 //!
@@ -29,6 +37,7 @@
 //! // Save it
 //! editor::save(&image, "tests/out/test_resize_exact.png");
 //! ```
+//! ![Resize exact](../out/test_resize_exact.png)
 //!
 //! ## Blending 2 Images
 //!
@@ -46,7 +55,11 @@
 //! // Save it
 //! editor::save(&image3, "tests/out/test_blend_normal.png");
 //! ```
+//! ![Blend Normal](../out/test_blend_normal.png)
+//!
 //! See the modules, more specifically the editor module for more info.
+//!
+
 
 pub mod color;
 pub mod compare;
