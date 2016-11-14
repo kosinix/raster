@@ -39,6 +39,9 @@ Checkout the docs for more info.
 
 ## To Do List
 
+* More examples and add pictures in docs
 * Implement bicubic interpolation
 * Add geometric transformations
 * Add filters and convolution
+* Memory and perf improvements
+* Reduce dependency to image decoders/encoders
