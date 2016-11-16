@@ -12,15 +12,18 @@ cargo test --test integration_tests
 git checkout master
 cargo doc --no-deps --open
 
-## Windows
+## Windows Copy Images
 mkdir target\doc\out
 xcopy tests\out target\doc\out /e
-rmdir "C:\Users\Lenovo G410\Desktop\rust\tmp"
+
+## Windows Copy Doc to gh-pages
+rmdir "C:\Users\Lenovo G410\Desktop\rust\tmp" /S /Q
 mkdir "C:\Users\Lenovo G410\Desktop\rust\tmp"
 xcopy target\doc "C:\Users\Lenovo G410\Desktop\rust\tmp" /e
 
 git checkout gh-pages
-git checkout
+
+xcopy "C:\Users\Lenovo G410\Desktop\rust\tmp" %cd% /e
 
 # Publishing
 
