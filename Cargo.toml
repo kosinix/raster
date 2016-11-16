@@ -4,6 +4,7 @@ version = "0.0.6"
 license = "MIT"
 authors = ["kosinix <kosinix@users.noreply.github.com>"]
 exclude = [
+    "dev/*",
     "tests/*",
 ]
 keywords = [
