@@ -6,7 +6,7 @@ An image processing library for Rust
 
 ## Documentation
 
-Examples and API are at [https://docs.rs/raster/](https://docs.rs/raster/)
+Examples and API are [here](https://kosinix.github.io/raster/raster/)
 
 ## Current Features
 
