@@ -20,3 +20,6 @@ cargo doc --no-deps --open
 ## Windows
 mkdir target\doc\out
 xcopy tests\out target\doc\out /e
+
+git checkout gh-pages
+git checkout
