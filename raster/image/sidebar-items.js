@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Image","A struct for easily representing a raster image."]]});

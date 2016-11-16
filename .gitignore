@@ -1,4 +1,0 @@
-target
-Cargo.lock
-tests/out/*
-src/main.rs

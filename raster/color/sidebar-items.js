@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Color","A struct for representing and creating color."]]});
