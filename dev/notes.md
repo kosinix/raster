@@ -23,7 +23,9 @@ xcopy target\doc "C:\Users\Lenovo G410\Desktop\rust\tmp" /e
 
 git checkout gh-pages
 
-xcopy "C:\Users\Lenovo G410\Desktop\rust\tmp" %cd% /e
+xcopy "C:\Users\Lenovo G410\Desktop\rust\tmp" "%cd%" /e
+
+git checkout master
 
 # Publishing
 
