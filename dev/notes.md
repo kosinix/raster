@@ -2,6 +2,10 @@
 
 cargo test
 
+## Target Specific Test
+
+cargo test --test integration_tests
+
 
 # Publishing
 
