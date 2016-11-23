@@ -2,7 +2,11 @@
 
 [![Build Status](https://travis-ci.org/kosinix/raster.svg?branch=master)](https://travis-ci.org/kosinix/raster)
 
-An image processing library for Rust
+An image processing library for Rust. 
+
+## Pre-Alpha Status
+
+Raster is currently in pre-alpha; There will be breaking changes between versions. The API will stabilize once it reaches 0.1.0. From then on it will follow semver.
 
 ## Documentation
 
@@ -39,7 +43,7 @@ Checkout the docs for more info.
 
 ## To Do List
 
-* More examples and add pictures in docs
+* ~~More examples and add pictures in docs~~
 * Implement bicubic interpolation
 * Add geometric transformations
 * Add filters and convolution
