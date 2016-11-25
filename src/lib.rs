@@ -67,6 +67,7 @@ pub mod editor;
 pub mod filter;
 pub mod image;
 pub mod interpolate;
+pub mod transform;
 mod blend;
 mod position;
 
