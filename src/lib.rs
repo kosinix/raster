@@ -65,6 +65,7 @@ pub mod color;
 pub mod compare;
 pub mod editor;
 pub mod image;
+pub mod interpolate;
 mod position;
 mod blend;
 
