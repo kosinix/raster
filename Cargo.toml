@@ -4,6 +4,7 @@ version = "0.0.6"
 license = "MIT"
 authors = ["kosinix <kosinix@users.noreply.github.com>"]
 exclude = [
+    "main.rs",
     "dev/*",
     "tests/*",
 ]
@@ -16,5 +17,7 @@ documentation = "https://kosinix.github.io/raster/raster/"
 homepage = "https://github.com/kosinix/raster"
 repository = "https://github.com/kosinix/raster.git"
 
-[dependencies]
-image = "0.10.3"
+[dependencies.image]
+version = "0.10.3"
+default-features = false
+features = ["gif_codec", "jpeg", "ico", "png_codec"]
