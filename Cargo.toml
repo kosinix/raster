@@ -13,7 +13,7 @@ keywords = [
 ]
 readme = "README.md"
 description = "Image processing lib for Rust"
-documentation = "https://kosinix.github.io/raster/raster/"
+documentation = "https://docs.rs/raster/"
 homepage = "https://github.com/kosinix/raster"
 repository = "https://github.com/kosinix/raster.git"
 
