@@ -15,11 +15,10 @@ use editor;
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
 /// use raster::compare;
 /// 
-/// let image1 = Image::from_file("tests/image/sample.jpg").unwrap();
-/// let image2 = Image::from_file("tests/image/sample.png").unwrap();
+/// let image1 = raster::open("tests/image/sample.jpg").unwrap();
+/// let image2 = raster::open("tests/image/sample.png").unwrap();
 /// 
 /// let hamming_distance = compare::similar(&image1, &image2).unwrap();
 /// println!("{}", hamming_distance);
@@ -43,11 +42,10 @@ pub fn similar(image1: &Image, image2: &Image) -> Result<u8, String> {
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
 /// use raster::compare;
 /// 
-/// let image1 = Image::from_file("tests/image/sample.png").unwrap();
-/// let image2 = Image::from_file("tests/image/sample.png").unwrap();
+/// let image1 = raster::open("tests/image/sample.png").unwrap();
+/// let image2 = raster::open("tests/image/sample.png").unwrap();
 /// 
 /// let equal = compare::equal(&image1, &image2).unwrap();
 /// assert_eq!(true, equal);

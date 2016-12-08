@@ -18,16 +18,15 @@ use color::Color;
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
 /// use raster::filter;
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let mut image = Image::from_file("tests/image/sample.jpg").unwrap();
-/// filter::box_blur(&mut image).unwrap();
-/// editor::save(&image, "tests/out/test_filter_box_blur.jpg");
+/// let mut image = raster::open("tests/image/sample.jpg").unwrap();
+/// filter::blur_box(&mut image).unwrap();
+/// raster::save(&image, "tests/out/test_filter_box_blur.jpg");
 /// ```
-pub fn box_blur(mut src: &mut Image) -> Result<&mut Image, String>{
+pub fn blur_box(mut src: &mut Image) -> Result<&mut Image, String>{
     let matrix: [[i32; 3]; 3] = [
         [1,1,1],
         [1,1,1],
@@ -48,11 +47,11 @@ pub fn box_blur(mut src: &mut Image) -> Result<&mut Image, String>{
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let mut image = Image::from_file("tests/image/sample.jpg").unwrap();
-/// filter::gaussian_blur(&mut image).unwrap();
-/// editor::save(&image, "tests/out/test_filter_gaussian_blur.jpg");
+/// let mut image = raster::open("tests/image/sample.jpg").unwrap();
+/// filter::blur_gaussian(&mut image).unwrap();
+/// raster::save(&image, "tests/out/test_filter_gaussian_blur.jpg");
 /// ```
-pub fn gaussian_blur(mut src: &mut Image) -> Result<&mut Image, String>{
+pub fn blur_gaussian(mut src: &mut Image) -> Result<&mut Image, String>{
     let matrix: [[i32; 3]; 3] = [
         [1,2,1],
         [2,4,2],
@@ -73,9 +72,9 @@ pub fn gaussian_blur(mut src: &mut Image) -> Result<&mut Image, String>{
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let mut image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/image/sample.jpg").unwrap();
 /// filter::sharpen(&mut image).unwrap();
-/// editor::save(&image, "tests/out/test_filter_sharpen.jpg");
+/// raster::save(&image, "tests/out/test_filter_sharpen.jpg");
 /// ```
 pub fn sharpen(mut src: &mut Image) -> Result<&mut Image, String>{
     let matrix: [[i32; 3]; 3] = [
@@ -89,7 +88,7 @@ pub fn sharpen(mut src: &mut Image) -> Result<&mut Image, String>{
     Ok(src)
 }
 
-/// Apply a convolvution matrix. The divisor is applied as the last step of convolution.
+/// Apply a 3x3 convolvution matrix. The divisor is applied as the last step of convolution.
 ///
 /// # Examples
 /// ```
@@ -98,14 +97,14 @@ pub fn sharpen(mut src: &mut Image) -> Result<&mut Image, String>{
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let mut image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/image/sample.jpg").unwrap();
 /// let matrix: [[i32; 3]; 3] = [
 ///     [0, 0, 0],
 ///     [0, 1, 0],
 ///     [0, 0, 0]
 /// ];
 /// filter::convolve(&mut image, matrix, 1).unwrap();
-/// editor::save(&image, "tests/out/test_filter_convolve.jpg");
+/// raster::save(&image, "tests/out/test_filter_convolve.jpg");
 /// ```
 pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<&mut Image, String> {
     

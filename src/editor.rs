@@ -25,12 +25,11 @@ use interpolate;
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
 /// use raster::editor;
 ///
 /// // Create images from file
-/// let image1 = Image::from_file("tests/image/sample.jpg").unwrap();
-/// let image2 = Image::from_file("tests/image/watermark.png").unwrap();
+/// let image1 = raster::open("tests/image/sample.jpg").unwrap();
+/// let image2 = raster::open("tests/image/watermark.png").unwrap();
 /// 
 /// // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
 /// let normal = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0).unwrap();
@@ -42,11 +41,11 @@ use interpolate;
 /// let screen = editor::blend(&image1, &image2, "screen", 1.0, "center", 0, 0).unwrap();
 ///
 /// // Save it
-/// let _ = editor::save(&normal, "tests/out/test_blend_normal.png");
-/// let _ = editor::save(&difference, "tests/out/test_blend_difference.png");
-/// let _ = editor::save(&multiply, "tests/out/test_blend_multiply.png");
-/// let _ = editor::save(&overlay, "tests/out/test_blend_overlay.png");
-/// let _ = editor::save(&screen, "tests/out/test_blend_screen.png");
+/// raster::save(&normal, "tests/out/test_blend_normal.png");
+/// raster::save(&difference, "tests/out/test_blend_difference.png");
+/// raster::save(&multiply, "tests/out/test_blend_multiply.png");
+/// raster::save(&overlay, "tests/out/test_blend_overlay.png");
+/// raster::save(&screen, "tests/out/test_blend_screen.png");
 /// ```
 pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32, position: &str, offset_x: i32, offset_y: i32) -> Result<Image, String> {
     
@@ -143,7 +142,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let original = Image::from_file("tests/image/sample.jpg").unwrap();
+/// let original = raster::open("tests/image/sample.jpg").unwrap();
 ///
 /// // Clone it
 /// let clone = editor::clone(&original);
@@ -160,11 +159,10 @@ pub fn clone(src: &Image) -> Image {
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let src = Image::from_file("tests/image/sample.gif").unwrap();
+/// let src = raster::open("tests/image/sample.gif").unwrap();
 /// 
 /// // Crop it
 /// let top_left = editor::crop(&src, 250, 128, "top-left", 0, 0).unwrap();
@@ -172,9 +170,9 @@ pub fn clone(src: &Image) -> Image {
 /// let center = editor::crop(&src, 250, 128, "center", 0, 0).unwrap();
 ///
 /// // Save it
-/// let _ = editor::save(&top_left, "tests/out/test_crop_top_left.png");
-/// let _ = editor::save(&top_right, "tests/out/test_crop_top_right.png");
-/// let _ = editor::save(&center, "tests/out/test_crop_center.png");
+/// raster::save(&top_left, "tests/out/test_crop_top_left.png");
+/// raster::save(&top_right, "tests/out/test_crop_top_right.png");
+/// raster::save(&center, "tests/out/test_crop_center.png");
 /// ```
 pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Result<Image, String> {
 
@@ -222,7 +220,7 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
 /// let image = editor::fill(&image, Color::rgb(255, 0, 0)).unwrap();
 ///
 /// // Save it
-/// let _ = editor::save(&image, "tests/out/test_fill.png");
+/// raster::save(&image, "tests/out/test_fill.png");
 /// ```
 pub fn fill(src: &Image, color: Color) -> Result<Image, String> {
 
