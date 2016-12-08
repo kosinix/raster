@@ -135,7 +135,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
     }
 }
 
-/// Create a copy of an image as another image.
+/// Create a clone of an image as another image.
 ///
 /// # Examples
 /// ```
@@ -145,10 +145,10 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// // Create image from file
 /// let original = Image::from_file("tests/image/sample.jpg").unwrap();
 ///
-/// // Copy it
-/// let copy = editor::copy(&original);
+/// // Clone it
+/// let clone = editor::clone(&original);
 /// ```
-pub fn copy(src: &Image) -> Image {
+pub fn clone(src: &Image) -> Image {
     Image{
         width: src.width,
         height: src.height,

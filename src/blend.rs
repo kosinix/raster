@@ -18,7 +18,7 @@ use color::Color;
 
 pub fn difference(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, loop_start_x:i32, loop_end_x:i32, offset_x:i32, offset_y:i32, opacity:f32) -> Result<Image, String> {
 
-    let mut canvas = editor::copy(&image1);
+    let mut canvas = editor::clone(&image1);
 
     for y in loop_start_y..loop_end_y {
         for x in loop_start_x..loop_end_x {
@@ -50,7 +50,7 @@ pub fn difference(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i
 
 pub fn multiply(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, loop_start_x:i32, loop_end_x:i32, offset_x:i32, offset_y:i32, opacity:f32) -> Result<Image, String> {
 
-    let mut canvas = editor::copy(&image1);
+    let mut canvas = editor::clone(&image1);
 
     for y in loop_start_y..loop_end_y {
         for x in loop_start_x..loop_end_x {
@@ -82,7 +82,7 @@ pub fn multiply(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32
 
 pub fn normal(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, loop_start_x:i32, loop_end_x:i32, offset_x:i32, offset_y:i32, opacity:f32) -> Result<Image, String> {
 
-    let mut canvas = editor::copy(&image1);
+    let mut canvas = editor::clone(&image1);
 
     for y in loop_start_y..loop_end_y {
         for x in loop_start_x..loop_end_x {
@@ -114,7 +114,7 @@ pub fn normal(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, 
 
 pub fn overlay(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, loop_start_x:i32, loop_end_x:i32, offset_x:i32, offset_y:i32, opacity:f32) -> Result<Image, String> {
 
-    let mut canvas = editor::copy(&image1);
+    let mut canvas = editor::clone(&image1);
 
     for y in loop_start_y..loop_end_y {
         for x in loop_start_x..loop_end_x {
@@ -146,7 +146,7 @@ pub fn overlay(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32,
 
 pub fn screen(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, loop_start_x:i32, loop_end_x:i32, offset_x:i32, offset_y:i32, opacity:f32) -> Result<Image, String> {
 
-    let mut canvas = editor::copy(&image1);
+    let mut canvas = editor::clone(&image1);
 
     for y in loop_start_y..loop_end_y {
         for x in loop_start_x..loop_end_x {
