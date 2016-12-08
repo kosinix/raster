@@ -26,6 +26,11 @@ use color::Color;
 /// filter::blur_box(&mut image).unwrap();
 /// raster::save(&image, "tests/out/test_filter_box_blur.jpg");
 /// ```
+/// ### Before
+///
+/// ![Blend Normal](https://kosinix.github.io/raster/in/sample.jpg)*Before*
+/// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_box_blur.jpg)*After*
+///
 pub fn blur_box(mut src: &mut Image) -> Result<&mut Image, String>{
     let matrix: [[i32; 3]; 3] = [
         [1,1,1],
