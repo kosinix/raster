@@ -10,7 +10,7 @@ Raster is currently in pre-alpha; There will be breaking changes between version
 
 ## Documentation
 
-Examples and API are [here](https://kosinix.github.io/raster/raster/)
+Examples and API are [here](https://docs.rs/raster/)
 
 ## Current Features
 
@@ -46,6 +46,6 @@ Checkout the docs for more info.
 * ~~More examples and add pictures in docs~~
 * Implement bicubic interpolation
 * Add geometric transformations
-* Add filters and convolution
+* ~~Add filters and convolution~~
 * Memory and perf improvements
 * Reduce dependency to image decoders/encoders
