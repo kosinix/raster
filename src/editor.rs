@@ -47,6 +47,41 @@ use interpolate;
 /// raster::save(&overlay, "tests/out/test_blend_overlay.png");
 /// raster::save(&screen, "tests/out/test_blend_screen.png");
 /// ```
+/// ### Source Images
+///
+/// Image 1 
+///
+/// ![](https://kosinix.github.io/raster/in/sample.jpg)
+///
+/// Image 2
+///
+/// ![](https://kosinix.github.io/raster/in/watermark.png)
+/// 
+/// ### Blended Images
+/// 
+/// Normal
+///
+/// ![](https://kosinix.github.io/raster/out/test_blend_normal.png)
+///
+/// Difference
+///
+/// ![](https://kosinix.github.io/raster/out/test_blend_difference.png)
+///
+/// 
+/// Multiply
+///
+/// ![](https://kosinix.github.io/raster/out/test_blend_multiply.png)
+///
+/// 
+/// Overlay
+///
+/// ![](https://kosinix.github.io/raster/out/test_blend_overlay.png)
+///
+/// 
+/// Screen
+///
+/// ![](https://kosinix.github.io/raster/out/test_blend_screen.png)
+///
 pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32, position: &str, offset_x: i32, offset_y: i32) -> Result<Image, String> {
     
     let mut opacity = opacity;
