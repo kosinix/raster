@@ -91,7 +91,7 @@ impl<'a> Image {
     /// use raster::image::Image;
     ///
     /// // Create an image from file
-    /// let image = Image::from_file("tests/image/sample.png").unwrap();
+    /// let image = raster::open("tests/in/sample.png").unwrap();
     /// println!("{:?}", image.bytes);
     /// ```
     pub fn from_file(file: &'a str) -> Result<Image, String> {

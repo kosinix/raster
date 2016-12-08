@@ -22,7 +22,7 @@ use color::Color;
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let mut image = raster::open("tests/image/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::blur_box(&mut image).unwrap();
 /// raster::save(&image, "tests/out/test_filter_box_blur.jpg");
 /// ```
@@ -47,7 +47,7 @@ pub fn blur_box(mut src: &mut Image) -> Result<&mut Image, String>{
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let mut image = raster::open("tests/image/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::blur_gaussian(&mut image).unwrap();
 /// raster::save(&image, "tests/out/test_filter_gaussian_blur.jpg");
 /// ```
@@ -72,7 +72,7 @@ pub fn blur_gaussian(mut src: &mut Image) -> Result<&mut Image, String>{
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let mut image = raster::open("tests/image/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::sharpen(&mut image).unwrap();
 /// raster::save(&image, "tests/out/test_filter_sharpen.jpg");
 /// ```
@@ -97,7 +97,7 @@ pub fn sharpen(mut src: &mut Image) -> Result<&mut Image, String>{
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let mut image = raster::open("tests/image/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// let matrix: [[i32; 3]; 3] = [
 ///     [0, 0, 0],
 ///     [0, 1, 0],

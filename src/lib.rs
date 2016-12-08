@@ -8,7 +8,7 @@
 //! use raster::image::Image;
 //!
 //! // Create an image from file
-//! let image1 = raster::open("tests/image/sample.png").unwrap();
+//! let image1 = raster::open("tests/in/sample.png").unwrap();
 //! 
 //! // Create a blank 100x100 image. Defaults to a black background.
 //! let image2 = Image::blank(100, 100);
@@ -28,7 +28,7 @@
 //! use raster::editor;
 //!
 //! // Create an image from file
-//! let image = Image::from_file("tests/image/sample.png").unwrap();
+//! let image = raster::open("tests/in/sample.png").unwrap();
 //! 
 //! // Resize an image to exactly 200x200 pixels
 //! let image = editor::resize_exact(&image, 200, 200).unwrap();
@@ -45,8 +45,8 @@
 //! use raster::editor;
 //!
 //! // Create images from file
-//! let image1 = Image::from_file("tests/image/sample.jpg").unwrap();
-//! let image2 = Image::from_file("tests/image/watermark.png").unwrap();
+//! let image1 = raster::open("tests/in/sample.jpg").unwrap();
+//! let image2 = raster::open("tests/in/watermark.png").unwrap();
 //! 
 //! // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
 //! let image3 = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0).unwrap();
@@ -78,7 +78,7 @@ use image::Image;
 /// 
 /// ```
 /// // Create an image from file
-/// let image = raster::open("tests/image/sample.png").unwrap();
+/// let image = raster::open("tests/in/sample.png").unwrap();
 /// println!("{:?}", image.bytes);
 /// ```
 pub fn open(image_file: &str) -> Result<Image, String> {
@@ -94,7 +94,7 @@ pub fn open(image_file: &str) -> Result<Image, String> {
 /// 
 /// ```
 /// // Create an image from file
-/// let image = raster::open("tests/image/sample.png").unwrap();
+/// let image = raster::open("tests/in/sample.png").unwrap();
 /// raster::save(&image, "tests/out/test.png");
 /// ```
 pub fn save(image: &Image, out: &str) {

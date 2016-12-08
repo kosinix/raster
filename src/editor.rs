@@ -28,8 +28,8 @@ use interpolate;
 /// use raster::editor;
 ///
 /// // Create images from file
-/// let image1 = raster::open("tests/image/sample.jpg").unwrap();
-/// let image2 = raster::open("tests/image/watermark.png").unwrap();
+/// let image1 = raster::open("tests/in/sample.jpg").unwrap();
+/// let image2 = raster::open("tests/in/watermark.png").unwrap();
 /// 
 /// // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
 /// let normal = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0).unwrap();
@@ -142,7 +142,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let original = raster::open("tests/image/sample.jpg").unwrap();
+/// let original = raster::open("tests/in/sample.jpg").unwrap();
 ///
 /// // Clone it
 /// let clone = editor::clone(&original);
@@ -162,7 +162,7 @@ pub fn clone(src: &Image) -> Image {
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let src = raster::open("tests/image/sample.gif").unwrap();
+/// let src = raster::open("tests/in/sample.gif").unwrap();
 /// 
 /// // Crop it
 /// let top_left = editor::crop(&src, 250, 128, "top-left", 0, 0).unwrap();
@@ -275,7 +275,7 @@ pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Result<Image, String> 
 /// use raster::editor;
 ///
 /// // Create an image from file
-/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_exact(&image, 100, 100).unwrap();
 /// editor::save(&image, "tests/out/resize_exact.jpg");
@@ -295,7 +295,7 @@ pub fn resize_exact(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 /// use raster::editor;
 ///
 /// // Create an image from file
-/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_exact_height(&image, 200).unwrap();
 /// editor::save(&image, "tests/out/resize_exact_height.jpg");
@@ -322,7 +322,7 @@ pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
 /// use raster::editor;
 ///
 /// // Create an image from file
-/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_exact_width(&image, 200).unwrap();
 /// editor::save(&image, "tests/out/resize_exact_width.jpg");
@@ -347,7 +347,7 @@ pub fn resize_exact_width(src: &Image, w: i32) -> Result<Image, String> {
 /// use raster::editor;
 ///
 /// // Create an image from file
-/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_fill(&image, 200, 200).unwrap();
 /// editor::save(&image, "tests/out/resize_fill.jpg");
@@ -383,7 +383,7 @@ pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 /// use raster::editor;
 ///
 /// // Create an image from file
-/// let image = Image::from_file("tests/image/sample.jpg").unwrap();
+/// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_fit(&image, 200, 200).unwrap();
 /// editor::save(&image, "tests/out/resize_fit.jpg");
