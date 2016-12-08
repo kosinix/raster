@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["color","A module for handling colors."],["compare","A module for comparing images."],["editor","A module for editing images."],["image","A module for handling a raster image."]]});
