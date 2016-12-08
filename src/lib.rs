@@ -71,4 +71,33 @@ pub mod transform;
 mod blend;
 mod position;
 
+use image::Image;
 
+/// Create an image from an image file. Returns raster::image::Image.
+///
+/// # Examples
+/// 
+/// ```
+/// // Create an image from file
+/// let image = raster::open("tests/image/sample.png").unwrap();
+/// println!("{:?}", image.bytes);
+/// ```
+pub fn open(image_file: &str) -> Result<Image, String> {
+    
+    let image = try!(Image::from_file(image_file));
+
+    Ok(image)
+}
+
+/// Save an image to an image file. The image type is detected from the file extension of the file name.
+///
+/// # Examples
+/// 
+/// ```
+/// // Create an image from file
+/// let image = raster::open("tests/image/sample.png").unwrap();
+/// raster::save(&image, "tests/out/test.png");
+/// ```
+pub fn save(image: &Image, out: &str) {
+    editor::save(&image, out);
+}
