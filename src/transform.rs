@@ -15,31 +15,40 @@ use Color;
 
 /// Rotate an image clockwise. Negate the degrees to do a counter-clockwise rotation. Background color can be any color.
 ///
+/// Note: If you look closely, the quality for arbitrary angles is not very good due to the simple sampling algorithm. The 90, 180, and 270 angles looks fine because no pixels are lost. This will be fixed in the future.
+///
 /// # Examples
+///
+/// ### Rotate 45 degrees with a black background color:
+///
 /// ```
 /// use raster::transform;
 /// use raster::Color;
 ///
-/// // Rotate 45 degrees with a black background color.
+/// //...
+///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
 /// transform::rotate(&mut image, 45, Color::rgb(0,0,0)).unwrap();
 /// raster::save(&image, "tests/out/test_transform_rotate_45.png");
-///
-/// // Rotate 45 degrees counter-clockwise with a red background color.
-/// let mut image = raster::open("tests/in/sample.png").unwrap();
-/// transform::rotate(&mut image, -45, Color::rgb(255,0,0)).unwrap();
-/// raster::save(&image, "tests/out/test_transform_rotate_45cc.png");
 /// ```
-/// # Results
-///
-/// 45 degrees clockwise
 ///
 /// ![](https://kosinix.github.io/raster/out/test_transform_rotate_45.png)
 ///
-/// 45 degrees counter-clockwise
+///
+/// ### Rotate 45 degrees counter-clockwise with a red background color:
+///
+/// ```
+/// use raster::transform;
+/// use raster::Color;
+///
+/// //...
+///
+/// let mut image = raster::open("tests/in/sample.png").unwrap();
+/// transform::rotate(&mut image, -45, Color::red()).unwrap();
+/// raster::save(&image, "tests/out/test_transform_rotate_45cc.png");
+/// ```
 ///
 /// ![](https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png)
-///
 ///
 pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> Result<&mut Image, String>{
     
