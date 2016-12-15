@@ -173,7 +173,6 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 ///
 /// # Examples
 /// ```
-/// use raster::Image;
 /// use raster::editor;
 ///
 /// // Create image from file
