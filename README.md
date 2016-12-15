@@ -15,7 +15,7 @@ Examples and API are [here](https://docs.rs/raster/)
 ## Current Features
 
 * blend - Combine 2 images using normal, difference, multiply, overlay and screen.
-* copy - Clone an image.
+* clone - Clone an image.
 * crop - Crop image with support for textual anchor points and offsets.
 * equal - Compares if two images are equal.
 * fill - Fill image with color.
@@ -26,6 +26,10 @@ Examples and API are [here](https://docs.rs/raster/)
 * resize_exact_height - Resize image to exact height.
 * save - Save to raster formats JPEG, PNG, and GIF
 * similarity - Compare two images to see how similar they are.
+* blur - Blur image using gaussian or box.
+* convolve - Apply a convolution matrix.
+* sharpen - Sharpen image.
+* rotate - Rotate to any arbitrary size in clockwise or counter-clockwise direction.
 
 
 Checkout the docs for more info.
