@@ -248,25 +248,23 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
 /// use raster::Color;
 ///
 /// // Create a 100x100 image
-/// let image = Image::blank(100, 100);
+/// let mut image = Image::blank(100, 100);
 ///
 /// // Fill it with red
-/// let image = editor::fill(&image, Color::rgb(255, 0, 0)).unwrap();
+/// editor::fill(&mut image, Color::red()).unwrap();
 ///
 /// // Save it
 /// raster::save(&image, "tests/out/test_fill.png");
 /// ```
-pub fn fill(src: &Image, color: Color) -> Result<Image, String> {
+pub fn fill(mut src: &mut Image, color: Color) -> Result<&mut Image, String> {
 
-    let mut dest = Image::blank(src.width, src.height);
-
-    for y in 0..dest.height {
-        for x in 0..dest.width {
-            try!(dest.set_pixel(x, y, color.clone()));
+    for y in 0..src.height {
+        for x in 0..src.width {
+            try!(src.set_pixel(x, y, color.clone()));
         }
     }
 
-    Ok(dest)
+    Ok(src)
 }
 
 /// Wrapper function for the resizeXXX family of functions. 
