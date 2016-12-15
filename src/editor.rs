@@ -4,7 +4,6 @@
 extern crate image;
 
 // from rust
-use std::path::Path;
 
 // from external crate
 
@@ -437,12 +436,6 @@ pub fn resize_fit(src: &Image, w: i32, h: i32) -> Result<Image, String> {
     let result = try!(resample(&src, resize_width, resize_height, "bicubic"));
     Ok(result)
 }
-
-/// Save an image into a file.
-pub fn save(image: &Image, out: &str){
-    image::save_buffer(&Path::new(out), &image.bytes, image.width as u32, image.height as u32, image::RGBA(8)).unwrap();
-}
-
 
 // Private functions
 

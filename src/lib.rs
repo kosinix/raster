@@ -79,6 +79,7 @@ mod position;
 extern crate image;
 
 // from rust
+use std::path::Path;
 
 // from external crate
 use self::image::GenericImage;
@@ -86,7 +87,7 @@ use self::image::GenericImage;
 // from local crate
 
 
-/// Create an image from an image file. Returns raster::image::Image.
+/// Create an image from an image file.
 ///
 /// # Examples
 /// 
@@ -97,9 +98,24 @@ use self::image::GenericImage;
 /// ```
 pub fn open(image_file: &str) -> Result<Image, String> {
     
-    let image = try!(Image::from_file(image_file));
+    let src = image::open(image_file).unwrap(); // Returns image::DynamicImage
+    let (w, h) = src.dimensions();
+    let mut bytes = Vec::new();
+    for y in 0..h {
+        for x in 0..w {
+            let p = src.get_pixel(x, y);
+            bytes.push(p.data[0]);
+            bytes.push(p.data[1]);
+            bytes.push(p.data[2]);
+            bytes.push(p.data[3]);
+        }
+    }
+    Ok(Image{ 
+        width: w as i32,
+        height: h as i32,
+        bytes: bytes
+    })
 
-    Ok(image)
 }
 
 /// Save an image to an image file. The image type is detected from the file extension of the file name.
@@ -112,7 +128,9 @@ pub fn open(image_file: &str) -> Result<Image, String> {
 /// raster::save(&image, "tests/out/test.png");
 /// ```
 pub fn save(image: &Image, out: &str) {
-    editor::save(&image, out);
+    
+    image::save_buffer(&Path::new(out), &image.bytes, image.width as u32, image.height as u32, image::RGBA(8)).unwrap();
+
 }
 
 /// A struct for easily representing a raster image.
