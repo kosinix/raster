@@ -11,7 +11,7 @@ use std::cmp;
 
 // from local crate
 use Image;
-use color::Color;
+use Color;
 
 /// Interpolate using nearest neighbor.
 pub fn nearest(src: &Image, w: i32, h: i32) -> Result<Image, String> {

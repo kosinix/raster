@@ -11,9 +11,9 @@ use std::path::Path;
 
 // from local crate
 use blend;
+use Color;
 use Image;
 use position::Position;
-use color::Color;
 use interpolate;
 
 /// Blend 2 images into one. The image1 is the base and image2 is the top. 

@@ -11,7 +11,7 @@ use std::cmp;
 
 // from local crate
 use Image;
-use color::Color;
+use Color;
 
 /// Rotate an image clockwise. Negate the degrees to do a counter-clockwise rotation. Background color can be any color.
 ///
