@@ -20,15 +20,27 @@ use Color;
 /// use raster::transform;
 /// use raster::Color;
 ///
-/// // Create image from file
+/// // Rotate 45 degrees with a black background color.
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
 /// transform::rotate(&mut image, 45, Color::rgb(0,0,0)).unwrap();
 /// raster::save(&image, "tests/out/test_transform_rotate_45.png");
 ///
+/// // Rotate 45 degrees counter-clockwise with a red background color.
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
 /// transform::rotate(&mut image, -45, Color::rgb(255,0,0)).unwrap();
 /// raster::save(&image, "tests/out/test_transform_rotate_45cc.png");
 /// ```
+/// # Results
+///
+/// 45 degrees clockwise
+///
+/// ![](https://kosinix.github.io/raster/out/test_transform_rotate_45.png)
+///
+/// 45 degrees counter-clockwise
+///
+/// ![](https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png)
+///
+///
 pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> Result<&mut Image, String>{
     
     let w1 = src.width;
