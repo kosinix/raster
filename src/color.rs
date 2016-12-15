@@ -95,4 +95,14 @@ impl<'a> Color {
             a: 255,
         }
     }
+
+    /// Returns a white Color.
+    pub fn white() -> Color {
+        Color {
+            r: 255,
+            g: 255,
+            b: 255,
+            a: 255,
+        }
+    }
 }
