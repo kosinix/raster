@@ -412,7 +412,7 @@ impl<'a> Color {
         }
     }
 
-    /// Returns a white Color.
+    /// Returns a blue Color.
     pub fn blue() -> Color {
         Color {
             r: 0,
