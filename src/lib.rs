@@ -391,4 +391,34 @@ impl<'a> Color {
             a: 255,
         }
     }
+
+    /// Returns a red Color.
+    pub fn red() -> Color {
+        Color {
+            r: 255,
+            g: 0,
+            b: 0,
+            a: 255,
+        }
+    }
+
+    /// Returns a green Color.
+    pub fn green() -> Color {
+        Color {
+            r: 0,
+            g: 255,
+            b: 0,
+            a: 255,
+        }
+    }
+
+    /// Returns a white Color.
+    pub fn blue() -> Color {
+        Color {
+            r: 0,
+            g: 0,
+            b: 255,
+            a: 255,
+        }
+    }
 }
