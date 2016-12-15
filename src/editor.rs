@@ -11,7 +11,7 @@ use std::path::Path;
 
 // from local crate
 use blend;
-use image::Image;
+use Image;
 use position::Position;
 use color::Color;
 use interpolate;
@@ -173,7 +173,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
+/// use raster::Image;
 /// use raster::editor;
 ///
 /// // Create image from file
@@ -244,7 +244,7 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
+/// use raster::Image;
 /// use raster::editor;
 /// use raster::color::Color;
 ///
@@ -306,7 +306,7 @@ pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Result<Image, String> 
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
+/// use raster::Image;
 /// use raster::editor;
 ///
 /// // Create an image from file
@@ -326,7 +326,7 @@ pub fn resize_exact(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
+/// use raster::Image;
 /// use raster::editor;
 ///
 /// // Create an image from file
@@ -353,7 +353,7 @@ pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
+/// use raster::Image;
 /// use raster::editor;
 ///
 /// // Create an image from file
@@ -378,7 +378,7 @@ pub fn resize_exact_width(src: &Image, w: i32) -> Result<Image, String> {
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
+/// use raster::Image;
 /// use raster::editor;
 ///
 /// // Create an image from file
@@ -414,7 +414,7 @@ pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 ///
 /// # Examples
 /// ```
-/// use raster::image::Image;
+/// use raster::Image;
 /// use raster::editor;
 ///
 /// // Create an image from file

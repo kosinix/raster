@@ -7,7 +7,7 @@
 // from external crate
 
 // from local crate
-use image::Image;
+use Image;
 use editor;
 
 /// Compare two images and returns a hamming distance. A value of 0 indicates a likely similar picture. 

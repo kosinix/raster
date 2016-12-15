@@ -11,7 +11,7 @@
 
 // from local crate
 use editor;
-use image::Image;
+use Image;
 use color::Color;
 
 /// Apply box blur.

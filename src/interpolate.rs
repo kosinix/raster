@@ -10,7 +10,7 @@ use std::cmp;
 
 
 // from local crate
-use image::Image;
+use Image;
 use color::Color;
 
 /// Interpolate using nearest neighbor.
