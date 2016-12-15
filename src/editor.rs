@@ -246,7 +246,7 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
 /// ```
 /// use raster::Image;
 /// use raster::editor;
-/// use raster::color::Color;
+/// use raster::Color;
 ///
 /// // Create a 100x100 image
 /// let image = Image::blank(100, 100);

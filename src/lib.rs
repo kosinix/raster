@@ -317,7 +317,7 @@ impl<'a> Color {
     /// # Examples
     ///
     /// ```
-    /// use raster::color::Color;
+    /// use raster::Color;
     ///
     /// let rgba = Color::rgba(0, 0, 255, 255); // Blue
     /// 
@@ -342,7 +342,7 @@ impl<'a> Color {
     /// # Examples
     ///
     /// ```
-    /// use raster::color::Color;
+    /// use raster::Color;
     ///
     /// let rgb = Color::rgb(0, 255, 0); // Green
     /// 

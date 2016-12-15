@@ -18,7 +18,7 @@ use Color;
 /// # Examples
 /// ```
 /// use raster::transform;
-/// use raster::color::Color;
+/// use raster::Color;
 ///
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
