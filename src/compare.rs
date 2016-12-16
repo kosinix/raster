@@ -102,7 +102,7 @@ fn diff_hash(image: &Image) -> Result<Vec<u8>, String> {
     let width  = 9;
     let height = 8;
 
-    let image = try!(editor::resize_exact(&image, width, height)); // Resize to exactly 9x8
+    let image = try!(editor::resize(&image, width, height, "exact")); // Resize to exactly 9x8
 
     // Build hash
     let mut hash = Vec::new();

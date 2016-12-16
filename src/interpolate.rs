@@ -13,6 +13,28 @@ use std::cmp;
 use Image;
 use Color;
 
+/// Resample an image into a new size using a given interpolation method.
+pub fn resample(src: &Image, w: i32, h: i32, interpolation: &str) -> Result<Image, String> {
+    
+    match interpolation {
+        "bilinear" => {
+            let result = try!(bilinear(&src, w, h));
+            Ok(result)
+        },
+        "bicubic" => {
+            let result = try!(bilinear(&src, w, h)); // TODO: bicubic
+            Ok(result)
+        },
+        "nearest" => {
+            let result = try!(nearest(&src, w, h));
+            Ok(result)
+        },
+        _ => {
+            Err(format!("Invalid interpolation '{}'", interpolation))
+        }
+    }
+}
+
 /// Interpolate using nearest neighbor.
 pub fn nearest(src: &Image, w: i32, h: i32) -> Result<Image, String> {
     
