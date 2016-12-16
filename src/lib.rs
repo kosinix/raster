@@ -41,7 +41,7 @@
 //! let image = editor::resize_exact(&image, 200, 200).unwrap();
 //!
 //! // Save it
-//! editor::save(&image, "tests/out/test_resize_exact.png");
+//! raster::save(&image, "tests/out/test_resize_exact.png");
 //! ```
 //! ![Resize exact](https://kosinix.github.io/raster/out/test_resize_exact.png)
 //!
@@ -59,7 +59,7 @@
 //! let image3 = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0).unwrap();
 //!
 //! // Save it
-//! editor::save(&image3, "tests/out/test_blend_normal.png");
+//! raster::save(&image3, "tests/out/test_blend_normal.png");
 //! ```
 //! ![Blend Normal](https://kosinix.github.io/raster/out/test_blend_normal.png)
 //!

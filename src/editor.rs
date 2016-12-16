@@ -302,14 +302,13 @@ pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Result<Image, String> 
 ///
 /// # Examples
 /// ```
-/// use raster::Image;
 /// use raster::editor;
 ///
 /// // Create an image from file
 /// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_exact(&image, 100, 100).unwrap();
-/// editor::save(&image, "tests/out/resize_exact.jpg");
+/// raster::save(&image, "tests/out/resize_exact.jpg");
 /// ```
 pub fn resize_exact(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 
@@ -329,7 +328,7 @@ pub fn resize_exact(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 /// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_exact_height(&image, 200).unwrap();
-/// editor::save(&image, "tests/out/resize_exact_height.jpg");
+/// raster::save(&image, "tests/out/resize_exact_height.jpg");
 /// ```
 pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
 
@@ -356,7 +355,7 @@ pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
 /// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_exact_width(&image, 200).unwrap();
-/// editor::save(&image, "tests/out/resize_exact_width.jpg");
+/// raster::save(&image, "tests/out/resize_exact_width.jpg");
 /// ```
 pub fn resize_exact_width(src: &Image, w: i32) -> Result<Image, String> {
     let width  = src.width;
@@ -381,7 +380,7 @@ pub fn resize_exact_width(src: &Image, w: i32) -> Result<Image, String> {
 /// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_fill(&image, 200, 200).unwrap();
-/// editor::save(&image, "tests/out/resize_fill.jpg");
+/// raster::save(&image, "tests/out/resize_fill.jpg");
 /// ```
 pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
     let width  = src.width;
@@ -417,7 +416,7 @@ pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 /// let image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
 /// let image = editor::resize_fit(&image, 200, 200).unwrap();
-/// editor::save(&image, "tests/out/resize_fit.jpg");
+/// raster::save(&image, "tests/out/resize_fit.jpg");
 /// ```
 pub fn resize_fit(src: &Image, w: i32, h: i32) -> Result<Image, String> {
     
