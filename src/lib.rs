@@ -31,7 +31,6 @@
 //! ## Editing and Saving Images
 //!
 //! ```
-//! use raster::Image;
 //! use raster::editor;
 //!
 //! // Create an image from file
@@ -48,7 +47,6 @@
 //! ## Blending 2 Images
 //!
 //! ```
-//! use raster::Image;
 //! use raster::editor;
 //!
 //! // Create images from file
