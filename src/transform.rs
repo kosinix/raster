@@ -15,7 +15,7 @@ use Color;
 
 /// Rotate an image clockwise. Negate the degrees to do a counter-clockwise rotation. Background color can be any color.
 ///
-/// Note: If you look closely, the quality for arbitrary angles is not very good due to the simple sampling algorithm. The 90, 180, and 270 angles looks fine because no pixels are lost. This will be fixed in the future.
+/// Note: If you look closely, the quality for arbitrary angles is not very good due to the simple sampling algorithm. The 90, 180, and 270 angles looks fine because no pixels are lost. This will be fixed in the future with a better sampling algorithm.
 ///
 /// # Examples
 ///
