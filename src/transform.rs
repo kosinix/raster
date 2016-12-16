@@ -118,17 +118,6 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> Result<&mut Image,
 
 /// Resize image to exact dimensions ignoring aspect ratio. 
 /// Useful if you want to force exact width and height.
-///
-/// # Examples
-/// ```
-/// use raster::transform;
-///
-/// // Create an image from file
-/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// 
-/// transform::resize_exact(&mut image, 100, 100).unwrap();
-/// raster::save(&image, "tests/out/resize_exact.jpg");
-/// ```
 pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mut Image, String> {
 
     try!(resample(&mut src, w, h, "bicubic"));
@@ -137,17 +126,6 @@ pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mu
 
 /// Resize image to exact height. Width is auto calculated.
 /// Useful for creating row of images with the same height.
-///
-/// # Examples
-/// ```
-/// use raster::transform;
-///
-/// // Create an image from file
-/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// 
-/// transform::resize_exact_height(&mut image, 200).unwrap();
-/// raster::save(&image, "tests/out/resize_exact_height.jpg");
-/// ```
 pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> Result<&'a mut Image, String> {
 
     let width = src.width;
@@ -163,17 +141,6 @@ pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> Result<&'a mut
 
 /// Resize image to exact width. Height is auto calculated. 
 /// Useful for creating column of images with the same width.
-///
-/// # Examples
-/// ```
-/// use raster::transform;
-///
-/// // Create an image from file
-/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// 
-/// transform::resize_exact_width(&mut image, 200).unwrap();
-/// raster::save(&image, "tests/out/resize_exact_width.jpg");
-/// ```
 pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> Result<&'a mut Image, String> {
     let width  = src.width;
     let height = src.height;
@@ -187,17 +154,6 @@ pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> Result<&'a mut 
 }
 
 /// Resize image to fill all the space in the given dimension. Excess parts are removed.
-///
-/// # Examples
-/// ```
-/// use raster::transform;
-///
-/// // Create an image from file
-/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// 
-/// transform::resize_fill(&mut image, 200, 200).unwrap();
-/// raster::save(&image, "tests/out/resize_fill.jpg");
-/// ```
 pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mut Image, String> {
     let width  = src.width;
     let height = src.height;
@@ -222,17 +178,6 @@ pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mut
 /// Resize an image to fit within the given width and height. 
 /// The re-sized image will not exceed the given dimension. 
 /// Preserves the aspect ratio.
-///
-/// # Examples
-/// ```
-/// use raster::transform;
-///
-/// // Create an image from file
-/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// 
-/// transform::resize_fit(&mut image, 200, 200).unwrap();
-/// raster::save(&image, "tests/out/resize_fit.jpg");
-/// ```
 pub fn resize_fit<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mut Image, String> {
     
     let ratio: f64 = src.width as f64 / src.height as f64;
