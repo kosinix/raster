@@ -14,20 +14,20 @@ use Image;
 use Color;
 
 /// Resample an image into a new size using a given interpolation method.
-pub fn resample(src: &Image, w: i32, h: i32, interpolation: &str) -> Result<Image, String> {
+pub fn resample<'a>(mut src: &'a mut Image, w: i32, h: i32, interpolation: &str) -> Result<&'a mut Image, String> {
     
     match interpolation {
         "bilinear" => {
-            let result = try!(bilinear(&src, w, h));
-            Ok(result)
+            try!(bilinear(&mut src, w, h));
+            Ok(src)
         },
         "bicubic" => {
-            let result = try!(bilinear(&src, w, h)); // TODO: bicubic
-            Ok(result)
+            try!(bilinear(&mut src, w, h)); // TODO: bicubic
+            Ok(src)
         },
         "nearest" => {
-            let result = try!(nearest(&src, w, h));
-            Ok(result)
+            try!(nearest(&mut src, w, h));
+            Ok(src)
         },
         _ => {
             Err(format!("Invalid interpolation '{}'", interpolation))
@@ -36,7 +36,7 @@ pub fn resample(src: &Image, w: i32, h: i32, interpolation: &str) -> Result<Imag
 }
 
 /// Interpolate using nearest neighbor.
-pub fn nearest(src: &Image, w: i32, h: i32) -> Result<Image, String> {
+pub fn nearest<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mut Image, String> {
     
     let x_ratio: f64 = src.width as f64 / w as f64;
     let y_ratio: f64 = src.height as f64 / h as f64;
@@ -52,21 +52,24 @@ pub fn nearest(src: &Image, w: i32, h: i32) -> Result<Image, String> {
             try!(dest.set_pixel(x, y, pixel));
         }
     }
-    
-    Ok(dest)
+    src.width = dest.width;
+    src.height = dest.height;
+    src.bytes = dest.bytes;
+
+    Ok(src)
 }
 
 /// Interpolate using linear function.
-pub fn bilinear(src: &Image, w2: i32, h2: i32) -> Result<Image, String> {
+pub fn bilinear<'a>(mut src: &'a mut Image, w2: i32, h2: i32) -> Result<&'a mut Image, String> {
     
-    let mut dest = try!(bilinear_width(&src, w2));
-    dest = try!(bilinear_height(&dest, h2));
+    try!(bilinear_width(&mut src, w2));
+    try!(bilinear_height(&mut src, h2));
     
-    Ok(dest)
+    Ok(src)
 }
 
 /// Interpolate the width using linear function.
-pub fn bilinear_width(src: &Image, w2: i32) -> Result<Image, String> {
+pub fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> Result<&'a mut Image, String> {
     
     let w1 = src.width;
     let h1 = src.height;
@@ -114,12 +117,15 @@ pub fn bilinear_width(src: &Image, w2: i32) -> Result<Image, String> {
 
         }
     }
+    src.width = dest.width;     
+    src.height = dest.height;     
+    src.bytes = dest.bytes;
     
-    Ok(dest)
+    Ok(src)
 }
 
 /// Interpolate the height using linear function.
-pub fn bilinear_height(src: &Image, h2: i32) -> Result<Image, String> {
+pub fn bilinear_height<'a>(mut src: &'a mut Image, h2: i32) -> Result<&'a mut Image, String> {
     
     let w1 = src.width;
     let h1 = src.height;
@@ -168,8 +174,11 @@ pub fn bilinear_height(src: &Image, h2: i32) -> Result<Image, String> {
 
         }
     }
-    
-    Ok(dest)
+    src.width = dest.width;
+    src.height = dest.height;
+    src.bytes = dest.bytes;
+
+    Ok(src)
 }
 
 // Simple linear function

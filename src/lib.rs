@@ -12,7 +12,7 @@
 //!
 //! raster = "0.x.x"
 //! ```
-//! Where x are version numbers of the latest version of raster. Eg.: 0.2.1
+//! Where x are version numbers of the [latest version](https://crates.io/crates/raster) of raster. Eg.: 0.2.1
 //!
 //! Then add the raster crate in your main.rs:
 //!
@@ -74,16 +74,16 @@
 //! use raster::editor;
 //!
 //! // Create an image from file
-//! let image = raster::open("tests/in/sample.png").unwrap();
+//! let mut image = raster::open("tests/in/sample.png").unwrap();
 //! 
 //! // Resize an image to fit in a 200x200 box
-//! let image = editor::resize_fit(&image, 200, 200).unwrap();
+//! editor::resize(&mut image, 200, 200, "fit").unwrap();
 //!
 //! // Save it
 //! raster::save(&image, "tests/out/test_resize_fit.png");
 //! ```
 //!
-//! ![Resize exact](https://kosinix.github.io/raster/out/test_resize_fit.png)
+//! ![](https://kosinix.github.io/raster/out/test_resize_fit.png)
 //!
 //! ## Blending 2 Images
 //!

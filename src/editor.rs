@@ -301,34 +301,34 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<&mut Image, String> {
 /// use raster::editor;
 ///
 /// // Create an image from file
-/// let image = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
-/// let image = editor::resize(&image, 200, 200, "fill").unwrap();
+/// editor::resize(&mut image, 200, 200, "fill").unwrap();
 /// raster::save(&image, "tests/out/test_resize_fill.jpg");
 /// ```
 ///
-pub fn resize(src: &Image, w: i32, h: i32, mode: &str) -> Result<Image, String> {
+pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: &str) -> Result<&'a mut Image, String> {
     
     match mode {
         "exact" => {
-            let dest = try!(transform::resize_exact(&src, w, h));
-            Ok(dest)
+            try!(transform::resize_exact(&mut src, w, h));
+            Ok(src)
         }
         "exact_width" => {
-            let dest = try!(transform::resize_exact_width(&src, w));
-            Ok(dest)
+            try!(transform::resize_exact_width(&mut src, w));
+            Ok(src)
         }
         "exact_height" => {
-            let dest = try!(transform::resize_exact_height(&src, h));
-            Ok(dest)
+            try!(transform::resize_exact_height(&mut src, h));
+            Ok(src)
         }
         "fit" => {
-            let dest = try!(transform::resize_fit(&src, w, h));
-            Ok(dest)
+            try!(transform::resize_fit(&mut src, w, h));
+            Ok(src)
         },
         "fill" => {
-            let dest = try!(transform::resize_fill(&src, w, h));
-            Ok(dest)
+            try!(transform::resize_fill(&mut src, w, h));
+            Ok(src)
         },
         _ => {
             Err(format!("Invalid resize mode '{}'.", mode))

@@ -121,18 +121,18 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> Result<&mut Image,
 ///
 /// # Examples
 /// ```
-/// use raster::editor;
+/// use raster::transform;
 ///
 /// // Create an image from file
-/// let image = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
-/// let image = editor::resize_exact(&image, 100, 100).unwrap();
+/// transform::resize_exact(&mut image, 100, 100).unwrap();
 /// raster::save(&image, "tests/out/resize_exact.jpg");
 /// ```
-pub fn resize_exact(src: &Image, w: i32, h: i32) -> Result<Image, String> {
+pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mut Image, String> {
 
-    let result = try!(resample(&src, w, h, "bicubic"));
-    Ok(result)
+    try!(resample(&mut src, w, h, "bicubic"));
+    Ok(src)
 }
 
 /// Resize image to exact height. Width is auto calculated.
@@ -140,16 +140,15 @@ pub fn resize_exact(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 ///
 /// # Examples
 /// ```
-/// use raster::Image;
-/// use raster::editor;
+/// use raster::transform;
 ///
 /// // Create an image from file
-/// let image = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
-/// let image = editor::resize_exact_height(&image, 200).unwrap();
+/// transform::resize_exact_height(&mut image, 200).unwrap();
 /// raster::save(&image, "tests/out/resize_exact_height.jpg");
 /// ```
-pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
+pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> Result<&'a mut Image, String> {
 
     let width = src.width;
     let height = src.height;
@@ -158,8 +157,8 @@ pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
     let resize_height = h;
     let resize_width = (h as f32 * ratio) as i32;
 
-    let result = try!(resample(&src, resize_width, resize_height, "bicubic"));
-    Ok(result)
+    try!(resample(&mut src, resize_width, resize_height, "bicubic"));
+    Ok(src)
 }
 
 /// Resize image to exact width. Height is auto calculated. 
@@ -167,16 +166,15 @@ pub fn resize_exact_height(src: &Image, h: i32) -> Result<Image, String> {
 ///
 /// # Examples
 /// ```
-/// use raster::Image;
-/// use raster::editor;
+/// use raster::transform;
 ///
 /// // Create an image from file
-/// let image = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
-/// let image = editor::resize_exact_width(&image, 200).unwrap();
+/// transform::resize_exact_width(&mut image, 200).unwrap();
 /// raster::save(&image, "tests/out/resize_exact_width.jpg");
 /// ```
-pub fn resize_exact_width(src: &Image, w: i32) -> Result<Image, String> {
+pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> Result<&'a mut Image, String> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -184,24 +182,23 @@ pub fn resize_exact_width(src: &Image, w: i32) -> Result<Image, String> {
     let resize_width  = w;
     let resize_height = (w as f32 / ratio).round() as i32;
 
-    let result = try!(resample(&src, resize_width, resize_height, "bicubic"));
-    Ok(result)
+    try!(resample(&mut src, resize_width, resize_height, "bicubic"));
+    Ok(src)
 }
 
 /// Resize image to fill all the space in the given dimension. Excess parts are removed.
 ///
 /// # Examples
 /// ```
-/// use raster::Image;
-/// use raster::editor;
+/// use raster::transform;
 ///
 /// // Create an image from file
-/// let image = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
-/// let image = editor::resize_fill(&image, 200, 200).unwrap();
+/// transform::resize_fill(&mut image, 200, 200).unwrap();
 /// raster::save(&image, "tests/out/resize_fill.jpg");
 /// ```
-pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
+pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mut Image, String> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -216,10 +213,12 @@ pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
         optimum_height = h;
     }
 
-    let resized = try!(resample(&src, optimum_width, optimum_height, "bicubic"));
-    let result = try!(crop(&resized, w, h, "top-left", 0, 0)); // Trim excess parts
-    
-    Ok(result)
+    try!(resample(&mut src, optimum_width, optimum_height, "bicubic"));
+    let dest = try!(crop(&src, w, h, "top-left", 0, 0)); // Trim excess parts
+    src.width = dest.width;
+    src.height = dest.height;
+    src.bytes = dest.bytes;
+    Ok(src)
 }
 
 /// Resize an image to fit within the given width and height. 
@@ -228,16 +227,15 @@ pub fn resize_fill(src: &Image, w: i32, h: i32) -> Result<Image, String> {
 ///
 /// # Examples
 /// ```
-/// use raster::Image;
-/// use raster::editor;
+/// use raster::transform;
 ///
 /// // Create an image from file
-/// let image = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// 
-/// let image = editor::resize_fit(&image, 200, 200).unwrap();
+/// transform::resize_fit(&mut image, 200, 200).unwrap();
 /// raster::save(&image, "tests/out/resize_fit.jpg");
 /// ```
-pub fn resize_fit(src: &Image, w: i32, h: i32) -> Result<Image, String> {
+pub fn resize_fit<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mut Image, String> {
     
     let ratio: f64 = src.width as f64 / src.height as f64;
 
@@ -251,8 +249,8 @@ pub fn resize_fit(src: &Image, w: i32, h: i32) -> Result<Image, String> {
         resize_width  = (h as f64 * ratio).round() as i32;
     }
 
-    let result = try!(resample(&src, resize_width, resize_height, "bicubic"));
-    Ok(result)
+    try!(resample(&mut src, resize_width, resize_height, "bicubic"));
+    Ok(src)
 }
 
 // Private functions
