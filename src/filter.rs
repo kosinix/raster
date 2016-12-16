@@ -14,15 +14,17 @@ use editor;
 use Image;
 use Color;
 
-/// Apply box blur.
+/// Apply box or Gaussian blur.
 ///
 /// # Examples
+/// ### Box Blur
+///
 /// ```
 /// use raster::filter;
 ///
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// filter::blur_box(&mut image).unwrap();
+/// filter::blur(&mut image, "box").unwrap();
 /// raster::save(&image, "tests/out/test_filter_box_blur.jpg");
 /// ```
 /// ### Before
@@ -31,27 +33,14 @@ use Color;
 /// ### After
 /// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_box_blur.jpg)
 ///
-pub fn blur_box(mut src: &mut Image) -> Result<&mut Image, String>{
-    let matrix: [[i32; 3]; 3] = [
-        [1,1,1],
-        [1,1,1],
-        [1,1,1]
-    ];
-
-    convolve(&mut src, matrix, 9).unwrap();
-
-    Ok(src)
-}
-
-/// Apply gaussian blur.
+/// ### Gaussian Blur
 ///
-/// # Examples
 /// ```
 /// use raster::filter;
 ///
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// filter::blur_gaussian(&mut image).unwrap();
+/// filter::blur(&mut image, "gaussian").unwrap();
 /// raster::save(&image, "tests/out/test_filter_gaussian_blur.jpg");
 /// ```
 /// ### Before
@@ -60,17 +49,23 @@ pub fn blur_box(mut src: &mut Image) -> Result<&mut Image, String>{
 /// ### After
 /// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_gaussian_blur.jpg)
 ///
-pub fn blur_gaussian(mut src: &mut Image) -> Result<&mut Image, String>{
-    let matrix: [[i32; 3]; 3] = [
-        [1,2,1],
-        [2,4,2],
-        [1,2,1]
-    ];
+pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<&'a mut Image, String>{
 
-    convolve(&mut src, matrix, 16).unwrap();
-
-    Ok(src)
+    match mode {
+        "box" => {
+            try!(blur_box(&mut src));
+            Ok(src)
+        },
+        "gaussian" => {
+            try!(blur_gaussian(&mut src));
+            Ok(src)
+        },
+        _ => {
+            Err(format!("Invalid mode '{}'", mode))
+        }
+    }
 }
+
 
 /// Apply sharpen.
 ///
@@ -200,5 +195,34 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
         }
     }
     
+    Ok(src)
+}
+
+
+// Private functions
+
+// Box
+fn blur_box(mut src: &mut Image) -> Result<&mut Image, String>{
+    let matrix: [[i32; 3]; 3] = [
+        [1,1,1],
+        [1,1,1],
+        [1,1,1]
+    ];
+
+    convolve(&mut src, matrix, 9).unwrap();
+
+    Ok(src)
+}
+
+// Gaussian
+fn blur_gaussian(mut src: &mut Image) -> Result<&mut Image, String>{
+    let matrix: [[i32; 3]; 3] = [
+        [1,2,1],
+        [2,4,2],
+        [1,2,1]
+    ];
+
+    convolve(&mut src, matrix, 16).unwrap();
+
     Ok(src)
 }
