@@ -17,10 +17,29 @@ use interpolate;
 
 /// Blend 2 images into one. The image1 is the base and image2 is the top. 
 /// 
-/// Supported blend modes: "normal", "difference", multiply", "overlay", "screen"
-/// Position: "top-left", "top-center", "top-right", "center-left", "center", "center-right", "bottom-left", "bottom-center", "bottom-right"
+/// Supported blend modes: 
+///
+/// * normal
+/// * difference
+/// * multiply
+/// * overlay
+/// * screen
+///
+/// Possible position: 
+///
+/// * top-left
+/// * top-center
+/// * top-right
+/// * center-left
+/// * center
+/// * center-right
+/// * bottom-left
+/// * bottom-center
+/// * bottom-right"
+///
 /// Opacity is any value from 0.0 - 1.0
-/// offset_x and offset_y are added to the final position. Can also be negative offsets.
+///
+/// The offset_x and offset_y are added to the final position. Can also be negative offsets.
 ///
 /// # Examples
 /// ```
