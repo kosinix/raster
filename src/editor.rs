@@ -229,6 +229,8 @@ pub fn clone(src: &Image) -> Image {
 ///
 /// // Create image from file
 /// let src = raster::open("tests/in/sample.gif").unwrap();
+///
+/// // Make copies
 /// let mut top_left = editor::clone(&src);
 /// let mut top_right = editor::clone(&src);
 /// let mut center = editor::clone(&src);
