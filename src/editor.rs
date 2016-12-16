@@ -274,7 +274,7 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
 /// // Save it
 /// raster::save(&image, "tests/out/test_fill.png");
 /// ```
-/// ![](https://kosinix.github.io/raster/out/test_resize_fill.png)
+/// 
 ///
 pub fn fill(mut src: &mut Image, color: Color) -> Result<&mut Image, String> {
 
@@ -298,8 +298,21 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<&mut Image, String> {
 /// * fill - Resize image to fill all the space in the given dimension. Excess parts are cropped.
 ///
 /// # Examples
+/// ### fit
 /// ```
-/// use raster::Image;
+/// use raster::editor;
+///
+/// // Create an image from file
+/// let mut image = raster::open("tests/in/sample.png").unwrap();
+/// 
+/// editor::resize(&mut image, 200, 200, "fit").unwrap();
+/// raster::save(&image, "tests/out/test_resize_fit.png");
+/// ```
+///
+/// ![](https://kosinix.github.io/raster/out/test_resize_fit.png)
+///
+/// ### fill
+/// ```
 /// use raster::editor;
 ///
 /// // Create an image from file
@@ -308,6 +321,34 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<&mut Image, String> {
 /// editor::resize(&mut image, 200, 200, "fill").unwrap();
 /// raster::save(&image, "tests/out/test_resize_fill.jpg");
 /// ```
+///
+/// ![](https://kosinix.github.io/raster/out/test_resize_fill.jpg)
+///
+/// ### exact width
+/// ```
+/// use raster::editor;
+///
+/// // Create an image from file
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
+/// 
+/// editor::resize(&mut image, 200, 0, "exact_width").unwrap();
+/// raster::save(&image, "tests/out/test_resize_exact_width.jpg");
+/// ```
+///
+/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width.jpg)
+///
+/// ### exact height
+/// ```
+/// use raster::editor;
+///
+/// // Create an image from file
+/// let mut image = raster::open("tests/in/portrait.jpg").unwrap();
+/// 
+/// editor::resize(&mut image, 0, 200, "exact_height").unwrap();
+/// raster::save(&image, "tests/out/test_resize_exact_height.jpg");
+/// ```
+///
+/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width.jpg)
 ///
 pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: &str) -> Result<&'a mut Image, String> {
     
