@@ -13,8 +13,10 @@ git checkout master
 cargo doc --no-deps --open
 
 ## Windows Copy Images
-mkdir target\doc\out
-xcopy tests\out target\doc\out /e
+mkdir "D:\tmp\in"
+mkdir "D:\tmp\out"
+xcopy tests\in "D:\tmp\in" /e
+xcopy tests\out "D:\tmp\out" /e
 
 ## Windows Copy Doc to gh-pages
 rmdir "C:\Users\Lenovo G410\Desktop\rust\tmp" /S /Q
