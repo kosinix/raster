@@ -1,4 +1,4 @@
-//!  A module for editing images.
+//!  A module for common image editing operations.
 
 // crates
 extern crate image;
