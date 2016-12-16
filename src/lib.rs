@@ -7,7 +7,7 @@
 //! ## Installation
 //! Add this to your Cargo.toml file:
 //!
-//! ```
+//! ```rust,ignore
 //! [dependencies]
 //!
 //! raster = "0.x.x"
@@ -16,7 +16,7 @@
 //!
 //! Then add the raster crate in your main.rs:
 //!
-//! ```
+//! ```rust,ignore
 //! extern crate raster; // In your main rust file
 //! ```
 //!
@@ -76,14 +76,14 @@
 //! // Create an image from file
 //! let image = raster::open("tests/in/sample.png").unwrap();
 //! 
-//! // Resize an image to exactly 200x200 pixels
-//! let image = editor::resize_exact(&image, 200, 200).unwrap();
+//! // Resize an image to fit in a 200x200 box
+//! let image = editor::resize_fit(&image, 200, 200).unwrap();
 //!
 //! // Save it
-//! raster::save(&image, "tests/out/test_resize_exact.png");
+//! raster::save(&image, "tests/out/test_resize_fit.png");
 //! ```
 //!
-//! ![Resize exact](https://kosinix.github.io/raster/out/test_resize_exact.png)
+//! ![Resize exact](https://kosinix.github.io/raster/out/test_resize_fit.png)
 //!
 //! ## Blending 2 Images
 //!
