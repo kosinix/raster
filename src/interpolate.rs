@@ -68,8 +68,10 @@ pub fn bilinear<'a>(mut src: &'a mut Image, w2: i32, h2: i32) -> Result<&'a mut 
     Ok(src)
 }
 
+// Private functions
+
 /// Interpolate the width using linear function.
-pub fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> Result<&'a mut Image, String> {
+fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> Result<&'a mut Image, String> {
     
     let w1 = src.width;
     let h1 = src.height;
@@ -125,7 +127,7 @@ pub fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> Result<&'a mut Ima
 }
 
 /// Interpolate the height using linear function.
-pub fn bilinear_height<'a>(mut src: &'a mut Image, h2: i32) -> Result<&'a mut Image, String> {
+fn bilinear_height<'a>(mut src: &'a mut Image, h2: i32) -> Result<&'a mut Image, String> {
     
     let w1 = src.width;
     let h1 = src.height;
