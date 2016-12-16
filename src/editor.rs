@@ -274,6 +274,8 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
 /// // Save it
 /// raster::save(&image, "tests/out/test_fill.png");
 /// ```
+/// ![](https://kosinix.github.io/raster/out/test_resize_fill.png)
+///
 pub fn fill(mut src: &mut Image, color: Color) -> Result<&mut Image, String> {
 
     for y in 0..src.height {
