@@ -35,7 +35,7 @@ use transform;
 /// * center-right
 /// * bottom-left
 /// * bottom-center
-/// * bottom-right"
+/// * bottom-right
 ///
 /// Opacity is any value from 0.0 - 1.0
 ///
@@ -209,24 +209,41 @@ pub fn clone(src: &Image) -> Image {
 
 /// Crop the image to the given dimension and position.
 ///
+/// Possible position: 
+///
+/// * top-left
+/// * top-center
+/// * top-right
+/// * center-left
+/// * center
+/// * center-right
+/// * bottom-left
+/// * bottom-center
+/// * bottom-right
+///
+/// The offset_x and offset_y are added to the final position. Can also be negative offsets.
+///
 /// # Examples
 /// ```
 /// use raster::editor;
 ///
 /// // Create image from file
 /// let src = raster::open("tests/in/sample.gif").unwrap();
-/// 
+/// let mut top_left = editor::clone(&src);
+/// let mut top_right = editor::clone(&src);
+/// let mut center = editor::clone(&src);
+///
 /// // Crop it
-/// let top_left = editor::crop(&src, 250, 128, "top-left", 0, 0).unwrap();
-/// let top_right = editor::crop(&src, 250, 128, "top-right", 0, 0).unwrap();
-/// let center = editor::crop(&src, 250, 128, "center", 0, 0).unwrap();
+/// editor::crop(&mut top_left, 250, 128, "top-left", 0, 0).unwrap();
+/// editor::crop(&mut top_right, 250, 128, "top-right", 0, 0).unwrap();
+/// editor::crop(&mut center, 250, 128, "center", 0, 0).unwrap();
 ///
 /// // Save it
 /// raster::save(&top_left, "tests/out/test_crop_top_left.png");
 /// raster::save(&top_right, "tests/out/test_crop_top_right.png");
 /// raster::save(&center, "tests/out/test_crop_center.png");
 /// ```
-pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Result<Image, String> {
+pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Result<&'a mut Image, String> {
 
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
@@ -254,7 +271,11 @@ pub fn crop(src: &Image, crop_width: i32, crop_height: i32, position: &str, offs
             try!(dest.set_pixel(x, y, Color::rgba(pixel.r, pixel.g, pixel.b, pixel.a)));
         }
     }
-    Ok(dest)
+    src.width = dest.width;
+    src.height = dest.height;
+    src.bytes = dest.bytes;
+    
+    Ok(src)
 }
 
 /// Fill an image with color.

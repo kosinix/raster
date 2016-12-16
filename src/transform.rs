@@ -214,10 +214,8 @@ pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<&'a mut
     }
 
     try!(resample(&mut src, optimum_width, optimum_height, "bicubic"));
-    let dest = try!(crop(&src, w, h, "top-left", 0, 0)); // Trim excess parts
-    src.width = dest.width;
-    src.height = dest.height;
-    src.bytes = dest.bytes;
+    try!(crop(&mut src, w, h, "top-left", 0, 0)); // Trim excess parts
+    
     Ok(src)
 }
 
