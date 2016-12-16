@@ -1,9 +1,47 @@
 //! # Raster
 //!
-//! Raster provides a simplified API for processing pixels of raster images.
+//! Raster is an image processing lib for Rust.
+//!
+//! It provides a simplified API for processing raster images (JPEG, PNG and GIF).
 //! 
+//! ## Installation
+//! Add this to your Cargo.toml file:
+//!
+//! ```
+//! [dependencies]
+//!
+//! raster = "0.x.x"
+//! ```
+//! Where x are version numbers of the latest version of raster. Eg.: 0.2.1
+//!
+//! Then add the raster crate in your main.rs:
+//!
+//! ```
+//! extern crate raster; // In your main rust file
+//! ```
+//!
 //! ## Creating Images
 //! ### From an image file
+//!
+//! ```
+//! // Create an image from file
+//! let image = raster::open("tests/in/sample.png").unwrap();
+//!
+//! ```
+//! Raster will detect the image format based on the file name.
+//!
+//! ### Create a blank image
+//! ```
+//! use raster::Image; // Include the Image struct
+//! 
+//! // Create a blank 150x100 image. Defaults to a black background.
+//! let image = Image::blank(150, 100);
+//!
+//! ```
+//! 
+//! ## Saving Images
+//! Save the opened image file:
+//!
 //! ```
 //! // Create an image from file
 //! let image = raster::open("tests/in/sample.png").unwrap();
@@ -12,13 +50,14 @@
 //! raster::save(&image, "tests/out/test_open_save.png");
 //!
 //! ```
-//!
-//! ### Create a blank image
-//! ```
-//! use raster::Image;
 //! 
-//! // Create a blank 100x100 image. Defaults to a black background.
-//! let image = Image::blank(100, 100);
+//! Save the blank image:
+//!
+//! ```
+//! use raster::Image; // Include the Image struct
+//! 
+//! // Create a blank 150x100 image. Defaults to a black background.
+//! let image = Image::blank(150, 100);
 //!
 //! // Save blank
 //! raster::save(&image, "tests/out/test_blank.png");
@@ -27,8 +66,9 @@
 //! A blank image:
 //!
 //! ![Blank](https://kosinix.github.io/raster/out/test_blank.png)
-//! 
-//! ## Editing and Saving Images
+//!
+//!
+//! ## Editing Images
 //!
 //! ```
 //! use raster::editor;
@@ -42,6 +82,7 @@
 //! // Save it
 //! raster::save(&image, "tests/out/test_resize_exact.png");
 //! ```
+//!
 //! ![Resize exact](https://kosinix.github.io/raster/out/test_resize_exact.png)
 //!
 //! ## Blending 2 Images
@@ -61,7 +102,7 @@
 //! ```
 //! ![Blend Normal](https://kosinix.github.io/raster/out/test_blend_normal.png)
 //!
-//! See the modules, more specifically the editor module for more info.
+//! See the modules for more info.
 //!
 
 
