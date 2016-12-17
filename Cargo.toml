@@ -1,6 +1,6 @@
 [package]
 name = "raster"
-version = "0.0.7"
+version = "0.0.8"
 license = "MIT"
 authors = ["kosinix <kosinix@users.noreply.github.com>"]
 exclude = [
