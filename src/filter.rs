@@ -49,16 +49,16 @@ use Color;
 /// ### After
 /// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_gaussian_blur.jpg)
 ///
-pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<&'a mut Image, String>{
+pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<(), String>{
 
     match mode {
         "box" => {
             try!(blur_box(&mut src));
-            Ok(src)
+            Ok(())
         },
         "gaussian" => {
             try!(blur_gaussian(&mut src));
-            Ok(src)
+            Ok(())
         },
         _ => {
             Err(format!("Invalid mode '{}'", mode))
@@ -84,16 +84,16 @@ pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<&'a mut Image, Str
 /// ### After
 /// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_sharpen.jpg)
 ///
-pub fn sharpen(mut src: &mut Image) -> Result<&mut Image, String>{
+pub fn sharpen(mut src: &mut Image) -> Result<(), String>{
     let matrix: [[i32; 3]; 3] = [
         [0, -1, 0],
         [-1, 5,-1],
         [0, -1, 0]
     ];
 
-    convolve(&mut src, matrix, 1).unwrap();
+    try!(convolve(&mut src, matrix, 1));
 
-    Ok(src)
+    Ok(())
 }
 
 /// Apply a 3x3 convolvution matrix. The divisor is applied as the last step of convolution.
@@ -112,7 +112,7 @@ pub fn sharpen(mut src: &mut Image) -> Result<&mut Image, String>{
 /// filter::convolve(&mut image, matrix, 1).unwrap();
 /// raster::save(&image, "tests/out/test_filter_convolve.jpg");
 /// ```
-pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<&mut Image, String> {
+pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<(), String> {
     
     let w: i32 = src.width;
     let h: i32 = src.height;
@@ -195,34 +195,34 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
         }
     }
     
-    Ok(src)
+    Ok(())
 }
 
 
 // Private functions
 
 // Box
-fn blur_box(mut src: &mut Image) -> Result<&mut Image, String>{
+fn blur_box(mut src: &mut Image) -> Result<(), String>{
     let matrix: [[i32; 3]; 3] = [
         [1,1,1],
         [1,1,1],
         [1,1,1]
     ];
 
-    convolve(&mut src, matrix, 9).unwrap();
+    try!(convolve(&mut src, matrix, 9));
 
-    Ok(src)
+    Ok(())
 }
 
 // Gaussian
-fn blur_gaussian(mut src: &mut Image) -> Result<&mut Image, String>{
+fn blur_gaussian(mut src: &mut Image) -> Result<(), String>{
     let matrix: [[i32; 3]; 3] = [
         [1,2,1],
         [2,4,2],
         [1,2,1]
     ];
 
-    convolve(&mut src, matrix, 16).unwrap();
+    try!(convolve(&mut src, matrix, 16));
 
-    Ok(src)
+    Ok(())
 }

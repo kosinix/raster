@@ -245,7 +245,7 @@ pub fn clone(src: &Image) -> Image {
 /// raster::save(&top_right, "tests/out/test_crop_top_right.png");
 /// raster::save(&center, "tests/out/test_crop_center.png");
 /// ```
-pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Result<&'a mut Image, String> {
+pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Result<(), String> {
 
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
@@ -277,7 +277,7 @@ pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, posit
     src.height = dest.height;
     src.bytes = dest.bytes;
     
-    Ok(src)
+    Ok(())
 }
 
 /// Fill an image with color.
@@ -299,7 +299,7 @@ pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, posit
 /// ```
 /// 
 ///
-pub fn fill(mut src: &mut Image, color: Color) -> Result<&mut Image, String> {
+pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 
     for y in 0..src.height {
         for x in 0..src.width {
@@ -307,7 +307,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<&mut Image, String> {
         }
     }
 
-    Ok(src)
+    Ok(())
 }
 
 /// Resize an image to a given width, height and mode.
@@ -373,28 +373,28 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<&mut Image, String> {
 ///
 /// ![](https://kosinix.github.io/raster/out/test_resize_exact_width.jpg)
 ///
-pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: &str) -> Result<&'a mut Image, String> {
+pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: &str) -> Result<(), String> {
     
     match mode {
         "exact" => {
             try!(transform::resize_exact(&mut src, w, h));
-            Ok(src)
+            Ok(())
         }
         "exact_width" => {
             try!(transform::resize_exact_width(&mut src, w));
-            Ok(src)
+            Ok(())
         }
         "exact_height" => {
             try!(transform::resize_exact_height(&mut src, h));
-            Ok(src)
+            Ok(())
         }
         "fit" => {
             try!(transform::resize_fit(&mut src, w, h));
-            Ok(src)
+            Ok(())
         },
         "fill" => {
             try!(transform::resize_fill(&mut src, w, h));
-            Ok(src)
+            Ok(())
         },
         _ => {
             Err(format!("Invalid resize mode '{}'.", mode))
