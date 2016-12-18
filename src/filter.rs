@@ -66,36 +66,6 @@ pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<(), String>{
     }
 }
 
-
-/// Apply sharpen.
-///
-/// # Examples
-/// ```
-/// use raster::filter;
-///
-/// // Create image from file
-/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// filter::sharpen(&mut image).unwrap();
-/// raster::save(&image, "tests/out/test_filter_sharpen.jpg");
-/// ```
-/// ### Before
-/// ![Blend Normal](https://kosinix.github.io/raster/in/sample.jpg)
-/// 
-/// ### After
-/// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_sharpen.jpg)
-///
-pub fn sharpen(mut src: &mut Image) -> Result<(), String>{
-    let matrix: [[i32; 3]; 3] = [
-        [0, -1, 0],
-        [-1, 5,-1],
-        [0, -1, 0]
-    ];
-
-    try!(convolve(&mut src, matrix, 1));
-
-    Ok(())
-}
-
 /// Apply a 3x3 convolvution matrix. The divisor is applied as the last step of convolution.
 ///
 /// # Examples
@@ -195,6 +165,35 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
         }
     }
     
+    Ok(())
+}
+
+/// Apply sharpen.
+///
+/// # Examples
+/// ```
+/// use raster::filter;
+///
+/// // Create image from file
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
+/// filter::sharpen(&mut image).unwrap();
+/// raster::save(&image, "tests/out/test_filter_sharpen.jpg");
+/// ```
+/// ### Before
+/// ![Blend Normal](https://kosinix.github.io/raster/in/sample.jpg)
+/// 
+/// ### After
+/// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_sharpen.jpg)
+///
+pub fn sharpen(mut src: &mut Image) -> Result<(), String>{
+    let matrix: [[i32; 3]; 3] = [
+        [0, -1, 0],
+        [-1, 5,-1],
+        [0, -1, 0]
+    ];
+
+    try!(convolve(&mut src, matrix, 1));
+
     Ok(())
 }
 
