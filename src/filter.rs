@@ -28,10 +28,10 @@ use Color;
 /// raster::save(&image, "tests/out/test_filter_box_blur.jpg");
 /// ```
 /// ### Before
-/// ![Blend Normal](https://kosinix.github.io/raster/in/sample.jpg)
+/// ![](https://kosinix.github.io/raster/in/sample.jpg)
 /// 
 /// ### After
-/// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_box_blur.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_filter_box_blur.jpg)
 ///
 /// ### Gaussian Blur
 ///
@@ -44,10 +44,10 @@ use Color;
 /// raster::save(&image, "tests/out/test_filter_gaussian_blur.jpg");
 /// ```
 /// ### Before
-/// ![Blend Normal](https://kosinix.github.io/raster/in/sample.jpg)
+/// ![](https://kosinix.github.io/raster/in/sample.jpg)
 /// 
 /// ### After
-/// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_gaussian_blur.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_filter_gaussian_blur.jpg)
 ///
 pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<(), String>{
 
@@ -168,6 +168,36 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
     Ok(())
 }
 
+/// Apply emboss.
+///
+/// # Examples
+/// ```
+/// use raster::filter;
+///
+/// // Create image from file
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
+/// filter::emboss(&mut image).unwrap();
+/// raster::save(&image, "tests/out/test_filter_emboss.jpg");
+/// ```
+///
+/// ### Before
+/// ![](https://kosinix.github.io/raster/in/sample.jpg)
+/// 
+/// ### After
+/// ![](https://kosinix.github.io/raster/out/test_filter_sharpen.jpg)
+///
+pub fn emboss(mut src: &mut Image) -> Result<(), String>{
+    let matrix: [[i32; 3]; 3] = [
+        [-2, -1, 0],
+        [-1, 1, 1],
+        [0, 1, 2]
+    ];
+
+    try!(convolve(&mut src, matrix, 1));
+
+    Ok(())
+}
+
 /// Apply sharpen.
 ///
 /// # Examples
@@ -180,10 +210,10 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
 /// raster::save(&image, "tests/out/test_filter_sharpen.jpg");
 /// ```
 /// ### Before
-/// ![Blend Normal](https://kosinix.github.io/raster/in/sample.jpg)
+/// ![](https://kosinix.github.io/raster/in/sample.jpg)
 /// 
 /// ### After
-/// ![Blend Normal](https://kosinix.github.io/raster/out/test_filter_sharpen.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_filter_sharpen.jpg)
 ///
 pub fn sharpen(mut src: &mut Image) -> Result<(), String>{
     let matrix: [[i32; 3]; 3] = [
