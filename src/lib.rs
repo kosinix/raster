@@ -23,7 +23,7 @@
 //! ## Creating Images
 //! ### From an image file
 //!
-//! ```
+//! ```rust,ignore
 //! // Create an image from file
 //! let image = raster::open("tests/in/sample.png").unwrap();
 //!
@@ -31,7 +31,7 @@
 //! Raster will detect the image format based on the file name.
 //!
 //! ### Create a blank image
-//! ```
+//! ```rust,ignore
 //! use raster::Image; // Include the Image struct
 //! 
 //! // Create a blank 150x100 image. Defaults to a black background.
@@ -445,5 +445,107 @@ impl<'a> Color {
             b: 255,
             a: 255,
         }
+    }
+
+    /// Convert RGB to HSV/HSB (Hue, Saturation, Brightness).
+    ///
+    // Using f32 for s,v for accuracy when converting from RGB-HSV and vice-versa.
+    pub fn to_hsv(r: u8, g: u8, b: u8) -> (u16, f32, f32) {
+
+        let r = r as f32 / 255.0;
+        let g = g as f32 / 255.0;
+        let b = b as f32 / 255.0;
+
+        let mut min = r;
+        if g < min {
+            min = g;
+        }
+        if b < min {
+            min = b;
+        }
+
+        let mut max = r;
+        if g > max {
+            max = g;
+        }
+        if b > max {
+            max = b;
+        }
+
+
+        let chroma = max - min;
+        let mut h = 0.0;
+
+        if chroma != 0.0 {
+            
+            if max == r {
+                h = 60.0 * (((g - b) / chroma) % 6.0);
+                println!("{}", h);
+            } else if max == g {
+                h = 60.0 * (((b - r) / chroma) + 2.0);
+            } else if max == b {
+                h = 60.0 * (((r - g) / chroma) + 4.0);
+            }
+
+        }
+
+        let v = max;
+        let mut s = 0.0;
+        if v != 0.0 {
+            
+            s = chroma / v;
+        }
+
+        ( h.round() as u16, s * 100.0, v * 100.0  )
+    }
+
+    /// Convert HSV/HSB (Hue, Saturation, Brightness) to RGB.
+    ///
+    // Using f32 for s,v for accuracy when converting from RGB-HSV and vice-versa.
+    pub fn to_rgb(h:u16, s: f32, v: f32) -> (u8, u8, u8) {
+
+        let h = h as f32 / 60.0;
+        let s = s as f32 / 100.0; // Convert to 0.0 - 1.0
+        let v = v as f32 / 100.0;
+
+        let chroma = v * s;
+
+        let x = chroma * ( 1.0 - ( (h % 2.0) - 1.0 ).abs() );
+
+        let mut r = 0.0;
+        let mut g = 0.0;
+        let mut b = 0.0;
+
+        if h >= 0.0 && h < 1.0 {
+            r = chroma;
+            g = x;
+            b = 0.0;
+        } else if h >= 1.0 && h < 2.0 {
+            r = x;
+            g = chroma;
+            b = 0.0;
+        } else if h >= 2.0 && h < 3.0 {
+            r = 0.0;
+            g = chroma;
+            b = x;
+        } else if h >= 3.0 && h < 4.0 {
+            r = 0.0;
+            g = x;
+            b = chroma;
+        } else if h >= 4.0 && h < 5.0 {
+            r = x;
+            g = 0.0;
+            b = chroma;
+        } else if h >= 5.0 && h < 6.0 {
+            r = chroma;
+            g = 0.0;
+            b = x;
+        }
+
+        let m = v - chroma;
+        r += m;
+        g += m;
+        b += m;
+        ( (r * 255.0).round() as u8, (g * 255.0).round() as u8, (b * 255.0).round() as u8)
     }
 }
