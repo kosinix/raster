@@ -198,6 +198,41 @@ pub fn emboss(mut src: &mut Image) -> Result<(), String>{
     Ok(())
 }
 
+/// Turn into grayscale image.
+///
+/// # Examples
+/// ```
+/// use raster::filter;
+///
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
+/// filter::grayscale(&mut image).unwrap();
+/// raster::save(&image, "tests/out/test_filter_grayscale.jpg");
+/// ```
+///
+/// ### Before
+/// ![](https://kosinix.github.io/raster/in/sample.jpg)
+/// 
+/// ### After
+/// ![](https://kosinix.github.io/raster/out/test_filter_grayscale.jpg)
+///
+pub fn grayscale(mut src: &mut Image) -> Result<(), String>{
+    let w: i32 = src.width;
+    let h: i32 = src.height;
+    
+    for y in 0..h {
+        for x in 0..w {
+            
+            let p = try!(src.get_pixel(x, y));
+            let gray = (p.r as f32 * 0.3) + (p.g as f32 * 0.59) + (p.b as f32 * 0.11);
+            
+            try!(src.set_pixel(x, y, Color::rgba(gray as u8, gray as u8, gray as u8, gray as u8)));
+            
+        }
+    }
+    
+    Ok(())
+}
+
 /// Apply sharpen.
 ///
 /// # Examples
