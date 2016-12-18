@@ -500,6 +500,18 @@ impl<'a> Color {
 
     /// Convert HSV/HSB (Hue, Saturation, Brightness) to RGB.
     ///
+    /// ```
+    /// use raster::Color;
+    ///
+    /// let rgb1 = (127, 70, 60);
+    /// let hsv = Color::to_hsv(rgb1.0, rgb1.1, rgb1.2); // Convert to HSV
+    /// let rgb2 = Color::to_rgb(hsv.0, hsv.1, hsv.2); // Convert back to RGB
+    /// 
+    /// // Check if source RGB is equal to final RGB
+    /// assert_eq!(rgb1.0, rgb2.0);
+    /// assert_eq!(rgb1.1, rgb2.1);
+    /// assert_eq!(rgb1.2, rgb2.2);
+    /// ```
     // Using f32 for s,v for accuracy when converting from RGB-HSV and vice-versa.
     pub fn to_rgb(h:u16, s: f32, v: f32) -> (u8, u8, u8) {
 
