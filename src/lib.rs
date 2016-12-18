@@ -479,7 +479,6 @@ impl<'a> Color {
             
             if max == r {
                 h = 60.0 * (((g - b) / chroma) % 6.0);
-                println!("{}", h);
             } else if max == g {
                 h = 60.0 * (((b - r) / chroma) + 2.0);
             } else if max == b {
