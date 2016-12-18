@@ -111,7 +111,7 @@ pub fn brightness(mut src: &mut Image, factor: f32) -> Result<(), String>{
     Ok(())
 }
 
-/// Apply a convolvution matrix. 
+/// Apply a convolution matrix. 
 ///
 /// The divisor is applied as the last step of convolution.
 ///
