@@ -337,28 +337,53 @@ pub struct Color {
 
 impl<'a> Color {
     
-    /// Create a RGBA color.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use raster::Color;
-    ///
-    /// let rgba = Color::rgba(0, 0, 255, 255); // Blue
-    /// 
-    /// println!("{:?}", rgba);
-    ///
-    /// assert_eq!(rgba.r, 0);
-    /// assert_eq!(rgba.g, 0);
-    /// assert_eq!(rgba.b, 255);
-    /// assert_eq!(rgba.a, 255);
-    /// ```
-    pub fn rgba(r:u8, g:u8, b:u8, a:u8) -> Color {
+    /// Returns a black Color.
+    pub fn black() -> Color {
         Color {
-            r: r,
-            g: g,
-            b: b,
-            a: a,
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 255,
+        }
+    }
+
+    /// Returns a blue Color.
+    pub fn blue() -> Color {
+        Color {
+            r: 0,
+            g: 0,
+            b: 255,
+            a: 255,
+        }
+    }
+
+    /// Clones a Color.
+    pub fn clone(&self) -> Color {
+        Color {
+            r: self.r,
+            g: self.g,
+            b: self.b,
+            a: self.a,
+        }
+    }
+
+    /// Returns a green Color.
+    pub fn green() -> Color {
+        Color {
+            r: 0,
+            g: 255,
+            b: 0,
+            a: 255,
+        }
+    }
+
+    /// Returns a red Color.
+    pub fn red() -> Color {
+        Color {
+            r: 255,
+            g: 0,
+            b: 0,
+            a: 255,
         }
     }
 
@@ -387,68 +412,42 @@ impl<'a> Color {
         }
     }
 
-    /// Clones a Color.
-    pub fn clone(&self) -> Color {
+    /// Create a RGBA color.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use raster::Color;
+    ///
+    /// let rgba = Color::rgba(0, 0, 255, 255); // Blue
+    /// 
+    /// println!("{:?}", rgba);
+    ///
+    /// assert_eq!(rgba.r, 0);
+    /// assert_eq!(rgba.g, 0);
+    /// assert_eq!(rgba.b, 255);
+    /// assert_eq!(rgba.a, 255);
+    /// ```
+    pub fn rgba(r:u8, g:u8, b:u8, a:u8) -> Color {
         Color {
-            r: self.r,
-            g: self.g,
-            b: self.b,
-            a: self.a,
-        }
-    }
-
-    /// Returns a black Color.
-    pub fn black() -> Color {
-        Color {
-            r: 0,
-            g: 0,
-            b: 0,
-            a: 255,
-        }
-    }
-
-    /// Returns a white Color.
-    pub fn white() -> Color {
-        Color {
-            r: 255,
-            g: 255,
-            b: 255,
-            a: 255,
-        }
-    }
-
-    /// Returns a red Color.
-    pub fn red() -> Color {
-        Color {
-            r: 255,
-            g: 0,
-            b: 0,
-            a: 255,
-        }
-    }
-
-    /// Returns a green Color.
-    pub fn green() -> Color {
-        Color {
-            r: 0,
-            g: 255,
-            b: 0,
-            a: 255,
-        }
-    }
-
-    /// Returns a blue Color.
-    pub fn blue() -> Color {
-        Color {
-            r: 0,
-            g: 0,
-            b: 255,
-            a: 255,
+            r: r,
+            g: g,
+            b: b,
+            a: a,
         }
     }
 
     /// Convert RGB to HSV/HSB (Hue, Saturation, Brightness).
     ///
+    /// ```
+    /// use raster::Color;
+    ///
+    /// let hsv = Color::to_hsv(50, 50, 100);
+    /// 
+    /// assert_eq!(240, hsv.0);
+    /// assert_eq!(50.0, (hsv.1).round()); // Saturation in float
+    /// assert_eq!(39.0, (hsv.2).round()); // Brightness in float
+    /// ```
     // Using f32 for s,v for accuracy when converting from RGB-HSV and vice-versa.
     pub fn to_hsv(r: u8, g: u8, b: u8) -> (u16, f32, f32) {
 
@@ -547,5 +546,15 @@ impl<'a> Color {
         g += m;
         b += m;
         ( (r * 255.0).round() as u8, (g * 255.0).round() as u8, (b * 255.0).round() as u8)
+    }
+
+    /// Returns a white Color.
+    pub fn white() -> Color {
+        Color {
+            r: 255,
+            g: 255,
+            b: 255,
+            a: 255,
+        }
     }
 }
