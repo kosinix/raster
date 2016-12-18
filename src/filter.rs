@@ -4,7 +4,7 @@
 
 
 // from rust
-
+use std::cmp;
 
 // from external crate
 
@@ -66,7 +66,54 @@ pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<(), String>{
     }
 }
 
-/// Apply a 3x3 convolvution matrix. The divisor is applied as the last step of convolution.
+/// Apply brightness. 
+///
+/// A brightness of < 0.0 will darken the image and brightness of > 1.0 will lighten it.
+///
+/// # Examples
+/// ```
+/// use raster::filter;
+///
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
+/// filter::brightness(&mut image, 1.2).unwrap();
+/// raster::save(&image, "tests/out/test_filter_brightness.jpg");
+/// ```
+///
+/// ### Before
+/// ![](https://kosinix.github.io/raster/in/sample.jpg)
+/// 
+/// ### After
+/// ![](https://kosinix.github.io/raster/out/test_filter_brightness.jpg)
+///
+pub fn brightness(mut src: &mut Image, factor: f32) -> Result<(), String>{
+    let w: i32 = src.width;
+    let h: i32 = src.height;
+
+    // if gamma < 0.01 || gamma > 9.99{
+    //     return Err(format!("Incorrect gamma value {}. Must be in range 0.01 - 9.99.", gamma));
+    // }
+    // let factor = 255.0 * factor;
+
+    for y in 0..h {
+        for x in 0..w {
+            
+            let p = try!(src.get_pixel(x, y));
+            let r = cmp::max(0, cmp::min(255, (p.r as f32 * factor) as i32));
+            let g = cmp::max(0, cmp::min(255, (p.g as f32 * factor) as i32));
+            let b = cmp::max(0, cmp::min(255, (p.b as f32 * factor) as i32));
+            let a = cmp::max(0, cmp::min(255, (p.a as f32 * factor) as i32)); // TODO: Should alpha be included?
+            
+            try!(src.set_pixel(x, y, Color::rgba(r as u8, g as u8, b as u8, a as u8)));
+            
+        }
+    }
+    
+    Ok(())
+}
+
+/// Apply a 3x3 convolvution matrix. 
+///
+/// The divisor is applied as the last step of convolution.
 ///
 /// # Examples
 /// ```
@@ -184,7 +231,7 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
 /// 
 /// ### After
-/// ![](https://kosinix.github.io/raster/out/test_filter_sharpen.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_filter_emboss.jpg)
 ///
 pub fn emboss(mut src: &mut Image) -> Result<(), String>{
     let matrix: [[i32; 3]; 3] = [
@@ -195,6 +242,53 @@ pub fn emboss(mut src: &mut Image) -> Result<(), String>{
 
     try!(convolve(&mut src, matrix, 1));
 
+    Ok(())
+}
+
+/// Apply a gamma correction. 
+///
+/// Gamma can be a value from 0.01 - 9.99. 
+/// A gamma < 1.0 will darken and a gamma > 1.0 will lighten the image.
+///
+/// # Examples
+/// ```
+/// use raster::filter;
+///
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
+/// filter::gamma(&mut image, 2.0).unwrap();
+/// raster::save(&image, "tests/out/test_filter_gamma.jpg");
+/// ```
+///
+/// ### Before
+/// ![](https://kosinix.github.io/raster/in/sample.jpg)
+/// 
+/// ### After
+/// ![](https://kosinix.github.io/raster/out/test_filter_gamma.jpg)
+///
+// http://stackoverflow.com/questions/14088889/changing-a-color-brightness
+pub fn gamma(mut src: &mut Image, gamma: f32) -> Result<(), String>{
+    let w: i32 = src.width;
+    let h: i32 = src.height;
+
+    if gamma < 0.01 || gamma > 9.99{
+        return Err(format!("Incorrect gamma value {}. Must be in range 0.01 - 9.99.", gamma));
+    }
+    let gamma = 1.0 / gamma;
+
+    for y in 0..h {
+        for x in 0..w {
+            
+            let p = try!(src.get_pixel(x, y));
+            let r = (p.r as f32 / 255.0).powf(gamma) * 255.0;
+            let g = (p.g as f32 / 255.0).powf(gamma) * 255.0;
+            let b = (p.b as f32 / 255.0).powf(gamma) * 255.0;
+            let a = (p.a as f32 / 255.0).powf(gamma) * 255.0;
+            
+            try!(src.set_pixel(x, y, Color::rgba(r as u8, g as u8, b as u8, a as u8)));
+            
+        }
+    }
+    
     Ok(())
 }
 
