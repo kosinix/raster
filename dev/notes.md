@@ -4,7 +4,7 @@ cargo test
 
 ## Target Specific Test
 
-cargo test --test integration_tests
+cargo test --test filter_tests
 
 # Updating documentation
 
