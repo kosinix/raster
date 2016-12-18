@@ -75,7 +75,7 @@ pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<(), String>{
 /// use raster::filter;
 ///
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// filter::brightness(&mut image, 1.2).unwrap();
+/// filter::brightness(&mut image, 1.5).unwrap();
 /// raster::save(&image, "tests/out/test_filter_brightness.jpg");
 /// ```
 ///
