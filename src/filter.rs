@@ -327,6 +327,55 @@ pub fn grayscale(mut src: &mut Image) -> Result<(), String>{
     Ok(())
 }
 
+/// Change saturation. 
+///
+/// Pass a float value for sat. < 0.0 to decrease and > 0.0 to increase. Eg 0.5 for 50% increase in saturation.
+///
+/// Note: Saturation does not look good at the moment.
+///
+/// # Examples
+/// ```
+/// use raster::filter;
+///
+/// // Create image from file
+/// let mut image = raster::open("tests/in/sample.png").unwrap();
+/// filter::saturation(&mut image, 0.5).unwrap();
+/// raster::save(&image, "tests/out/test_filter_saturation.jpg");
+/// ```
+///
+/// ### Before
+/// ![](https://kosinix.github.io/raster/in/sample.png)
+/// 
+/// ### After
+/// ![](https://kosinix.github.io/raster/out/test_filter_saturation.jpg)
+///
+pub fn saturation(mut src: &mut Image, sat: f32) -> Result<(), String>{
+    let w: i32 = src.width;
+    let h: i32 = src.height;
+    
+    for y in 0..h {
+        for x in 0..w {
+            
+            let p = try!(src.get_pixel(x, y));
+            let hsv = Color::to_hsv(p.r, p.g, p.b);
+            let s = hsv.1;
+            let factor = (100.0 - s) * sat; // use % remaining
+            let mut new_s = s + factor;
+            if new_s > 100.0 {
+                new_s = 100.0;
+            } else if new_s < 0.0 {
+                new_s = 0.0;
+            }
+            let rgb = Color::to_rgb(hsv.0, new_s, hsv.2);
+            
+            try!(src.set_pixel(x, y, Color::rgb(rgb.0, rgb.1, rgb.2)));
+            
+        }
+    }
+    
+    Ok(())
+}
+
 /// Apply sharpen.
 ///
 /// # Examples
