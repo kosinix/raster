@@ -478,7 +478,10 @@ impl<'a> Color {
         if chroma != 0.0 {
             
             if max == r {
-                h = 60.0 * (((g - b) / chroma) % 6.0);
+                h = 60.0 * ((g - b) / chroma);
+                if h < 0.0 {
+                    h += 360.0;
+                }
             } else if max == g {
                 h = 60.0 * (((b - r) / chroma) + 2.0);
             } else if max == b {
@@ -487,6 +490,9 @@ impl<'a> Color {
 
         }
 
+        if h > 359.0 {
+            h = 360.0 - h; // Invert if > 0 to 359
+        }
         let v = max;
         let mut s = 0.0;
         if v != 0.0 {
