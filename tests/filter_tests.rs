@@ -9,3 +9,4 @@ fn brightness_test(){
     filter::brightness(&mut image, 1.5).unwrap();
     raster::save(&image, "tests/out/test_filter_brightness.jpg");
 }
+
