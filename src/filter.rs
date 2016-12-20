@@ -10,7 +10,6 @@ use std::cmp;
 
 
 // from local crate
-use editor;
 use Image;
 use Color;
 

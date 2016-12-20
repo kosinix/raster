@@ -12,7 +12,6 @@ extern crate image;
 
 
 // from local crate
-use editor;
 use Image;
 use Color;
 
