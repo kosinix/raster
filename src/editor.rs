@@ -208,22 +208,35 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let mut top_left = raster::open("tests/in/sample.gif").unwrap();
+/// let mut top_left = raster::open("tests/in/crop-test.jpg").unwrap();
 ///
 /// // Make copies
+/// let mut top_center = top_left.clone();
 /// let mut top_right = top_left.clone();
-/// let mut center = top_left.clone();
 ///
 /// // Crop it
-/// editor::crop(&mut top_left, 250, 128, "top-left", 0, 0).unwrap();
-/// editor::crop(&mut top_right, 250, 128, "top-right", 0, 0).unwrap();
-/// editor::crop(&mut center, 250, 128, "center", 0, 0).unwrap();
+/// editor::crop(&mut top_left, 167, 93, "top-left", 0, 0).unwrap();
+/// editor::crop(&mut top_center, 166, 93, "top-center", 0, 0).unwrap();
+/// editor::crop(&mut top_right, 167, 93, "top-right", 0, 0).unwrap();
 ///
 /// // Save it
 /// raster::save(&top_left, "tests/out/test_crop_top_left.png");
+/// raster::save(&top_center, "tests/out/test_crop_top_center.png");
 /// raster::save(&top_right, "tests/out/test_crop_top_right.png");
-/// raster::save(&center, "tests/out/test_crop_center.png");
 /// ```
+/// ### Input
+///
+/// ![](https://kosinix.github.io/raster/in/crop-test.jpg)
+///
+/// ### Output
+/// The cropped images arranged in a grid
+///
+/// |   |   |   |
+/// |---|---|---|
+/// | ![](https://kosinix.github.io/raster/out/test_crop_top_left.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_top_center.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_top_right.jpg) |
+/// | ![](https://kosinix.github.io/raster/out/test_crop_center_left.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_center.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_center_right.jpg) |
+/// | ![](https://kosinix.github.io/raster/out/test_crop_bottom_left.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg) |
+///
 pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Result<(), String> {
 
     // Turn into positioner struct
