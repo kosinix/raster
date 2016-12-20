@@ -201,9 +201,16 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// * bottom-center
 /// * bottom-right
 ///
-/// The offset_x and offset_y are added to the final position. Can also be negative offsets.
+/// The offset_x and offset_y are added to the final position. Can also be negative offsets. Offsets can be used to nudge the final position. Or you can use set the position to "top-left" and use the offsets as a normal screen x and y coordinates.
 ///
 /// # Examples
+///
+/// ### Input
+///
+/// ![](https://kosinix.github.io/raster/in/crop-test.jpg)
+///
+/// ### Code
+///
 /// ```
 /// use raster::editor;
 ///
@@ -248,18 +255,19 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// raster::save(&bottom_center, "tests/out/test_crop_bottom_center.jpg");
 /// raster::save(&bottom_right, "tests/out/test_crop_bottom_right.jpg");
 /// ```
-/// ### Input
-///
-/// ![](https://kosinix.github.io/raster/in/crop-test.jpg)
 ///
 /// ### Output
-/// The cropped images arranged in a grid
+/// The cropped images arranged in a grid, showing how you can easily set the crop position.
 ///
-/// |   |   |   |
-/// |---|---|---|
-/// | ![](https://kosinix.github.io/raster/out/test_crop_top_left.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_top_center.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_top_right.jpg) |
-/// | ![](https://kosinix.github.io/raster/out/test_crop_center_left.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_center.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_center_right.jpg) |
-/// | ![](https://kosinix.github.io/raster/out/test_crop_bottom_left.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg) | ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg) |
+/// ![](https://kosinix.github.io/raster/out/test_crop_top_left.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_crop_top_center.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_crop_top_right.jpg)  
+/// ![](https://kosinix.github.io/raster/out/test_crop_center_left.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_crop_center.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_crop_center_right.jpg)  
+/// ![](https://kosinix.github.io/raster/out/test_crop_bottom_left.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg)
 ///
 pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Result<(), String> {
 
