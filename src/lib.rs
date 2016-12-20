@@ -243,6 +243,24 @@ impl<'a> Image {
         true
     }
 
+    /// Create a clone of an image as another image.
+    ///
+    /// # Examples
+    /// ```
+    /// // Create image from file
+    /// let original = raster::open("tests/in/sample.jpg").unwrap();
+    ///
+    /// // Clone it
+    /// let clone = original.clone();
+    /// ```
+    pub fn clone(&self) -> Image {
+        Image{
+            width: self.width,
+            height: self.height,
+            bytes: self.bytes.clone(),
+        }
+    }
+
     /// Get pixel in a given x and y location of an image.
     ///
     /// # Examples

@@ -187,26 +187,6 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
     }
 }
 
-/// Create a clone of an image as another image.
-///
-/// # Examples
-/// ```
-/// use raster::editor;
-///
-/// // Create image from file
-/// let original = raster::open("tests/in/sample.jpg").unwrap();
-///
-/// // Clone it
-/// let clone = editor::clone(&original);
-/// ```
-pub fn clone(src: &Image) -> Image {
-    Image{
-        width: src.width,
-        height: src.height,
-        bytes: src.bytes.clone(),
-    }
-}
-
 /// Crop the image to the given dimension and position.
 ///
 /// Possible position: 
@@ -228,12 +208,11 @@ pub fn clone(src: &Image) -> Image {
 /// use raster::editor;
 ///
 /// // Create image from file
-/// let src = raster::open("tests/in/sample.gif").unwrap();
+/// let mut top_left = raster::open("tests/in/sample.gif").unwrap();
 ///
 /// // Make copies
-/// let mut top_left = editor::clone(&src);
-/// let mut top_right = editor::clone(&src);
-/// let mut center = editor::clone(&src);
+/// let mut top_right = top_left.clone();
+/// let mut center = top_left.clone();
 ///
 /// // Crop it
 /// editor::crop(&mut top_left, 250, 128, "top-left", 0, 0).unwrap();

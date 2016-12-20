@@ -135,7 +135,7 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
     let h: i32 = src.height;
     let m_size = 3; // Matrix size
     
-    let copy = editor::clone(&src); // Create a copy as input of pixels
+    let copy = src.clone(); // Create a copy as input of pixels
 
     for y in 0..h {
         for x in 0..w {
