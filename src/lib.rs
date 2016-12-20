@@ -119,6 +119,7 @@ extern crate image;
 
 // from rust
 use std::path::Path;
+use std::collections::HashMap;
 
 // from external crate
 use self::image::GenericImage;
@@ -261,6 +262,37 @@ impl<'a> Image {
         }
     }
 
+    /// Get the histogram of the image.
+    pub fn histogram(&self) -> Result< (HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>), String> {
+        let w = self.width;
+        let h = self.height;
+
+        let mut r_bin: HashMap<u8, u32> = HashMap::new();
+        let mut g_bin: HashMap<u8, u32> = HashMap::new();
+        let mut b_bin: HashMap<u8, u32> = HashMap::new();
+        let mut a_bin: HashMap<u8, u32> = HashMap::new();
+        for y in 0..h {
+            for x in 0..w {
+                let pixel = try!(self.get_pixel(x, y));
+
+                let r_bin_c = r_bin.entry(pixel.r).or_insert(0); // Insert the key with a value of 0 if key does not exist yet. Then return the count (which is zero).
+                *r_bin_c += 1; // +1 to the count.
+
+                let g_bin_c = g_bin.entry(pixel.g).or_insert(0);
+                *g_bin_c += 1;
+
+                let b_bin_c = b_bin.entry(pixel.b).or_insert(0);
+                *b_bin_c += 1;
+
+                let a_bin_c = a_bin.entry(pixel.a).or_insert(0);
+                *a_bin_c += 1;
+
+            }
+        }
+
+        Ok((r_bin, g_bin, b_bin, a_bin))
+    }
+
     /// Get pixel in a given x and y location of an image.
     ///
     /// # Examples
@@ -325,7 +357,10 @@ impl<'a> Image {
         if x >= self.width || y >= self.height {
             return Err(format!("Setting a pixel that is out of bounds at ({}, {}).", x, y).to_string());
         }
-
+        if start < 0 {
+            return Err(format!("Invalid start index {}.", start).to_string());
+        }
+        
         self.bytes[start as usize] = color.r;
         self.bytes[start as usize + 1] = color.g;
         self.bytes[start as usize + 2] = color.b;
