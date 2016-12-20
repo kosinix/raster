@@ -22,6 +22,36 @@ use editor::crop;
 /// * x - Flip image horizontally.
 /// * y - Flip image vertically.
 ///
+/// # Examples
+///
+/// ### Flip X:
+///
+/// ```
+/// use raster::transform;
+///
+/// //...
+///
+/// let mut image = raster::open("tests/in/sample.png").unwrap();
+/// transform::flip(&mut image, "x").unwrap();
+/// raster::save(&image, "tests/out/test_transform_flip_x.png");
+/// ```
+///
+/// ![](https://kosinix.github.io/raster/out/test_transform_flip_x.png)
+///
+/// ### Flip Y:
+///
+/// ```
+/// use raster::transform;
+///
+/// //...
+///
+/// let mut image = raster::open("tests/in/sample.png").unwrap();
+/// transform::flip(&mut image, "y").unwrap();
+/// raster::save(&image, "tests/out/test_transform_flip_y.png");
+/// ```
+///
+/// ![](https://kosinix.github.io/raster/out/test_transform_flip_y.png)
+///
 pub fn flip(mut src: &mut Image, mode: &str ) -> Result<(), String> {
 
     let w: i32 = src.width;
