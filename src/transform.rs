@@ -15,6 +15,66 @@ use Color;
 use interpolate::resample;
 use editor::crop;
 
+/// Flip an image on its x or y axis.
+///
+/// Mode:
+///
+/// * x - Flip image horizontally.
+/// * y - Flip image vertically.
+///
+pub fn flip(mut src: &mut Image, mode: &str ) -> Result<(), String> {
+
+    let w: i32 = src.width;
+    let h: i32 = src.height;
+    
+    match mode {
+        "x" => {
+            for x in 0..w {
+                let src_x = x;
+                let dest_x = w - x - 1;
+                if dest_x <= src_x {
+                    break;
+                }
+                for y in 0..h {
+                    
+                    let pixel_left = try!(src.get_pixel(src_x, y));
+                    let pixel_right = try!(src.get_pixel(dest_x, y));
+                    
+                    try!(src.set_pixel(dest_x, y, pixel_left));
+                    try!(src.set_pixel(src_x, y, pixel_right));
+                    
+                }
+            }
+            
+            Ok(())
+        },
+        "y" => {
+            for y in 0..h {
+                let src_y = y;
+                let dest_y = h - y - 1;
+                if dest_y <= src_y {
+                    break;
+                }
+                for x in 0..w {
+                    
+                    let pixel_top = try!(src.get_pixel(x, src_y));
+                    let pixel_bottom = try!(src.get_pixel(x, dest_y));
+                    
+                    try!(src.set_pixel(x, dest_y, pixel_top));
+                    try!(src.set_pixel(x, src_y, pixel_bottom));
+                    
+                }
+            }
+            
+            Ok(())
+        }
+        _ => {
+            Err(format!("Invalid mode '{}'", mode))
+        }
+    }
+    
+}
+
 /// Rotate an image clockwise. Negate the degrees to do a counter-clockwise rotation. Background color can be any color.
 ///
 /// Note: If you look closely, the quality for arbitrary angles is not very good due to the simple sampling algorithm. The 90, 180, and 270 angles looks fine because no pixels are lost. This will be fixed in the future with a better sampling algorithm.
