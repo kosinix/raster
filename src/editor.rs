@@ -214,15 +214,39 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// let mut top_center = top_left.clone();
 /// let mut top_right = top_left.clone();
 ///
+/// let mut center_left = top_left.clone();
+/// let mut center = top_left.clone();
+/// let mut center_right = top_left.clone();
+///
+/// let mut bottom_left = top_left.clone();
+/// let mut bottom_center = top_left.clone();
+/// let mut bottom_right = top_left.clone();
+///
 /// // Crop it
 /// editor::crop(&mut top_left, 167, 93, "top-left", 0, 0).unwrap();
 /// editor::crop(&mut top_center, 166, 93, "top-center", 0, 0).unwrap();
 /// editor::crop(&mut top_right, 167, 93, "top-right", 0, 0).unwrap();
 ///
+/// editor::crop(&mut center_left, 167, 93, "center-left", 0, 0).unwrap();
+/// editor::crop(&mut center, 166, 93, "center", 0, 0).unwrap();
+/// editor::crop(&mut center_right, 167, 93, "center-right", 0, 0).unwrap();
+///
+/// editor::crop(&mut bottom_left, 167, 93, "bottom-left", 0, 0).unwrap();
+/// editor::crop(&mut bottom_center, 166, 93, "bottom-center", 0, 0).unwrap();
+/// editor::crop(&mut bottom_right, 167, 93, "bottom-right", 0, 0).unwrap();
+///
 /// // Save it
-/// raster::save(&top_left, "tests/out/test_crop_top_left.png");
-/// raster::save(&top_center, "tests/out/test_crop_top_center.png");
-/// raster::save(&top_right, "tests/out/test_crop_top_right.png");
+/// raster::save(&top_left, "tests/out/test_crop_top_left.jpg");
+/// raster::save(&top_center, "tests/out/test_crop_top_center.jpg");
+/// raster::save(&top_right, "tests/out/test_crop_top_right.jpg");
+///
+/// raster::save(&center_left, "tests/out/test_crop_center_left.jpg");
+/// raster::save(&center, "tests/out/test_crop_center.jpg");
+/// raster::save(&center_right, "tests/out/test_crop_center_right.jpg");
+///
+/// raster::save(&bottom_left, "tests/out/test_crop_bottom_left.jpg");
+/// raster::save(&bottom_center, "tests/out/test_crop_bottom_center.jpg");
+/// raster::save(&bottom_right, "tests/out/test_crop_bottom_right.jpg");
 /// ```
 /// ### Input
 ///
