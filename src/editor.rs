@@ -201,7 +201,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 /// * bottom-center
 /// * bottom-right
 ///
-/// The offset_x and offset_y are added to the final position. Can also be negative offsets. Offsets can be used to nudge the final position. Or you can use set the position to "top-left" and use the offsets as a normal screen x and y coordinates.
+/// The offset_x and offset_y are added to the final position. Can also be negative offsets. Offsets can be used to nudge the final position. Or you can set the position to "top-left" and use the offsets as a normal screen x and y coordinates.
 ///
 /// # Examples
 ///
