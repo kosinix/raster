@@ -266,7 +266,13 @@ impl<'a> Image {
     ///
     /// # Examples
     ///
-    /// Visualizing the histogram of the red channel of an image:
+    /// Visualizing the histogram of the red channel of this image:
+    ///
+    /// Image:
+    ///
+    /// ![](https://kosinix.github.io/raster/in/sample.png)
+    ///
+    /// Code:
     ///
     /// ```
     /// use raster::Image;
@@ -307,9 +313,6 @@ impl<'a> Image {
     ///
     /// raster::save(&image, "tests/out/histogram.png");
     /// ```
-    /// Image:
-    ///
-    /// ![](https://kosinix.github.io/raster/in/sample.png)
     ///
     /// Histogram:
     ///
