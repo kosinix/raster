@@ -263,6 +263,62 @@ impl<'a> Image {
     }
 
     /// Get the histogram of the image.
+    ///
+    /// # Examples
+    ///
+    /// Visualizing the histogram of the red channel of an image:
+    ///
+    /// ```
+    /// use raster::Image;
+    /// use raster::Color;
+    ///
+    /// let image = raster::open("tests/in/sample.png").unwrap();
+    /// 
+    /// let (r_bin, _, _, _) = image.histogram().unwrap();
+    /// 
+    /// let mut max_r_bin = 0;
+    /// for (_, count) in &r_bin {
+    ///     if *count > max_r_bin {
+    ///         max_r_bin = *count;
+    ///     }
+    /// }
+    ///
+    /// let canvas_w = 256;
+    /// let canvas_h: i32 = 100;
+    /// let mut image = Image::blank(canvas_w, canvas_h);
+    /// raster::editor::fill(&mut image, Color::rgb(214, 214, 214)).unwrap();
+    /// 
+    /// for x in 0..256 as i32 { // 0-255
+    ///     let key = x as u8;
+    ///     match r_bin.get(&key) {
+    ///         Some(count) => {
+    /// 
+    ///             let height = (canvas_h as f32 * (*count as f32 / max_r_bin as f32)).round() as i32;
+    /// 
+    ///             for y in canvas_h-height..canvas_h {
+    /// 
+    ///                 image.set_pixel(x, y, Color::hex("#e22d11").unwrap()).unwrap();
+    ///                 
+    ///             }
+    ///         },
+    ///         None => {}
+    ///     }
+    /// }
+    ///
+    /// raster::save(&image, "tests/out/histogram.png");
+    /// ```
+    /// Image:
+    ///
+    /// ![](https://kosinix.github.io/raster/in/sample.png)
+    ///
+    /// Histogram:
+    ///
+    /// ![](https://kosinix.github.io/raster/out/histogram.png)
+    ///
+    /// Photoshop's result:
+    /// 
+    /// ![](https://kosinix.github.io/raster/in/histogram-ps.png)
+    ///
     pub fn histogram(&self) -> Result< (HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>), String> {
         let w = self.width;
         let h = self.height;
@@ -428,6 +484,116 @@ impl<'a> Color {
             b: 0,
             a: 255,
         }
+    }
+
+    /// Create a color from hexadecimal value.
+    ///
+    /// Example of valid formats: #FFFFFF, #ffeecc, #00ff007f
+    ///
+    /// # Examples
+    /// ```
+    /// use raster::Color;
+    ///
+    /// // Ok tests
+    /// let color = Color::hex("#FFFFFF"); // Opaque white
+    /// assert!(color.is_ok());
+    /// 
+    /// let color = Color::hex("#00FF007F"); // Green with 50% opacity
+    /// assert!(color.is_ok());
+    /// 
+    /// // Error tests
+    /// let color = Color::hex("");
+    /// assert!(color.is_err());
+    /// 
+    /// let color = Color::hex("#");
+    /// assert!(color.is_err());
+    /// 
+    /// let color = Color::hex("#FFF");
+    /// assert!(color.is_err());
+    ///
+    /// ```
+    ///
+    /// To get the value, use unwrap:
+    ///
+    /// ```
+    /// use raster::Color;
+    ///
+    /// let color = Color::hex("#00FF007F").unwrap();
+    /// assert_eq!(255, color.g);
+    /// ```
+    pub fn hex(hex: &str) -> Result<Color, String> {
+        let mut r = 0;
+        let mut g = 0;
+        let mut b = 0;
+        let mut a = 255;
+        if hex.len() == 9 && hex.starts_with("#") { // #FFFFFFFF (Red Green Blue Alpha)
+            match u8::from_str_radix(&hex[1..3], 16) {
+                Ok(o) => {
+                    r = o;
+                },
+                Err(e) => {
+                    return Err(format!("Error parsing hex: {}", e).to_string());
+                }
+            }
+            match u8::from_str_radix(&hex[3..5], 16) {
+                Ok(o) => {
+                    g = o;
+                },
+                Err(e) => {
+                    return Err(format!("Error parsing hex: {}", e).to_string());
+                }
+            }
+            match u8::from_str_radix(&hex[5..7], 16) {
+                Ok(o) => {
+                    b = o;
+                },
+                Err(e) => {
+                    return Err(format!("Error parsing hex: {}", e).to_string());
+                }
+            }
+            match u8::from_str_radix(&hex[7..9], 16) {
+                Ok(o) => {
+                    a = o;
+                },
+                Err(e) => {
+                    return Err(format!("Error parsing hex: {}", e).to_string());
+                }
+            }
+        } else if hex.len() == 7 && hex.starts_with("#") { // #FFFFFF (Red Green Blue)
+            match u8::from_str_radix(&hex[1..3], 16) {
+                Ok(o) => {
+                    r = o;
+                },
+                Err(e) => {
+                    return Err(format!("Error parsing hex: {}", e).to_string());
+                }
+            }
+            match u8::from_str_radix(&hex[3..5], 16) {
+                Ok(o) => {
+                    g = o;
+                },
+                Err(e) => {
+                    return Err(format!("Error parsing hex: {}", e).to_string());
+                }
+            }
+            match u8::from_str_radix(&hex[5..7], 16) {
+                Ok(o) => {
+                    b = o;
+                },
+                Err(e) => {
+                    return Err(format!("Error parsing hex: {}", e).to_string());
+                }
+            }
+        } else {
+            return Err("Error parsing hex. Example of valid formats: #FFFFFF or #ffffffff".to_string());
+        }
+
+        Ok(Color {
+            r: r as u8,
+            g: g as u8,
+            b: b as u8,
+            a: a as u8,
+        })
     }
 
     /// Returns a red Color.
