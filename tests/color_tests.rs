@@ -23,3 +23,23 @@ fn conversion_accuracy_test(){
     assert_eq!(rgb1.1, rgb2.1);
     assert_eq!(rgb1.2, rgb2.2);
 }
+
+#[test]
+fn hex_test() {
+    // Ok tests
+    let color = Color::hex("#FFFFFF"); // Opaque white
+    assert!(color.is_ok());
+
+    let color = Color::hex("#00FF007F"); // Green with 50% opacity
+    assert!(color.is_ok());
+
+    // Error tests
+    let color = Color::hex("");
+    assert!(color.is_err());
+
+    let color = Color::hex("#");
+    assert!(color.is_err());
+    
+    let color = Color::hex("#FFF");
+    assert!(color.is_err());
+}
