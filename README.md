@@ -49,7 +49,7 @@ Checkout the docs for more info.
 
 * ~~More examples and add pictures in docs~~
 * Implement bicubic interpolation
-* Add geometric transformations
+* ~~Add geometric transformations~~
 * ~~Add filters and convolution~~
 * Memory and perf improvements
 * Reduce dependency to image decoders/encoders
