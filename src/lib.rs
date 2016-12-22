@@ -10,9 +10,9 @@
 //! ```rust,ignore
 //! [dependencies]
 //!
-//! raster = "0.x.x"
+//! raster = "x.x.x"
 //! ```
-//! Where x are version numbers of the [latest version](https://crates.io/crates/raster) of raster. Eg.: 0.2.1
+//! Where x are version numbers of the [latest version](https://crates.io/crates/raster) of raster. Eg.: 0.1.0
 //!
 //! Then add the raster crate in your main.rs:
 //!
@@ -51,61 +51,36 @@
 //!
 //! ```
 //! 
-//! Save the blank image:
-//!
-//! ```
-//! use raster::Image; // Include the Image struct
-//! 
-//! // Create a blank 150x100 image. Defaults to a black background.
-//! let image = Image::blank(150, 100);
-//!
-//! // Save blank
-//! raster::save(&image, "tests/out/test_blank.png");
-//!
-//! ```
-//! A blank image:
-//!
-//! ![Blank](https://kosinix.github.io/raster/out/test_blank.png)
 //!
 //!
-//! ## Editing Images
-//!
-//! ```
-//! use raster::editor;
-//!
-//! // Create an image from file
-//! let mut image = raster::open("tests/in/sample.png").unwrap();
-//! 
-//! // Resize an image to fit in a 200x200 box
-//! editor::resize(&mut image, 200, 200, "fit").unwrap();
-//!
-//! // Save it
-//! raster::save(&image, "tests/out/test_resize_fit.png");
-//! ```
-//!
-//! ![](https://kosinix.github.io/raster/out/test_resize_fit.png)
 //!
 //! ## Blending 2 Images
 //!
-//! ```
-//! use raster::editor;
-//!
-//! // Create images from file
-//! let image1 = raster::open("tests/in/sample.jpg").unwrap();
-//! let image2 = raster::open("tests/in/watermark.png").unwrap();
+//! Here are two images blended using the normal mode.
 //! 
-//! // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
-//! let image3 = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0).unwrap();
+//! ![](https://kosinix.github.io/raster/out/test_blend_normal.png)
 //!
-//! // Save it
-//! raster::save(&image3, "tests/out/test_blend_normal.png");
-//! ```
-//! ![Blend Normal](https://kosinix.github.io/raster/out/test_blend_normal.png)
+//! More blending modes and options are available, see the blend API.
 //!
-//! See the modules for more info.
+//! ## Resizing Images
 //!
-
-
+//! An example of images resized to "fit" in a 200x200 box.
+//!
+//! ![](https://kosinix.github.io/raster/out/test_resize_fit_1.jpg) ![](https://kosinix.github.io/raster/out/test_resize_fit_2.jpg)
+//!
+//! More modes available, see the resize API.
+//!
+//! ## Rotating Images
+//!
+//! Images can be rotated both clockwise and counter-clockwise at any arbitrary angle with a custom background color.
+//!
+//! ![](https://kosinix.github.io/raster/out/test_transform_rotate_45.png)  
+//! ![](https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png)
+//!
+//! ## And Many More...
+//!
+//! More options are available, checkout the modules below.
+//!
 pub mod compare;
 pub mod editor;
 pub mod filter;
