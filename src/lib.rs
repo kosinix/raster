@@ -749,6 +749,7 @@ impl<'a> Color {
     }
 }
 
+// Private functions
 
 // Convert a hex string to decimal. Eg. "00" -> 0. "FF" -> 255.
 fn _hex_dec(hex_string: &str) -> Result <u8, String> {
