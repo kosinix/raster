@@ -525,78 +525,29 @@ impl<'a> Color {
     /// assert_eq!(255, color.g);
     /// ```
     pub fn hex(hex: &str) -> Result<Color, String> {
-        let mut r = 0;
-        let mut g = 0;
-        let mut b = 0;
-        let mut a = 255;
+        
         if hex.len() == 9 && hex.starts_with("#") { // #FFFFFFFF (Red Green Blue Alpha)
-            match u8::from_str_radix(&hex[1..3], 16) {
-                Ok(o) => {
-                    r = o;
-                },
-                Err(e) => {
-                    return Err(format!("Error parsing hex: {}", e).to_string());
-                }
-            }
-            match u8::from_str_radix(&hex[3..5], 16) {
-                Ok(o) => {
-                    g = o;
-                },
-                Err(e) => {
-                    return Err(format!("Error parsing hex: {}", e).to_string());
-                }
-            }
-            match u8::from_str_radix(&hex[5..7], 16) {
-                Ok(o) => {
-                    b = o;
-                },
-                Err(e) => {
-                    return Err(format!("Error parsing hex: {}", e).to_string());
-                }
-            }
-            match u8::from_str_radix(&hex[7..9], 16) {
-                Ok(o) => {
-                    a = o;
-                },
-                Err(e) => {
-                    return Err(format!("Error parsing hex: {}", e).to_string());
-                }
-            }
-        } else if hex.len() == 7 && hex.starts_with("#") { // #FFFFFF (Red Green Blue)
-            match u8::from_str_radix(&hex[1..3], 16) {
-                Ok(o) => {
-                    r = o;
-                },
-                Err(e) => {
-                    return Err(format!("Error parsing hex: {}", e).to_string());
-                }
-            }
-            match u8::from_str_radix(&hex[3..5], 16) {
-                Ok(o) => {
-                    g = o;
-                },
-                Err(e) => {
-                    return Err(format!("Error parsing hex: {}", e).to_string());
-                }
-            }
-            match u8::from_str_radix(&hex[5..7], 16) {
-                Ok(o) => {
-                    b = o;
-                },
-                Err(e) => {
-                    return Err(format!("Error parsing hex: {}", e).to_string());
-                }
-            }
-        } else {
-            return Err("Error parsing hex. Example of valid formats: #FFFFFF or #ffffffff".to_string());
-        }
 
-        Ok(Color {
-            r: r as u8,
-            g: g as u8,
-            b: b as u8,
-            a: a as u8,
-        })
+            return Ok(Color {
+                r: try!(_hex_dec(&hex[1..3])),
+                g: try!(_hex_dec(&hex[3..5])),
+                b: try!(_hex_dec(&hex[5..7])),
+                a: try!(_hex_dec(&hex[7..9])),
+            });
+
+        } else if hex.len() == 7 && hex.starts_with("#") { // #FFFFFF (Red Green Blue)
+
+            return Ok(Color {
+                r: try!(_hex_dec(&hex[1..3])),
+                g: try!(_hex_dec(&hex[3..5])),
+                b: try!(_hex_dec(&hex[5..7])),
+                a: 255,
+            });
+
+        } 
+        
+        Err("Error parsing hex. Example of valid formats: #FFFFFF or #ffffffff".to_string())
+        
     }
 
     /// Returns a red Color.
@@ -794,6 +745,19 @@ impl<'a> Color {
             g: 255,
             b: 255,
             a: 255,
+        }
+    }
+}
+
+
+// Convert a hex string to decimal. Eg. "00" -> 0. "FF" -> 255.
+fn _hex_dec(hex_string: &str) -> Result <u8, String> {
+    match u8::from_str_radix(hex_string, 16) {
+        Ok(o) => {
+            Ok(o as u8)
+        },
+        Err(e) => {
+            Err(format!("Error parsing hex: {}", e).to_string())
         }
     }
 }
