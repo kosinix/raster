@@ -136,7 +136,7 @@ pub fn flip(mut src: &mut Image, mode: &str ) -> Result<(), String> {
 /// //...
 ///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
-/// transform::rotate(&mut image, -45, Color::red()).unwrap();
+/// transform::rotate(&mut image, -45, Color::rgb(252,145,145)).unwrap();
 /// raster::save(&image, "tests/out/test_transform_rotate_45cc.png");
 /// ```
 ///
