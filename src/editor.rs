@@ -388,13 +388,6 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// editor::resize(&mut image1, 200, 200, "fill");
 /// editor::resize(&mut image2, 200, 200, "fill");
 ///
-/// // Superimpose images on a gray background
-/// let mut bg = Image::blank(200, 200);
-/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
-///
-/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
-/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
-///
 /// raster::save(&image1, "tests/out/test_resize_fill_1.jpg");
 /// raster::save(&image2, "tests/out/test_resize_fill_2.jpg");
 /// ```
@@ -416,13 +409,6 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// // Resize it
 /// editor::resize(&mut image1, 200, 200, "exact_width");
 /// editor::resize(&mut image2, 200, 200, "exact_width");
-///
-/// // Superimpose images on a gray background
-/// let mut bg = Image::blank(200, 200);
-/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
-///
-/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
-/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
 ///
 /// raster::save(&image1, "tests/out/test_resize_exact_width_1.jpg");
 /// raster::save(&image2, "tests/out/test_resize_exact_width_2.jpg");
@@ -447,13 +433,6 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// editor::resize(&mut image1, 200, 200, "exact_height");
 /// editor::resize(&mut image2, 200, 200, "exact_height");
 ///
-/// // Superimpose images on a gray background
-/// let mut bg = Image::blank(200, 200);
-/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
-///
-/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
-/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
-///
 /// raster::save(&image1, "tests/out/test_resize_exact_height_1.jpg");
 /// raster::save(&image2, "tests/out/test_resize_exact_height_2.jpg");
 /// ```
@@ -475,13 +454,6 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// // Resize it
 /// editor::resize(&mut image1, 200, 200, "exact");
 /// editor::resize(&mut image2, 200, 200, "exact");
-///
-/// // Superimpose images on a gray background
-/// let mut bg = Image::blank(200, 200);
-/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
-///
-/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
-/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
 ///
 /// raster::save(&image1, "tests/out/test_resize_exact_1.jpg");
 /// raster::save(&image2, "tests/out/test_resize_exact_2.jpg");
