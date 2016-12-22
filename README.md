@@ -4,10 +4,6 @@
 
 An image processing library for Rust. 
 
-## Pre-Alpha Status
-
-Raster is currently in pre-alpha; There will be breaking changes between versions. The API will stabilize once it reaches 0.1.0. From then on it will follow semver.
-
 ## Documentation
 
 Examples and API are [here](https://docs.rs/raster/)
