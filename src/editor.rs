@@ -345,57 +345,151 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// * fill - Resize image to fill all the space in the given dimension. Excess parts are cropped.
 ///
 /// # Examples
-/// ### fit
+/// ### Resize Fit
 /// ```
 /// use raster::editor;
+/// use raster::Color;
+/// use raster::Image;
 ///
 /// // Create an image from file
-/// let mut image = raster::open("tests/in/sample.png").unwrap();
+/// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
 /// 
-/// editor::resize(&mut image, 200, 200, "fit").unwrap();
-/// raster::save(&image, "tests/out/test_resize_fit.png");
+/// // Resize it
+/// editor::resize(&mut image1, 200, 200, "fit");
+/// editor::resize(&mut image2, 200, 200, "fit");
+///
+/// // Superimpose images on a gray background
+/// let mut bg = Image::blank(200, 200);
+/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
+///
+/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
+/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
+///
+/// raster::save(&image1, "tests/out/test_resize_fit_1.jpg");
+/// raster::save(&image2, "tests/out/test_resize_fit_2.jpg");
 /// ```
 ///
-/// ![](https://kosinix.github.io/raster/out/test_resize_fit.png)
+/// The gray box shows the 200x200 imaginary box that the images "fit" in.
 ///
-/// ### fill
+/// ![](https://kosinix.github.io/raster/out/test_resize_fit_1.jpg) ![](https://kosinix.github.io/raster/out/test_resize_fit_2.jpg)
+///
+/// ### Resize Fill
 /// ```
 /// use raster::editor;
+/// use raster::Color;
+/// use raster::Image;
 ///
 /// // Create an image from file
-/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
 /// 
-/// editor::resize(&mut image, 200, 200, "fill").unwrap();
-/// raster::save(&image, "tests/out/test_resize_fill.jpg");
+/// // Resize it
+/// editor::resize(&mut image1, 200, 200, "fill");
+/// editor::resize(&mut image2, 200, 200, "fill");
+///
+/// // Superimpose images on a gray background
+/// let mut bg = Image::blank(200, 200);
+/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
+///
+/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
+/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
+///
+/// raster::save(&image1, "tests/out/test_resize_fill_1.jpg");
+/// raster::save(&image2, "tests/out/test_resize_fill_2.jpg");
 /// ```
 ///
-/// ![](https://kosinix.github.io/raster/out/test_resize_fill.jpg)
+/// The image fills up the entire 200x200 box.
 ///
-/// ### exact width
+/// ![](https://kosinix.github.io/raster/out/test_resize_fill_1.jpg) ![](https://kosinix.github.io/raster/out/test_resize_fill_2.jpg)
+///
+/// ### Resize to Exact Width
 /// ```
 /// use raster::editor;
+/// use raster::Color;
+/// use raster::Image;
 ///
 /// // Create an image from file
-/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
 /// 
-/// editor::resize(&mut image, 200, 0, "exact_width").unwrap();
-/// raster::save(&image, "tests/out/test_resize_exact_width.jpg");
+/// // Resize it
+/// editor::resize(&mut image1, 200, 200, "exact_width");
+/// editor::resize(&mut image2, 200, 200, "exact_width");
+///
+/// // Superimpose images on a gray background
+/// let mut bg = Image::blank(200, 200);
+/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
+///
+/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
+/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
+///
+/// raster::save(&image1, "tests/out/test_resize_exact_width_1.jpg");
+/// raster::save(&image2, "tests/out/test_resize_exact_width_2.jpg");
 /// ```
 ///
-/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width.jpg)
+/// The images will have a width of 200. The height is auto-calculated.
 ///
-/// ### exact height
+/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_1.jpg)  
+/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_2.jpg)
+///
+/// ### Resize to Exact Height
 /// ```
 /// use raster::editor;
+/// use raster::Color;
+/// use raster::Image;
 ///
 /// // Create an image from file
-/// let mut image = raster::open("tests/in/portrait.jpg").unwrap();
+/// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
 /// 
-/// editor::resize(&mut image, 0, 200, "exact_height").unwrap();
-/// raster::save(&image, "tests/out/test_resize_exact_height.jpg");
+/// // Resize it
+/// editor::resize(&mut image1, 200, 200, "exact_height");
+/// editor::resize(&mut image2, 200, 200, "exact_height");
+///
+/// // Superimpose images on a gray background
+/// let mut bg = Image::blank(200, 200);
+/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
+///
+/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
+/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
+///
+/// raster::save(&image1, "tests/out/test_resize_exact_height_1.jpg");
+/// raster::save(&image2, "tests/out/test_resize_exact_height_2.jpg");
 /// ```
 ///
-/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width.jpg)
+/// The images will have a height of 200. The width is auto-calculated.
+///
+/// ![](https://kosinix.github.io/raster/out/test_resize_exact_height_1.jpg) ![](https://kosinix.github.io/raster/out/test_resize_exact_height_2.jpg)
+///
+/// ### Resize to Exact Dimension
+/// ```
+/// use raster::editor;
+/// use raster::Color;
+/// use raster::Image;
+///
+/// // Create an image from file
+/// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
+/// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
+/// 
+/// // Resize it
+/// editor::resize(&mut image1, 200, 200, "exact");
+/// editor::resize(&mut image2, 200, 200, "exact");
+///
+/// // Superimpose images on a gray background
+/// let mut bg = Image::blank(200, 200);
+/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
+///
+/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
+/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
+///
+/// raster::save(&image1, "tests/out/test_resize_exact_1.jpg");
+/// raster::save(&image2, "tests/out/test_resize_exact_2.jpg");
+/// ```
+///
+/// The images will be resized to the exact dimension ignoring aspect ratio.
+///
+/// ![](https://kosinix.github.io/raster/out/test_resize_exact_1.jpg) ![](https://kosinix.github.io/raster/out/test_resize_exact_2.jpg)
 ///
 pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: &str) -> Result<(), String> {
     
