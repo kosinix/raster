@@ -260,7 +260,7 @@ pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<(), Str
     }
 
     try!(resample(&mut src, optimum_width, optimum_height, "bicubic"));
-    try!(crop(&mut src, w, h, "top-left", 0, 0)); // Trim excess parts
+    try!(crop(&mut src, w, h, "center", 0, 0)); // Trim excess parts
     
     Ok(())
 }
