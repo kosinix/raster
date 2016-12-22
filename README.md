@@ -6,7 +6,7 @@ An image processing library for Rust.
 
 ## Documentation
 
-Examples and API are [here](https://docs.rs/raster/)
+API and detailed documentation can be found [here](https://docs.rs/raster/)
 
 ## Core Principles
 * Keep everything simple
