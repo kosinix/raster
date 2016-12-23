@@ -22,6 +22,10 @@ use transform;
 ///
 /// The offset_x and offset_y are added to the final position. Can also be negative offsets.
 ///
+/// # Errors
+///
+/// If image2 falls outside the canvas area, then this fails with `RasterError::BlendingImageFallsOutsideCanvas`.
+///
 /// # Examples
 /// ```
 /// use raster::{editor, BlendMode, PositionType};
