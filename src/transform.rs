@@ -10,30 +10,39 @@ use std::cmp;
 
 
 // from local crate
-use error::{RasterError, RasterResult};
+use error::RasterResult;
 use Image;
 use Color;
-use interpolate::resample;
+use interpolate::{resample, InterpolationMode};
+use position::PositionType;
 use editor::crop;
+
+#[derive(Debug)]
+pub enum TransformMode {
+    /// Horizontal transform.
+    X,
+    /// Vertical transform.
+    Y
+}
 
 /// Flip an image on its x or y axis.
 ///
 /// Mode:
 ///
-/// * x - Flip image horizontally.
-/// * y - Flip image vertically.
+/// * X - Flip image horizontally.
+/// * Y - Flip image vertically.
 ///
 /// # Examples
 ///
 /// ### Flip X:
 ///
 /// ```
-/// use raster::transform;
+/// use raster::{transform, TransformMode};
 ///
 /// //...
 ///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
-/// transform::flip(&mut image, "x").unwrap();
+/// transform::flip(&mut image, TransformMode::X).unwrap();
 /// raster::save(&image, "tests/out/test_transform_flip_x.png");
 /// ```
 ///
@@ -42,24 +51,24 @@ use editor::crop;
 /// ### Flip Y:
 ///
 /// ```
-/// use raster::transform;
+/// use raster::{transform, TransformMode};
 ///
 /// //...
 ///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
-/// transform::flip(&mut image, "y").unwrap();
+/// transform::flip(&mut image, TransformMode::Y).unwrap();
 /// raster::save(&image, "tests/out/test_transform_flip_y.png");
 /// ```
 ///
 /// ![](https://kosinix.github.io/raster/out/test_transform_flip_y.png)
 ///
-pub fn flip(mut src: &mut Image, mode: &str ) -> RasterResult<()> {
+pub fn flip(mut src: &mut Image, mode: TransformMode ) -> RasterResult<()> {
 
     let w: i32 = src.width;
     let h: i32 = src.height;
 
     match mode {
-        "x" => {
+        TransformMode::X => {
             for x in 0..w {
                 let src_x = x;
                 let dest_x = w - x - 1;
@@ -79,7 +88,7 @@ pub fn flip(mut src: &mut Image, mode: &str ) -> RasterResult<()> {
 
             Ok(())
         },
-        "y" => {
+        TransformMode::Y => {
             for y in 0..h {
                 let src_y = y;
                 let dest_y = h - y - 1;
@@ -99,7 +108,6 @@ pub fn flip(mut src: &mut Image, mode: &str ) -> RasterResult<()> {
 
             Ok(())
         }
-        _ => Err(RasterError::InvalidTransformMode(mode.to_string()))
     }
 
 }
@@ -209,7 +217,7 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
 /// Useful if you want to force exact width and height.
 pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
 
-    try!(resample(&mut src, w, h, "bicubic"));
+    try!(resample(&mut src, w, h, InterpolationMode::Bicubic));
     Ok(())
 }
 
@@ -224,7 +232,7 @@ pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> RasterResult<(
     let resize_height = h;
     let resize_width = (h as f32 * ratio) as i32;
 
-    try!(resample(&mut src, resize_width, resize_height, "bicubic"));
+    try!(resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic));
     Ok(())
 }
 
@@ -238,7 +246,7 @@ pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> RasterResult<()
     let resize_width  = w;
     let resize_height = (w as f32 / ratio).round() as i32;
 
-    try!(resample(&mut src, resize_width, resize_height, "bicubic"));
+    try!(resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic));
     Ok(())
 }
 
@@ -258,8 +266,8 @@ pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<(
         optimum_height = h;
     }
 
-    try!(resample(&mut src, optimum_width, optimum_height, "bicubic"));
-    try!(crop(&mut src, w, h, "center", 0, 0)); // Trim excess parts
+    try!(resample(&mut src, optimum_width, optimum_height, InterpolationMode::Bicubic));
+    try!(crop(&mut src, w, h, PositionType::Center, 0, 0)); // Trim excess parts
 
     Ok(())
 }
@@ -281,7 +289,7 @@ pub fn resize_fit<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()
         resize_width  = (h as f64 * ratio).round() as i32;
     }
 
-    try!(resample(&mut src, resize_width, resize_height, "bicubic"));
+    try!(resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic));
     Ok(())
 }
 

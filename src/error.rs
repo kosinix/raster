@@ -18,17 +18,7 @@ pub enum RasterError {
     In an ideal world, image's error type needn't be exposed
     (but we don't live in an ideal world yet)
     */
-    Image(ImageError),
-
-    /*
-    All of these invalid mode/type errors will be unneeded once mode/type flags are switched
-    to using enums rather than strings.
-    */
-    InvalidResiveMode(String),
-    InvalidBlurMode(String),
-    InvalidInterpolationMode(String),
-    InvalidTransformMode(String),
-    InvalidPositionType(String)
+    Image(ImageError)
 }
 
 pub type RasterResult<T> = Result<T, RasterError>;

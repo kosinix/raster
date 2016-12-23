@@ -9,7 +9,7 @@
 // from local crate
 use error::RasterResult;
 use Image;
-use editor;
+use editor::{self, ResizeMode};
 
 /// Compare two images and returns a hamming distance. A value of 0 indicates a likely similar picture.
 /// A value between 1 and 10 is potentially a variation. A value greater than 10 is likely a different image.
@@ -104,7 +104,7 @@ fn diff_hash(image: &Image) -> RasterResult<Vec<u8>> {
     let height = 8;
 
     let mut image = image.clone(); // copy it since resize is desctructive
-    try!(editor::resize(&mut image, width, height, "exact")); // Resize to exactly 9x8
+    try!(editor::resize(&mut image, width, height, ResizeMode::Exact)); // Resize to exactly 9x8
 
     // Build hash
     let mut hash = Vec::new();

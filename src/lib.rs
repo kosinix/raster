@@ -103,6 +103,11 @@ use self::image::GenericImage;
 // from local crate
 use error::{RasterError, RasterResult};
 pub use blend::BlendMode;
+pub use editor::ResizeMode;
+pub use filter::BlurMode;
+pub use interpolate::InterpolationMode;
+pub use position::PositionType;
+pub use transform::TransformMode;
 
 /// Create an image from an image file.
 ///
