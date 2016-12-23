@@ -10,6 +10,7 @@ use std::cmp;
 
 
 // from local crate
+use error::{RasterError, RasterResult};
 use Image;
 use Color;
 use interpolate::resample;
@@ -52,11 +53,11 @@ use editor::crop;
 ///
 /// ![](https://kosinix.github.io/raster/out/test_transform_flip_y.png)
 ///
-pub fn flip(mut src: &mut Image, mode: &str ) -> Result<(), String> {
+pub fn flip(mut src: &mut Image, mode: &str ) -> RasterResult<()> {
 
     let w: i32 = src.width;
     let h: i32 = src.height;
-    
+
     match mode {
         "x" => {
             for x in 0..w {
@@ -66,16 +67,16 @@ pub fn flip(mut src: &mut Image, mode: &str ) -> Result<(), String> {
                     break;
                 }
                 for y in 0..h {
-                    
+
                     let pixel_left = try!(src.get_pixel(src_x, y));
                     let pixel_right = try!(src.get_pixel(dest_x, y));
-                    
+
                     try!(src.set_pixel(dest_x, y, pixel_left));
                     try!(src.set_pixel(src_x, y, pixel_right));
-                    
+
                 }
             }
-            
+
             Ok(())
         },
         "y" => {
@@ -86,23 +87,21 @@ pub fn flip(mut src: &mut Image, mode: &str ) -> Result<(), String> {
                     break;
                 }
                 for x in 0..w {
-                    
+
                     let pixel_top = try!(src.get_pixel(x, src_y));
                     let pixel_bottom = try!(src.get_pixel(x, dest_y));
-                    
+
                     try!(src.set_pixel(x, dest_y, pixel_top));
                     try!(src.set_pixel(x, src_y, pixel_bottom));
-                    
+
                 }
             }
-            
+
             Ok(())
         }
-        _ => {
-            Err(format!("Invalid mode '{}'", mode))
-        }
+        _ => Err(RasterError::InvalidTransformMode(mode.to_string()))
     }
-    
+
 }
 
 /// Rotate an image clockwise. Negate the degrees to do a counter-clockwise rotation. Background color can be any color.
@@ -142,8 +141,8 @@ pub fn flip(mut src: &mut Image, mode: &str ) -> Result<(), String> {
 ///
 /// ![](https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png)
 ///
-pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> Result<(), String>{
-    
+pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
+
     let w1 = src.width;
     let h1 = src.height;
 
@@ -202,13 +201,13 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> Result<(), String>
     src.width = dest.width;
     src.height = dest.height;
     src.bytes = dest.bytes;
-    
+
     Ok(())
 }
 
-/// Resize image to exact dimensions ignoring aspect ratio. 
+/// Resize image to exact dimensions ignoring aspect ratio.
 /// Useful if you want to force exact width and height.
-pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<(), String> {
+pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
 
     try!(resample(&mut src, w, h, "bicubic"));
     Ok(())
@@ -216,7 +215,7 @@ pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<(), St
 
 /// Resize image to exact height. Width is auto calculated.
 /// Useful for creating row of images with the same height.
-pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> Result<(), String> {
+pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> RasterResult<()> {
 
     let width = src.width;
     let height = src.height;
@@ -229,9 +228,9 @@ pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> Result<(), Str
     Ok(())
 }
 
-/// Resize image to exact width. Height is auto calculated. 
+/// Resize image to exact width. Height is auto calculated.
 /// Useful for creating column of images with the same width.
-pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> Result<(), String> {
+pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> RasterResult<()> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -244,7 +243,7 @@ pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> Result<(), Stri
 }
 
 /// Resize image to fill all the space in the given dimension. Excess parts are removed.
-pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<(), String> {
+pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -261,15 +260,15 @@ pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<(), Str
 
     try!(resample(&mut src, optimum_width, optimum_height, "bicubic"));
     try!(crop(&mut src, w, h, "center", 0, 0)); // Trim excess parts
-    
+
     Ok(())
 }
 
-/// Resize an image to fit within the given width and height. 
-/// The re-sized image will not exceed the given dimension. 
+/// Resize an image to fit within the given width and height.
+/// The re-sized image will not exceed the given dimension.
 /// Preserves the aspect ratio.
-pub fn resize_fit<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<(), String> {
-    
+pub fn resize_fit<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
+
     let ratio: f64 = src.width as f64 / src.height as f64;
 
     // Try basing it on width first
