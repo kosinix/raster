@@ -105,6 +105,11 @@ use error::{RasterError, RasterResult};
 
 /// Create an image from an image file.
 ///
+/// # Errors
+///
+/// At present, this function relies on [image](https://github.com/PistonDevelopers/image), and
+/// thus returns `RasterError::Image` upon failure.
+///
 /// # Examples
 ///
 /// ```
@@ -135,6 +140,10 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
 }
 
 /// Save an image to an image file. The image type is detected from the file extension of the file name.
+///
+/// # Errors
+///
+/// If writing to a file fails, this function returns `RasterError::Io`.
 ///
 /// # Examples
 ///
@@ -334,6 +343,11 @@ impl<'a> Image {
 
     /// Get pixel in a given x and y location of an image.
     ///
+    /// # Errors
+    ///
+    /// If either the x or y coordinate falls out of bounds, this will fail with
+    /// `RasterError::PixelOutOfBounds`.
+    ///
     /// # Examples
     ///
     /// ```
@@ -370,6 +384,14 @@ impl<'a> Image {
     }
 
     /// Set pixel in a given x and y location of an image.
+    ///
+    /// # Errors
+    ///
+    /// If either the x or y coordinate falls out of bounds, this will fail with
+    /// `RasterError::PixelOutOfBounds`.
+    ///
+    /// If the calculated byte start index is less than 0, this will fail with
+    /// `RasterError::InvalidStartIndex`.
     ///
     /// # Examples
     ///
@@ -471,6 +493,12 @@ impl<'a> Color {
     /// Create a color from hexadecimal value.
     ///
     /// Example of valid formats: #FFFFFF, #ffeecc, #00ff007f
+    ///
+    /// # Errors
+    ///
+    /// If the hex *string* is malformed (doesn't begin with `#` or is of invalid length) then this
+    /// fails with `RasterError::InvalidHex`. If it passes that, but the string can't be parsed
+    /// into actual values, then this fails with `RasterError::HexParse`.
     ///
     /// # Examples
     /// ```
