@@ -10,7 +10,7 @@ extern crate image;
 
 // from local crate
 use error::{RasterError, RasterResult};
-use blend;
+use blend::{self, BlendMode};
 use Color;
 use Image;
 use position::Position;
@@ -45,19 +45,20 @@ use transform;
 /// # Examples
 /// ```
 /// use raster::editor;
+/// use raster::BlendMode;
 ///
 /// // Create images from file
 /// let image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let image2 = raster::open("tests/in/watermark.png").unwrap();
 ///
 /// // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
-/// let normal = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0).unwrap();
+/// let normal = editor::blend(&image1, &image2, BlendMode::Normal, 1.0, "center", 0, 0).unwrap();
 ///
 /// // All the other blend modes
-/// let difference = editor::blend(&image1, &image2, "difference", 1.0, "center", 0, 0).unwrap();
-/// let multiply = editor::blend(&image1, &image2, "multiply", 1.0, "center", 0, 0).unwrap();
-/// let overlay = editor::blend(&image1, &image2, "overlay", 1.0, "center", 0, 0).unwrap();
-/// let screen = editor::blend(&image1, &image2, "screen", 1.0, "center", 0, 0).unwrap();
+/// let difference = editor::blend(&image1, &image2, BlendMode::Difference, 1.0, "center", 0, 0).unwrap();
+/// let multiply = editor::blend(&image1, &image2, BlendMode::Multiply, 1.0, "center", 0, 0).unwrap();
+/// let overlay = editor::blend(&image1, &image2, BlendMode::Overlay, 1.0, "center", 0, 0).unwrap();
+/// let screen = editor::blend(&image1, &image2, BlendMode::Screen, 1.0, "center", 0, 0).unwrap();
 ///
 /// // Save it
 /// raster::save(&normal, "tests/out/test_blend_normal.png");
@@ -101,7 +102,7 @@ use transform;
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_screen.png)
 ///
-pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32, position: &str, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
+pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32, position: &str, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
 
     let mut opacity = opacity;
     if opacity > 1.0 {
@@ -160,31 +161,17 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
         loop_end_y -= diff;
     }
 
-    let blend_mode = blend_mode.to_lowercase();
-    match &*blend_mode {
-        "normal" => {
-            let image3 = try!(blend::normal( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
-            Ok(image3)
-        },
-        "difference" => {
-            let image3 = try!(blend::difference( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
-            Ok(image3)
-        },
-        "multiply" => {
-            let image3 = try!(blend::multiply( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
-            Ok(image3)
-        },
-        "overlay" => {
-            let image3 = try!(blend::overlay( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
-            Ok(image3)
-        },
-        "screen" => {
-            let image3 = try!(blend::screen( &image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity ));
-            Ok(image3)
-        },
-        _ => {
-            Err(RasterError::InvalidBlendMode(blend_mode))
-        }
+    match blend_mode {
+        BlendMode::Normal =>
+            blend::normal(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+        BlendMode::Difference =>
+            blend::difference(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+        BlendMode::Multiply =>
+            blend::multiply(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+        BlendMode::Overlay =>
+            blend::overlay(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+        BlendMode::Screen =>
+            blend::screen(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
     }
 }
 
@@ -351,6 +338,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> RasterResult<()> {
 /// use raster::editor;
 /// use raster::Color;
 /// use raster::Image;
+/// use raster::BlendMode;
 ///
 /// // Create an image from file
 /// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
@@ -364,8 +352,8 @@ pub fn fill(mut src: &mut Image, color: Color) -> RasterResult<()> {
 /// let mut bg = Image::blank(200, 200);
 /// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
 ///
-/// let image1 = editor::blend(&bg, &image1, "normal", 1.0, "top-left", 0, 0).unwrap();
-/// let image2 = editor::blend(&bg, &image2, "normal", 1.0, "top-left", 0, 0).unwrap();
+/// let image1 = editor::blend(&bg, &image1, BlendMode::Normal, 1.0, "top-left", 0, 0).unwrap();
+/// let image2 = editor::blend(&bg, &image2, BlendMode::Normal, 1.0, "top-left", 0, 0).unwrap();
 ///
 /// raster::save(&image1, "tests/out/test_resize_fit_1.jpg");
 /// raster::save(&image2, "tests/out/test_resize_fit_2.jpg");

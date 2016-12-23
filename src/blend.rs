@@ -16,6 +16,15 @@ use error::RasterResult;
 use Image;
 use Color;
 
+#[derive(Debug)]
+pub enum BlendMode {
+    Normal,
+    Difference,
+    Multiply,
+    Overlay,
+    Screen
+}
+
 pub fn difference(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, loop_start_x:i32, loop_end_x:i32, offset_x:i32, offset_y:i32, opacity:f32) -> RasterResult<Image> {
 
     let mut canvas = image1.clone();
@@ -36,9 +45,9 @@ pub fn difference(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i
             let g2 = rgba2.g as f32;
             let b2 = rgba2.b as f32;
 
-            let r3 = ch_alpha_f(r1, r2, "difference", a2);
-            let g3 = ch_alpha_f(g1, g2, "difference", a2);
-            let b3 = ch_alpha_f(b1, b2, "difference", a2);
+            let r3 = ch_alpha_f(r1, r2, BlendFunction::Difference, a2);
+            let g3 = ch_alpha_f(g1, g2, BlendFunction::Difference, a2);
+            let b3 = ch_alpha_f(b1, b2, BlendFunction::Difference, a2);
             let a3 = 255;
 
             try!(canvas.set_pixel(canvas_x, canvas_y, Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
@@ -68,9 +77,9 @@ pub fn multiply(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32
             let g2 = rgba2.g as f32;
             let b2 = rgba2.b as f32;
 
-            let r3 = ch_alpha_f(r1, r2, "multiply", a2);
-            let g3 = ch_alpha_f(g1, g2, "multiply", a2);
-            let b3 = ch_alpha_f(b1, b2, "multiply", a2);
+            let r3 = ch_alpha_f(r1, r2, BlendFunction::Multiply, a2);
+            let g3 = ch_alpha_f(g1, g2, BlendFunction::Multiply, a2);
+            let b3 = ch_alpha_f(b1, b2, BlendFunction::Multiply, a2);
             let a3 = 255;
 
             try!(canvas.set_pixel(canvas_x, canvas_y, Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
@@ -132,9 +141,9 @@ pub fn overlay(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32,
             let g2 = rgba2.g as f32;
             let b2 = rgba2.b as f32;
 
-            let r3 = ch_alpha_f(r1, r2, "overlay", a2);
-            let g3 = ch_alpha_f(g1, g2, "overlay", a2);
-            let b3 = ch_alpha_f(b1, b2, "overlay", a2);
+            let r3 = ch_alpha_f(r1, r2, BlendFunction::Overlay, a2);
+            let g3 = ch_alpha_f(g1, g2, BlendFunction::Overlay, a2);
+            let b3 = ch_alpha_f(b1, b2, BlendFunction::Overlay, a2);
             let a3 = 255;
 
             try!(canvas.set_pixel(canvas_x, canvas_y, Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
@@ -164,9 +173,9 @@ pub fn screen(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, 
             let g2 = rgba2.g as f32;
             let b2 = rgba2.b as f32;
 
-            let r3 = ch_alpha_f(r1, r2, "screen", a2);
-            let g3 = ch_alpha_f(g1, g2, "screen", a2);
-            let b3 = ch_alpha_f(b1, b2, "screen", a2);
+            let r3 = ch_alpha_f(r1, r2, BlendFunction::Screen, a2);
+            let g3 = ch_alpha_f(g1, g2, BlendFunction::Screen, a2);
+            let b3 = ch_alpha_f(b1, b2, BlendFunction::Screen, a2);
             let a3 = 255;
 
             try!(canvas.set_pixel(canvas_x, canvas_y, Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
@@ -180,13 +189,25 @@ pub fn screen(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, 
 // base, top 0.0 - 255.0
 // opacity 0.0 - 1.0
 
-fn ch_alpha_f(base: f32, top: f32, f: &str, opacity: f32) -> f32 {
+/*
+This is the private BlendFunction enum, not to be confused with BlendMode, which is for public
+consumption! BlendFunction differs only in lacking a Normal variant, as ch_alpha_f has no need for
+such things.
+*/
+#[derive(Debug)]
+enum BlendFunction {
+    Difference,
+    Multiply,
+    Overlay,
+    Screen
+}
+
+fn ch_alpha_f(base: f32, top: f32, f: BlendFunction, opacity: f32) -> f32 {
     match f {
-        "difference" => ch_alpha( base, ch_difference( base, top ), opacity ),
-        "multiply" => ch_alpha( base, ch_multiply( base, top ), opacity ),
-        "overlay" => ch_alpha( base, ch_overlay( base, top ), opacity ),
-        "screen" => ch_alpha( base, ch_screen( base, top ), opacity ),
-        _ => panic!("Invalid blend function.") // TODO:
+        BlendFunction::Difference => ch_alpha( base, ch_difference( base, top ), opacity ),
+        BlendFunction::Multiply => ch_alpha( base, ch_multiply( base, top ), opacity ),
+        BlendFunction::Overlay => ch_alpha( base, ch_overlay( base, top ), opacity ),
+        BlendFunction::Screen => ch_alpha( base, ch_screen( base, top ), opacity )
     }
 }
 

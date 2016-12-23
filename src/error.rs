@@ -22,7 +22,6 @@ pub enum RasterError {
     All of these invalid mode/type errors will be unneeded once mode/type flags are switched
     to using enums rather than strings.
     */
-    InvalidBlendMode(String),
     InvalidResiveMode(String),
     InvalidBlurMode(String),
     InvalidInterpolationMode(String),

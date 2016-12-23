@@ -102,6 +102,7 @@ use self::image::GenericImage;
 
 // from local crate
 use error::{RasterError, RasterResult};
+pub use blend::BlendMode;
 
 /// Create an image from an image file.
 ///
