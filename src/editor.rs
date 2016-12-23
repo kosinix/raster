@@ -309,7 +309,7 @@ pub enum ResizeMode {
 
 /// Resize an image to a given width, height and mode.
 ///
-/// Modes:
+/// # Modes
 ///
 /// * `Exact` - Resize image to exact dimensions ignoring aspect ratio.
 /// * `ExactWidth` - Resize image to exact width. Height parameter is ignored and is auto calculated instead.
