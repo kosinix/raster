@@ -29,8 +29,8 @@ pub enum TransformMode {
 ///
 /// Mode:
 ///
-/// * X - Flip image horizontally.
-/// * Y - Flip image vertically.
+/// * `X` - Flip image horizontally.
+/// * `Y` - Flip image vertically.
 ///
 /// # Examples
 ///
