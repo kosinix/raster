@@ -7,24 +7,25 @@
 // from external crate
 
 // from local crate
+use error::RasterResult;
 use Image;
 use editor;
 
-/// Compare two images and returns a hamming distance. A value of 0 indicates a likely similar picture. 
+/// Compare two images and returns a hamming distance. A value of 0 indicates a likely similar picture.
 /// A value between 1 and 10 is potentially a variation. A value greater than 10 is likely a different image.
 ///
 /// # Examples
 /// ```
 /// use raster::compare;
-/// 
+///
 /// let image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let image2 = raster::open("tests/in/sample.png").unwrap();
-/// 
+///
 /// let hamming_distance = compare::similar(&image1, &image2).unwrap();
 /// println!("{}", hamming_distance);
 /// ```
-pub fn similar(image1: &Image, image2: &Image) -> Result<u8, String> {
-    
+pub fn similar(image1: &Image, image2: &Image) -> RasterResult<u8> {
+
     let bin1 = try!(diff_hash(image1));
     let bin2 = try!(diff_hash(image2));
     let mut distance = 0;
@@ -36,21 +37,21 @@ pub fn similar(image1: &Image, image2: &Image) -> Result<u8, String> {
     Ok(distance)
 }
 
-/// Compare if two images are equal. It will compare if the two images are of the same width and height. 
-/// If the dimensions differ, it will return false. If the dimensions are equal, it will loop through each pixels. 
+/// Compare if two images are equal. It will compare if the two images are of the same width and height.
+/// If the dimensions differ, it will return false. If the dimensions are equal, it will loop through each pixels.
 /// If one of the pixel don't match, it will return false. The pixels are compared using their RGB (Red, Green, Blue) values.
 ///
 /// # Examples
 /// ```
 /// use raster::compare;
-/// 
+///
 /// let image1 = raster::open("tests/in/sample.png").unwrap();
 /// let image2 = raster::open("tests/in/sample.png").unwrap();
-/// 
+///
 /// let equal = compare::equal(&image1, &image2).unwrap();
 /// assert_eq!(true, equal);
 /// ```
-pub fn equal(image1: &Image, image2: &Image)-> Result<bool, String> {
+pub fn equal(image1: &Image, image2: &Image)-> RasterResult<bool> {
 
     // Check if image dimensions are equal
     if image1.width != image2.width || image1.height != image2.height {
@@ -70,7 +71,7 @@ pub fn equal(image1: &Image, image2: &Image)-> Result<bool, String> {
                 let pixel2 = try!(image2.get_pixel(x, y));
 
                 // Compare pixel value
-                if 
+                if
                     pixel1.r != pixel2.r ||
                     pixel1.g != pixel2.g ||
                     pixel1.b != pixel2.b
@@ -97,7 +98,7 @@ pub fn equal(image1: &Image, image2: &Image)-> Result<bool, String> {
 // http://www.hackerfactor.com/blog/index.php?/archives/529-Kind-of-Like-That.html
 //
 //
-fn diff_hash(image: &Image) -> Result<Vec<u8>, String> {
+fn diff_hash(image: &Image) -> RasterResult<Vec<u8>> {
 
     let width  = 9;
     let height = 8;

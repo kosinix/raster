@@ -10,37 +10,26 @@ use std::cmp;
 
 
 // from local crate
+use error::{RasterError, RasterResult};
 use Image;
 use Color;
 
 /// Resample an image into a new size using a given interpolation method.
-pub fn resample<'a>(mut src: &'a mut Image, w: i32, h: i32, interpolation: &str) -> Result<(), String> {
-    
+pub fn resample<'a>(mut src: &'a mut Image, w: i32, h: i32, interpolation: &str) -> RasterResult<()> {
     match interpolation {
-        "bilinear" => {
-            try!(bilinear(&mut src, w, h));
-            Ok(())
-        },
-        "bicubic" => {
-            try!(bilinear(&mut src, w, h)); // TODO: bicubic
-            Ok(())
-        },
-        "nearest" => {
-            try!(nearest(&mut src, w, h));
-            Ok(())
-        },
-        _ => {
-            Err(format!("Invalid interpolation '{}'", interpolation))
-        }
-    }
+        "bilinear" => bilinear(&mut src, w, h),
+        "bicubic" => bilinear(&mut src, w, h), // TODO: bicubic
+        "nearest" => nearest(&mut src, w, h),
+        _ => Err(RasterError::InvalidInterpolationMode(interpolation.to_string()))
+    }.map(|_| ())
 }
 
 /// Interpolate using nearest neighbor.
-pub fn nearest<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<(), String> {
-    
+pub fn nearest<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
+
     let x_ratio: f64 = src.width as f64 / w as f64;
     let y_ratio: f64 = src.height as f64 / h as f64;
-    
+
     let mut dest = Image::blank(w, h);
     for y in 0..h {
         for x in 0..w {
@@ -48,7 +37,7 @@ pub fn nearest<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<(), String>
             let px: i32 = ( x as f64 * x_ratio ).floor() as i32;
             let py: i32 = ( y as f64 * y_ratio ).floor() as i32;
             let pixel = try!(src.get_pixel(px, py));
-            
+
             try!(dest.set_pixel(x, y, pixel));
         }
     }
@@ -60,26 +49,26 @@ pub fn nearest<'a>(mut src: &'a mut Image, w: i32, h: i32) -> Result<(), String>
 }
 
 /// Interpolate using linear function.
-pub fn bilinear<'a>(mut src: &'a mut Image, w2: i32, h2: i32) -> Result<(), String> {
-    
+pub fn bilinear<'a>(mut src: &'a mut Image, w2: i32, h2: i32) -> RasterResult<()> {
+
     try!(bilinear_width(&mut src, w2));
     try!(bilinear_height(&mut src, h2));
-    
+
     Ok(())
 }
 
 // Private functions
 
 /// Interpolate the width using linear function.
-fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> Result<(), String> {
-    
+fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> RasterResult<()> {
+
     let w1 = src.width;
     let h1 = src.height;
 
     let x_ratio: f64 = w1 as f64 / w2 as f64;
-    
+
     let mut dest = Image::blank(w2, h1);
-    
+
     let offset_x = (w2 / w1 / 2) as i32;
 
     let x_start = 0 - offset_x;
@@ -87,7 +76,7 @@ fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> Result<(), String> {
 
     for y in 0..h1 {
         for x in x_start..x_end {
-            
+
             let mut src_x = x as f64 * x_ratio;
             if src_x < 0.0 {
                 src_x = 0.0; // limit lower bound to 0
@@ -102,7 +91,7 @@ fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> Result<(), String> {
 
             let src_color1 = try!(src.get_pixel(src_x_int, y));
             let src_color2 = try!(src.get_pixel(src_x_int2, y));
-            
+
             // red
             let red = _lerp(src_color1.r, src_color2.r, t_x);
 
@@ -119,23 +108,23 @@ fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> Result<(), String> {
 
         }
     }
-    src.width = dest.width;     
-    src.height = dest.height;     
+    src.width = dest.width;
+    src.height = dest.height;
     src.bytes = dest.bytes;
-    
+
     Ok(())
 }
 
 /// Interpolate the height using linear function.
-fn bilinear_height<'a>(mut src: &'a mut Image, h2: i32) -> Result<(), String> {
-    
+fn bilinear_height<'a>(mut src: &'a mut Image, h2: i32) -> RasterResult<()> {
+
     let w1 = src.width;
     let h1 = src.height;
 
     let y_ratio: f64 = h1 as f64 / h2 as f64;
-    
+
     let mut dest = Image::blank(w1, h2);
-    
+
     let offset_y = (h2 / h1 / 2) as i32;
 
     let y_start = 0 - offset_y;
@@ -143,7 +132,7 @@ fn bilinear_height<'a>(mut src: &'a mut Image, h2: i32) -> Result<(), String> {
 
     for x in 0..w1 {
         for y in y_start..y_end {
-            
+
             let mut src_y = y as f64 * y_ratio;
 
             if src_y < 0.0 {
@@ -159,7 +148,7 @@ fn bilinear_height<'a>(mut src: &'a mut Image, h2: i32) -> Result<(), String> {
 
             let src_color1 = try!(src.get_pixel(x, src_y_int));
             let src_color2 = try!(src.get_pixel(x, src_y_int2));
-            
+
             // red
             let red = _lerp(src_color1.r, src_color2.r, t_y);
 

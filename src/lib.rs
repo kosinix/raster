@@ -3,7 +3,7 @@
 //! Raster is an image processing lib for Rust.
 //!
 //! It provides a simplified API for processing raster images (JPEG, PNG and GIF).
-//! 
+//!
 //! ## Installation
 //! Add this to your Cargo.toml file:
 //!
@@ -33,12 +33,12 @@
 //! ### Create a blank image
 //! ```rust,ignore
 //! use raster::Image; // Include the Image struct
-//! 
+//!
 //! // Create a blank 150x100 image. Defaults to a black background.
 //! let image = Image::blank(150, 100);
 //!
 //! ```
-//! 
+//!
 //! ## Saving Images
 //! Save the opened image file:
 //!
@@ -50,14 +50,14 @@
 //! raster::save(&image, "tests/out/test_open_save.png");
 //!
 //! ```
-//! 
+//!
 //!
 //!
 //!
 //! ## Blending 2 Images
 //!
 //! Here are two images blended using the normal mode.
-//! 
+//!
 //! ![](https://kosinix.github.io/raster/out/test_blend_normal.png)
 //!
 //! More blending modes and options are available, see the blend API.
@@ -74,13 +74,14 @@
 //!
 //! Images can be rotated both clockwise and counter-clockwise at any arbitrary angle with a custom background color.
 //!
-//! ![](https://kosinix.github.io/raster/out/test_transform_rotate_45.png)  
+//! ![](https://kosinix.github.io/raster/out/test_transform_rotate_45.png)
 //! ![](https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png)
 //!
 //! ## And Many More...
 //!
 //! More options are available, checkout the modules below.
 //!
+pub mod error;
 pub mod compare;
 pub mod editor;
 pub mod filter;
@@ -100,20 +101,25 @@ use std::collections::HashMap;
 use self::image::GenericImage;
 
 // from local crate
-
+use error::{RasterError, RasterResult};
 
 /// Create an image from an image file.
 ///
+/// # Errors
+///
+/// At present, this function relies on [image](https://github.com/PistonDevelopers/image), and
+/// thus returns `RasterError::Image` upon failure.
+///
 /// # Examples
-/// 
+///
 /// ```
 /// // Create an image from file
 /// let image = raster::open("tests/in/sample.png").unwrap();
 /// println!("{:?}", image.bytes);
 /// ```
-pub fn open(image_file: &str) -> Result<Image, String> {
-    
-    let src = image::open(image_file).unwrap(); // Returns image::DynamicImage
+pub fn open(image_file: &str) -> RasterResult<Image> {
+
+    let src = try!(image::open(image_file).map_err(RasterError::Image)); // Returns image::DynamicImage
     let (w, h) = src.dimensions();
     let mut bytes = Vec::new();
     for y in 0..h {
@@ -125,7 +131,7 @@ pub fn open(image_file: &str) -> Result<Image, String> {
             bytes.push(p.data[3]);
         }
     }
-    Ok(Image{ 
+    Ok(Image{
         width: w as i32,
         height: h as i32,
         bytes: bytes
@@ -135,17 +141,25 @@ pub fn open(image_file: &str) -> Result<Image, String> {
 
 /// Save an image to an image file. The image type is detected from the file extension of the file name.
 ///
+/// # Errors
+///
+/// If writing to a file fails, this function returns `RasterError::Io`.
+///
 /// # Examples
-/// 
+///
 /// ```
 /// // Create an image from file
 /// let image = raster::open("tests/in/sample.png").unwrap();
 /// raster::save(&image, "tests/out/test.png");
 /// ```
-pub fn save(image: &Image, out: &str) {
-    
-    image::save_buffer(&Path::new(out), &image.bytes, image.width as u32, image.height as u32, image::RGBA(8)).unwrap();
-
+pub fn save(image: &Image, out: &str) -> RasterResult<()> {
+    image::save_buffer(
+        &Path::new(out),
+        &image.bytes,
+        image.width as u32,
+        image.height as u32,
+        image::RGBA(8)
+    ).map_err(RasterError::Io)
 }
 
 /// A struct for easily representing a raster image.
@@ -153,16 +167,16 @@ pub fn save(image: &Image, out: &str) {
 pub struct Image {
     /// Width of image in pixels.
     pub width: i32, //  i32 type is used as computation with negative integers is common.
-    
+
     /// Height of image in pixels.
-    pub height: i32,    
+    pub height: i32,
 
     /// Vector containing sequence of bytes in RGBA format.
     pub bytes: Vec<u8>,
 }
 
 impl<'a> Image {
-    
+
     /// Create a blank image. Default color is black.
     ///
     /// # Examples
@@ -171,14 +185,14 @@ impl<'a> Image {
     /// use raster::Image;
     ///
     /// let image = Image::blank(2, 2);
-    /// 
+    ///
     /// println!("{:?}", image.bytes);
     ///
     /// assert_eq!(image.width, 2);
     /// assert_eq!(image.height, 2);
     /// ```
     pub fn blank(w:i32, h:i32) -> Image {
-        
+
         let mut bytes = Vec::new();
         for _ in 0..h {
             for _ in 0..w {
@@ -188,7 +202,7 @@ impl<'a> Image {
                 bytes.push(255);
             }
         }
-        Image { 
+        Image {
             width: w,
             height: h,
             bytes: bytes
@@ -203,12 +217,12 @@ impl<'a> Image {
     /// use raster::Image;
     ///
     /// let image = Image::blank(2, 2);
-    /// 
+    ///
     /// assert_eq!(image.check_pixel(0, 0), true);
     /// assert_eq!(image.check_pixel(3, 3), false);
     /// ```
     pub fn check_pixel(&self, x: i32, y:i32) -> bool {
-        
+
         if y < 0 || y > self.height { // TODO: check on actual vectors and not just width and height?
             return false;
 
@@ -254,9 +268,9 @@ impl<'a> Image {
     /// use raster::Color;
     ///
     /// let image = raster::open("tests/in/sample.png").unwrap();
-    /// 
+    ///
     /// let (r_bin, _, _, _) = image.histogram().unwrap();
-    /// 
+    ///
     /// let mut max_r_bin = 0;
     /// for (_, count) in &r_bin {
     ///     if *count > max_r_bin {
@@ -268,18 +282,18 @@ impl<'a> Image {
     /// let canvas_h: i32 = 100;
     /// let mut image = Image::blank(canvas_w, canvas_h);
     /// raster::editor::fill(&mut image, Color::rgb(214, 214, 214)).unwrap();
-    /// 
+    ///
     /// for x in 0..256 as i32 { // 0-255
     ///     let key = x as u8;
     ///     match r_bin.get(&key) {
     ///         Some(count) => {
-    /// 
+    ///
     ///             let height = (canvas_h as f32 * (*count as f32 / max_r_bin as f32)).round() as i32;
-    /// 
+    ///
     ///             for y in canvas_h-height..canvas_h {
-    /// 
+    ///
     ///                 image.set_pixel(x, y, Color::hex("#e22d11").unwrap()).unwrap();
-    ///                 
+    ///
     ///             }
     ///         },
     ///         None => {}
@@ -294,10 +308,10 @@ impl<'a> Image {
     /// ![](https://kosinix.github.io/raster/out/histogram.png)
     ///
     /// Photoshop's result:
-    /// 
+    ///
     /// ![](https://kosinix.github.io/raster/in/histogram-ps.png)
     ///
-    pub fn histogram(&self) -> Result< (HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>), String> {
+    pub fn histogram(&self) -> RasterResult<(HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>)> {
         let w = self.width;
         let h = self.height;
 
@@ -329,6 +343,11 @@ impl<'a> Image {
 
     /// Get pixel in a given x and y location of an image.
     ///
+    /// # Errors
+    ///
+    /// If either the x or y coordinate falls out of bounds, this will fail with
+    /// `RasterError::PixelOutOfBounds`.
+    ///
     /// # Examples
     ///
     /// ```
@@ -344,7 +363,7 @@ impl<'a> Image {
     /// assert_eq!(0, pixel.b);
     /// assert_eq!(255, pixel.a);
     /// ```
-    pub fn get_pixel(&self, x: i32, y:i32) -> Result<Color, String> {
+    pub fn get_pixel(&self, x: i32, y:i32) -> RasterResult<Color> {
         let rgba = 4;
         let start = (y * &self.width) + x;
         let start = start * rgba;
@@ -352,19 +371,27 @@ impl<'a> Image {
         let len = self.bytes.len();
 
         if start as usize > len || end as usize > len {
-            return Err(format!("Getting a pixel at ({}, {}) that is out of bounds.", x, y).to_string());
+            Err(RasterError::PixelOutOfBounds(x, y))
+        } else {
+            let slice = &self.bytes[start as usize..end as usize];
+            Ok(Color {
+                r: slice[0],
+                g: slice[1],
+                b: slice[2],
+                a: slice[3],
+            })
         }
-        
-        let slice = &self.bytes[start as usize..end as usize];
-        Ok(Color {
-            r: slice[0],
-            g: slice[1],
-            b: slice[2],
-            a: slice[3],
-        })
     }
 
     /// Set pixel in a given x and y location of an image.
+    ///
+    /// # Errors
+    ///
+    /// If either the x or y coordinate falls out of bounds, this will fail with
+    /// `RasterError::PixelOutOfBounds`.
+    ///
+    /// If the calculated byte start index is less than 0, this will fail with
+    /// `RasterError::InvalidStartIndex`.
     ///
     /// # Examples
     ///
@@ -383,24 +410,23 @@ impl<'a> Image {
     /// assert_eq!(0, pixel.b);
     /// assert_eq!(255, pixel.a);
     /// ```
-    pub fn set_pixel(&mut self, x: i32, y:i32, color: Color ) -> Result<(), String> {
+    pub fn set_pixel(&mut self, x: i32, y:i32, color: Color ) -> RasterResult<()> {
         let rgba = 4; // length
         let start = (y * &self.width) + x;
         let start = start * rgba;
-        
-        if x >= self.width || y >= self.height {
-            return Err(format!("Setting a pixel that is out of bounds at ({}, {}).", x, y).to_string());
-        }
-        if start < 0 {
-            return Err(format!("Invalid start index {}.", start).to_string());
-        }
-        
-        self.bytes[start as usize] = color.r;
-        self.bytes[start as usize + 1] = color.g;
-        self.bytes[start as usize + 2] = color.b;
-        self.bytes[start as usize + 3] = color.a;
 
-        Ok(())
+        if x >= self.width || y >= self.height {
+            Err(RasterError::PixelOutOfBounds(x, y))
+        } else if start < 0 {
+            Err(RasterError::InvalidStartIndex(start))
+        } else {
+            self.bytes[start as usize] = color.r;
+            self.bytes[start as usize + 1] = color.g;
+            self.bytes[start as usize + 2] = color.b;
+            self.bytes[start as usize + 3] = color.a;
+
+            Ok(())
+        }
     }
 }
 
@@ -411,7 +437,7 @@ impl<'a> Image {
 pub struct Color {
     /// Red channel 0 - 255
     pub r: u8,
-    
+
     /// Green channel 0 - 255
     pub g: u8,
 
@@ -423,7 +449,7 @@ pub struct Color {
 }
 
 impl<'a> Color {
-    
+
     /// Returns a black Color.
     pub fn black() -> Color {
         Color {
@@ -468,6 +494,12 @@ impl<'a> Color {
     ///
     /// Example of valid formats: #FFFFFF, #ffeecc, #00ff007f
     ///
+    /// # Errors
+    ///
+    /// If the hex *string* is malformed (doesn't begin with `#` or is of invalid length) then this
+    /// fails with `RasterError::InvalidHex`. If it passes that, but the string can't be parsed
+    /// into actual values, then this fails with `RasterError::HexParse`.
+    ///
     /// # Examples
     /// ```
     /// use raster::Color;
@@ -475,17 +507,17 @@ impl<'a> Color {
     /// // Ok tests
     /// let color = Color::hex("#FFFFFF"); // Opaque white
     /// assert!(color.is_ok());
-    /// 
+    ///
     /// let color = Color::hex("#00FF007F"); // Green with 50% opacity
     /// assert!(color.is_ok());
-    /// 
+    ///
     /// // Error tests
     /// let color = Color::hex("");
     /// assert!(color.is_err());
-    /// 
+    ///
     /// let color = Color::hex("#");
     /// assert!(color.is_err());
-    /// 
+    ///
     /// let color = Color::hex("#FFF");
     /// assert!(color.is_err());
     ///
@@ -499,30 +531,24 @@ impl<'a> Color {
     /// let color = Color::hex("#00FF007F").unwrap();
     /// assert_eq!(255, color.g);
     /// ```
-    pub fn hex(hex: &str) -> Result<Color, String> {
-        
+    pub fn hex(hex: &str) -> RasterResult<Color> {
         if hex.len() == 9 && hex.starts_with("#") { // #FFFFFFFF (Red Green Blue Alpha)
-
-            return Ok(Color {
+            Ok(Color {
                 r: try!(_hex_dec(&hex[1..3])),
                 g: try!(_hex_dec(&hex[3..5])),
                 b: try!(_hex_dec(&hex[5..7])),
                 a: try!(_hex_dec(&hex[7..9])),
-            });
-
+            })
         } else if hex.len() == 7 && hex.starts_with("#") { // #FFFFFF (Red Green Blue)
-
-            return Ok(Color {
+            Ok(Color {
                 r: try!(_hex_dec(&hex[1..3])),
                 g: try!(_hex_dec(&hex[3..5])),
                 b: try!(_hex_dec(&hex[5..7])),
                 a: 255,
-            });
-
-        } 
-        
-        Err("Error parsing hex. Example of valid formats: #FFFFFF or #ffffffff".to_string())
-        
+            })
+        } else {
+            Err(RasterError::InvalidHex)
+        }
     }
 
     /// Returns a red Color.
@@ -543,7 +569,7 @@ impl<'a> Color {
     /// use raster::Color;
     ///
     /// let rgb = Color::rgb(0, 255, 0); // Green
-    /// 
+    ///
     /// println!("{:?}", rgb);
     ///
     /// assert_eq!(rgb.r, 0);
@@ -568,7 +594,7 @@ impl<'a> Color {
     /// use raster::Color;
     ///
     /// let rgba = Color::rgba(0, 0, 255, 255); // Blue
-    /// 
+    ///
     /// println!("{:?}", rgba);
     ///
     /// assert_eq!(rgba.r, 0);
@@ -591,7 +617,7 @@ impl<'a> Color {
     /// use raster::Color;
     ///
     /// let hsv = Color::to_hsv(50, 50, 100);
-    /// 
+    ///
     /// assert_eq!(240, hsv.0);
     /// assert_eq!(50.0, (hsv.1).round()); // Saturation in float
     /// assert_eq!(39.0, (hsv.2).round()); // Brightness in float
@@ -624,7 +650,7 @@ impl<'a> Color {
         let mut h = 0.0;
 
         if chroma != 0.0 {
-            
+
             if max == r {
                 h = 60.0 * ((g - b) / chroma);
                 if h < 0.0 {
@@ -644,7 +670,7 @@ impl<'a> Color {
         let v = max;
         let mut s = 0.0;
         if v != 0.0 {
-            
+
             s = chroma / v;
         }
 
@@ -659,7 +685,7 @@ impl<'a> Color {
     /// let rgb1 = (127, 70, 60);
     /// let hsv = Color::to_hsv(rgb1.0, rgb1.1, rgb1.2); // Convert to HSV
     /// let rgb2 = Color::to_rgb(hsv.0, hsv.1, hsv.2); // Convert back to RGB
-    /// 
+    ///
     /// // Check if source RGB is equal to final RGB
     /// assert_eq!(rgb1.0, rgb2.0);
     /// assert_eq!(rgb1.1, rgb2.1);
@@ -727,13 +753,8 @@ impl<'a> Color {
 // Private functions
 
 // Convert a hex string to decimal. Eg. "00" -> 0. "FF" -> 255.
-fn _hex_dec(hex_string: &str) -> Result <u8, String> {
-    match u8::from_str_radix(hex_string, 16) {
-        Ok(o) => {
-            Ok(o as u8)
-        },
-        Err(e) => {
-            Err(format!("Error parsing hex: {}", e).to_string())
-        }
-    }
+fn _hex_dec(hex_string: &str) -> RasterResult<u8> {
+    u8::from_str_radix(hex_string, 16)
+        .map(|o| o as u8)
+        .map_err(RasterError::HexParse)
 }

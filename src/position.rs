@@ -8,6 +8,10 @@
 
 // from external crate
 
+
+// from local crate
+use error::{RasterError, RasterResult};
+
 /// Struct for computing position on an image.
 pub struct Position<'a> {
     position: &'a str,
@@ -25,7 +29,7 @@ impl<'a> Position<'a> {
     }
 
     /// Get X and Y position based on parameters.
-    pub fn get_x_y(&self, canvas_width: i32, canvas_height: i32, image_width:i32, image_height:i32) -> Result<(i32, i32), String> {
+    pub fn get_x_y(&self, canvas_width: i32, canvas_height: i32, image_width:i32, image_height:i32) -> RasterResult<(i32, i32)> {
         let offset_x = self.offset_x;
         let offset_y = self.offset_y;
 
@@ -69,9 +73,7 @@ impl<'a> Position<'a> {
                 let y = ((canvas_height / 2) - (image_height / 2)) + offset_y;
                 Ok((x, y))
             },
-            _ => {
-                Err(format!("Invalid position {}.", self.position))
-            }
+            _ => Err(RasterError::InvalidPositionType(self.position.to_string()))
         }
     }
 }

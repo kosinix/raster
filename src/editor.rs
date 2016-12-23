@@ -9,15 +9,16 @@ extern crate image;
 
 
 // from local crate
+use error::{RasterError, RasterResult};
 use blend;
 use Color;
 use Image;
 use position::Position;
 use transform;
 
-/// Blend 2 images into one. The image1 is the base and image2 is the top. 
-/// 
-/// Supported blend modes: 
+/// Blend 2 images into one. The image1 is the base and image2 is the top.
+///
+/// Supported blend modes:
 ///
 /// * normal
 /// * difference
@@ -25,7 +26,7 @@ use transform;
 /// * overlay
 /// * screen
 ///
-/// Possible position: 
+/// Possible position:
 ///
 /// * top-left
 /// * top-center
@@ -41,6 +42,10 @@ use transform;
 ///
 /// The offset_x and offset_y are added to the final position. Can also be negative offsets.
 ///
+/// # Errors
+///
+/// If image2 falls outside the canvas area, then this fails with `RasterError::BlendingImageFallsOutsideCanvas`.
+///
 /// # Examples
 /// ```
 /// use raster::editor;
@@ -48,7 +53,7 @@ use transform;
 /// // Create images from file
 /// let image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let image2 = raster::open("tests/in/watermark.png").unwrap();
-/// 
+///
 /// // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
 /// let normal = editor::blend(&image1, &image2, "normal", 1.0, "center", 0, 0).unwrap();
 ///
@@ -67,16 +72,16 @@ use transform;
 /// ```
 /// ### Source Images
 ///
-/// Image 1 
+/// Image 1
 ///
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
 ///
 /// Image 2
 ///
 /// ![](https://kosinix.github.io/raster/in/watermark.png)
-/// 
+///
 /// ### Blended Images
-/// 
+///
 /// Normal
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_normal.png)
@@ -85,23 +90,23 @@ use transform;
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_difference.png)
 ///
-/// 
+///
 /// Multiply
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_multiply.png)
 ///
-/// 
+///
 /// Overlay
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_overlay.png)
 ///
-/// 
+///
 /// Screen
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_screen.png)
 ///
-pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32, position: &str, offset_x: i32, offset_y: i32) -> Result<Image, String> {
-    
+pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32, position: &str, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
+
     let mut opacity = opacity;
     if opacity > 1.0 {
         opacity = 1.0
@@ -124,7 +129,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
         (offset_y >= h1) ||
         (offset_y + h2 <= 0) {
 
-        return Err("Invalid blending. Image 2 is outside the canvas.".to_string());
+        return Err(RasterError::BlendingImageFallsOutsideCanvas);
     }
 
     // Loop start X
@@ -182,14 +187,14 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
             Ok(image3)
         },
         _ => {
-            Err(format!("Invalid blend type {}.", &*blend_mode))
+            Err(RasterError::InvalidBlendMode(blend_mode))
         }
     }
 }
 
 /// Crop the image to the given dimension and position.
 ///
-/// Possible position: 
+/// Possible position:
 ///
 /// * top-left
 /// * top-center
@@ -261,15 +266,15 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: &str, opacity: f32,
 ///
 /// ![](https://kosinix.github.io/raster/out/test_crop_top_left.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_top_center.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_top_right.jpg)  
+/// ![](https://kosinix.github.io/raster/out/test_crop_top_right.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_center_left.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_center.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_center_right.jpg)  
+/// ![](https://kosinix.github.io/raster/out/test_crop_center_right.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_left.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg)
 ///
-pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> Result<(), String> {
+pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: &str, offset_x: i32, offset_y: i32) -> RasterResult<()> {
 
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
@@ -280,13 +285,13 @@ pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, posit
 
 
     let mut height2 = offset_y + crop_height;
-    if height2 > src.height { 
-        height2 = src.height 
+    if height2 > src.height {
+        height2 = src.height
     }
 
     let mut width2 = offset_x + crop_width;
-    if width2 > src.width { 
-        width2 = src.width 
+    if width2 > src.width {
+        width2 = src.width
     }
 
     let mut dest = Image::blank(width2-offset_x, height2-offset_y);
@@ -300,7 +305,7 @@ pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, posit
     src.width = dest.width;
     src.height = dest.height;
     src.bytes = dest.bytes;
-    
+
     Ok(())
 }
 
@@ -321,9 +326,9 @@ pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, posit
 /// // Save it
 /// raster::save(&image, "tests/out/test_fill.png");
 /// ```
-/// 
 ///
-pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
+///
+pub fn fill(mut src: &mut Image, color: Color) -> RasterResult<()> {
 
     for y in 0..src.height {
         for x in 0..src.width {
@@ -338,7 +343,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 ///
 /// Modes:
 ///
-/// * exact - Resize image to exact dimensions ignoring aspect ratio. 
+/// * exact - Resize image to exact dimensions ignoring aspect ratio.
 /// * exact_width - Resize image to exact width. Height parameter is ignored and is auto calculated instead.
 /// * exact_height - Resize image to exact height. Width parameter is ignored and is auto calculated instead.
 /// * fit - Resize an image to fit within the given width and height.
@@ -354,7 +359,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// // Create an image from file
 /// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
-/// 
+///
 /// // Resize it
 /// editor::resize(&mut image1, 200, 200, "fit");
 /// editor::resize(&mut image2, 200, 200, "fit");
@@ -383,7 +388,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// // Create an image from file
 /// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
-/// 
+///
 /// // Resize it
 /// editor::resize(&mut image1, 200, 200, "fill");
 /// editor::resize(&mut image2, 200, 200, "fill");
@@ -405,7 +410,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// // Create an image from file
 /// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
-/// 
+///
 /// // Resize it
 /// editor::resize(&mut image1, 200, 200, "exact_width");
 /// editor::resize(&mut image2, 200, 200, "exact_width");
@@ -416,7 +421,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 ///
 /// The images will have a width of 200. The height is auto-calculated.
 ///
-/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_1.jpg)  
+/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_1.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_2.jpg)
 ///
 /// ### Resize to Exact Height
@@ -428,7 +433,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// // Create an image from file
 /// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
-/// 
+///
 /// // Resize it
 /// editor::resize(&mut image1, 200, 200, "exact_height");
 /// editor::resize(&mut image2, 200, 200, "exact_height");
@@ -450,7 +455,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 /// // Create an image from file
 /// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
-/// 
+///
 /// // Resize it
 /// editor::resize(&mut image1, 200, 200, "exact");
 /// editor::resize(&mut image2, 200, 200, "exact");
@@ -463,31 +468,13 @@ pub fn fill(mut src: &mut Image, color: Color) -> Result<(), String> {
 ///
 /// ![](https://kosinix.github.io/raster/out/test_resize_exact_1.jpg) ![](https://kosinix.github.io/raster/out/test_resize_exact_2.jpg)
 ///
-pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: &str) -> Result<(), String> {
-    
+pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: &str) -> RasterResult<()> {
     match mode {
-        "exact" => {
-            try!(transform::resize_exact(&mut src, w, h));
-            Ok(())
-        }
-        "exact_width" => {
-            try!(transform::resize_exact_width(&mut src, w));
-            Ok(())
-        }
-        "exact_height" => {
-            try!(transform::resize_exact_height(&mut src, h));
-            Ok(())
-        }
-        "fit" => {
-            try!(transform::resize_fit(&mut src, w, h));
-            Ok(())
-        },
-        "fill" => {
-            try!(transform::resize_fill(&mut src, w, h));
-            Ok(())
-        },
-        _ => {
-            Err(format!("Invalid resize mode '{}'.", mode))
-        },
-    }
+        "exact" => transform::resize_exact(&mut src, w, h),
+        "exact_width" => transform::resize_exact_width(&mut src, w),
+        "exact_height" => transform::resize_exact_height(&mut src, h),
+        "fit" => transform::resize_fit(&mut src, w, h),
+        "fill" => transform::resize_fill(&mut src, w, h),
+        _ => Err(RasterError::InvalidResiveMode(mode.to_string()))
+    }.map(|_| ())
 }

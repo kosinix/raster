@@ -10,6 +10,7 @@ use std::cmp;
 
 
 // from local crate
+use error::{RasterError, RasterResult};
 use Image;
 use Color;
 
@@ -28,7 +29,7 @@ use Color;
 /// ```
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
-/// 
+///
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_box_blur.jpg)
 ///
@@ -44,28 +45,19 @@ use Color;
 /// ```
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
-/// 
+///
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_gaussian_blur.jpg)
 ///
-pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<(), String>{
-
+pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> RasterResult<()>{
     match mode {
-        "box" => {
-            try!(blur_box(&mut src));
-            Ok(())
-        },
-        "gaussian" => {
-            try!(blur_gaussian(&mut src));
-            Ok(())
-        },
-        _ => {
-            Err(format!("Invalid mode '{}'", mode))
-        }
-    }
+        "box" => blur_box(&mut src),
+        "gaussian" => blur_gaussian(&mut src),
+        _ => Err(RasterError::InvalidBlurMode(mode.to_string()))
+    }.map(|_| ())
 }
 
-/// Apply brightness. 
+/// Apply brightness.
 ///
 /// A brightness of < 0.0 will darken the image and brightness of > 1.0 will lighten it.
 ///
@@ -80,11 +72,11 @@ pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> Result<(), String>{
 ///
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
-/// 
+///
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_brightness.jpg)
 ///
-pub fn brightness(mut src: &mut Image, factor: f32) -> Result<(), String>{
+pub fn brightness(mut src: &mut Image, factor: f32) -> RasterResult<()>{
     let w: i32 = src.width;
     let h: i32 = src.height;
 
@@ -95,22 +87,22 @@ pub fn brightness(mut src: &mut Image, factor: f32) -> Result<(), String>{
 
     for y in 0..h {
         for x in 0..w {
-            
+
             let p = try!(src.get_pixel(x, y));
             let r = cmp::max(0, cmp::min(255, (p.r as f32 * factor) as i32));
             let g = cmp::max(0, cmp::min(255, (p.g as f32 * factor) as i32));
             let b = cmp::max(0, cmp::min(255, (p.b as f32 * factor) as i32));
             let a = cmp::max(0, cmp::min(255, (p.a as f32 * factor) as i32)); // TODO: Should alpha be included?
-            
+
             try!(src.set_pixel(x, y, Color::rgba(r as u8, g as u8, b as u8, a as u8)));
-            
+
         }
     }
-    
+
     Ok(())
 }
 
-/// Apply a convolution matrix. 
+/// Apply a convolution matrix.
 ///
 /// The divisor is applied as the last step of convolution.
 ///
@@ -128,20 +120,20 @@ pub fn brightness(mut src: &mut Image, factor: f32) -> Result<(), String>{
 /// filter::convolve(&mut image, matrix, 1).unwrap();
 /// raster::save(&image, "tests/out/test_filter_convolve.jpg");
 /// ```
-pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<(), String> {
-    
+pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterResult<()> {
+
     let w: i32 = src.width;
     let h: i32 = src.height;
     let m_size = 3; // Matrix size
-    
+
     let copy = src.clone(); // Create a copy as input of pixels
 
     for y in 0..h {
         for x in 0..w {
-            
+
             let mstarty = y - 1;
             let mstartx = x - 1;
-            
+
             let mut accum_red: i32 = 0;
             let mut accum_green: i32 = 0;
             let mut accum_blue: i32 = 0;
@@ -161,7 +153,7 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
                     } else if src_x > w - 1 {
                         src_x = w - 1;
                     }
-                    
+
                     let pixel = try!(copy.get_pixel(src_x, src_y));
                     accum_red += pixel.r as i32 * matrix[m_index_y][m_index_x];
                     accum_green += pixel.g as i32 * matrix[m_index_y][m_index_x];
@@ -207,10 +199,10 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
             }
 
             try!(src.set_pixel(x, y, Color::rgba(accum_red as u8, accum_green as u8, accum_blue as u8, accum_alpha as u8)));
-            
+
         }
     }
-    
+
     Ok(())
 }
 
@@ -228,11 +220,11 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> Result<
 ///
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
-/// 
+///
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_emboss.jpg)
 ///
-pub fn emboss(mut src: &mut Image) -> Result<(), String>{
+pub fn emboss(mut src: &mut Image) -> RasterResult<()>{
     let matrix: [[i32; 3]; 3] = [
         [-2, -1, 0],
         [-1, 1, 1],
@@ -244,9 +236,9 @@ pub fn emboss(mut src: &mut Image) -> Result<(), String>{
     Ok(())
 }
 
-/// Apply a gamma correction. 
+/// Apply a gamma correction.
 ///
-/// Gamma can be a value from 0.01 - 9.99. 
+/// Gamma can be a value from 0.01 - 9.99.
 /// A gamma < 1.0 will darken and a gamma > 1.0 will lighten the image.
 ///
 /// # Examples
@@ -260,34 +252,34 @@ pub fn emboss(mut src: &mut Image) -> Result<(), String>{
 ///
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
-/// 
+///
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_gamma.jpg)
 ///
 // http://stackoverflow.com/questions/14088889/changing-a-color-brightness
-pub fn gamma(mut src: &mut Image, gamma: f32) -> Result<(), String>{
+pub fn gamma(mut src: &mut Image, gamma: f32) -> RasterResult<()>{
     let w: i32 = src.width;
     let h: i32 = src.height;
 
-    if gamma < 0.01 || gamma > 9.99{
-        return Err(format!("Incorrect gamma value {}. Must be in range 0.01 - 9.99.", gamma));
+    if gamma < 0.01 || gamma > 9.99 {
+        return Err(RasterError::InvalidGamma(gamma));
     }
     let gamma = 1.0 / gamma;
 
     for y in 0..h {
         for x in 0..w {
-            
+
             let p = try!(src.get_pixel(x, y));
             let r = (p.r as f32 / 255.0).powf(gamma) * 255.0;
             let g = (p.g as f32 / 255.0).powf(gamma) * 255.0;
             let b = (p.b as f32 / 255.0).powf(gamma) * 255.0;
             let a = (p.a as f32 / 255.0).powf(gamma) * 255.0;
-            
+
             try!(src.set_pixel(x, y, Color::rgba(r as u8, g as u8, b as u8, a as u8)));
-            
+
         }
     }
-    
+
     Ok(())
 }
 
@@ -304,29 +296,29 @@ pub fn gamma(mut src: &mut Image, gamma: f32) -> Result<(), String>{
 ///
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
-/// 
+///
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_grayscale.jpg)
 ///
-pub fn grayscale(mut src: &mut Image) -> Result<(), String>{
+pub fn grayscale(mut src: &mut Image) -> RasterResult<()>{
     let w: i32 = src.width;
     let h: i32 = src.height;
-    
+
     for y in 0..h {
         for x in 0..w {
-            
+
             let p = try!(src.get_pixel(x, y));
             let gray = (p.r as f32 * 0.3) + (p.g as f32 * 0.59) + (p.b as f32 * 0.11);
-            
+
             try!(src.set_pixel(x, y, Color::rgba(gray as u8, gray as u8, gray as u8, gray as u8)));
-            
+
         }
     }
-    
+
     Ok(())
 }
 
-/// Change saturation. 
+/// Change saturation.
 ///
 /// Pass a float value for sat. < 0.0 to decrease and > 0.0 to increase. Eg 0.5 for 50% increase in saturation.
 ///
@@ -344,17 +336,17 @@ pub fn grayscale(mut src: &mut Image) -> Result<(), String>{
 ///
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.png)
-/// 
+///
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_saturation.jpg)
 ///
-pub fn saturation(mut src: &mut Image, sat: f32) -> Result<(), String>{
+pub fn saturation(mut src: &mut Image, sat: f32) -> RasterResult<()>{
     let w: i32 = src.width;
     let h: i32 = src.height;
-    
+
     for y in 0..h {
         for x in 0..w {
-            
+
             let p = try!(src.get_pixel(x, y));
             let hsv = Color::to_hsv(p.r, p.g, p.b);
             let s = hsv.1;
@@ -366,12 +358,12 @@ pub fn saturation(mut src: &mut Image, sat: f32) -> Result<(), String>{
                 new_s = 0.0;
             }
             let rgb = Color::to_rgb(hsv.0, new_s, hsv.2);
-            
+
             try!(src.set_pixel(x, y, Color::rgb(rgb.0, rgb.1, rgb.2)));
-            
+
         }
     }
-    
+
     Ok(())
 }
 
@@ -388,11 +380,11 @@ pub fn saturation(mut src: &mut Image, sat: f32) -> Result<(), String>{
 /// ```
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
-/// 
+///
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_sharpen.jpg)
 ///
-pub fn sharpen(mut src: &mut Image) -> Result<(), String>{
+pub fn sharpen(mut src: &mut Image) -> RasterResult<()>{
     let matrix: [[i32; 3]; 3] = [
         [0, -1, 0],
         [-1, 5,-1],
@@ -408,7 +400,7 @@ pub fn sharpen(mut src: &mut Image) -> Result<(), String>{
 // Private functions
 
 // Box
-fn blur_box(mut src: &mut Image) -> Result<(), String>{
+fn blur_box(mut src: &mut Image) -> RasterResult<()>{
     let matrix: [[i32; 3]; 3] = [
         [1,1,1],
         [1,1,1],
@@ -421,7 +413,7 @@ fn blur_box(mut src: &mut Image) -> Result<(), String>{
 }
 
 // Gaussian
-fn blur_gaussian(mut src: &mut Image) -> Result<(), String>{
+fn blur_gaussian(mut src: &mut Image) -> RasterResult<()>{
     let matrix: [[i32; 3]; 3] = [
         [1,2,1],
         [2,4,2],
