@@ -1,3 +1,5 @@
+//!  A module for error types.
+
 use std::io::Error as IoError;
 use std::num::ParseIntError;
 use image::ImageError;
