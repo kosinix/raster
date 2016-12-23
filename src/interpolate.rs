@@ -28,7 +28,7 @@ pub fn resample<'a>(mut src: &'a mut Image, w: i32, h: i32, interpolation: Inter
         InterpolationMode::Bilinear => bilinear(&mut src, w, h),
         InterpolationMode::Bicubic => bilinear(&mut src, w, h), // TODO: bicubic
         InterpolationMode::Nearest => nearest(&mut src, w, h)
-    }.map(|_| ())
+    }
 }
 
 /// Interpolate using nearest neighbor.
@@ -57,11 +57,8 @@ pub fn nearest<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
 
 /// Interpolate using linear function.
 pub fn bilinear<'a>(mut src: &'a mut Image, w2: i32, h2: i32) -> RasterResult<()> {
-
-    try!(bilinear_width(&mut src, w2));
-    try!(bilinear_height(&mut src, h2));
-
-    Ok(())
+    bilinear_width(&mut src, w2)
+        .and_then(|_| bilinear_height(&mut src, h2))
 }
 
 // Private functions

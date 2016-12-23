@@ -210,9 +210,7 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
 /// Resize image to exact dimensions ignoring aspect ratio.
 /// Useful if you want to force exact width and height.
 pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
-
-    try!(resample(&mut src, w, h, InterpolationMode::Bicubic));
-    Ok(())
+    resample(&mut src, w, h, InterpolationMode::Bicubic)
 }
 
 /// Resize image to exact height. Width is auto calculated.
@@ -226,8 +224,7 @@ pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> RasterResult<(
     let resize_height = h;
     let resize_width = (h as f32 * ratio) as i32;
 
-    try!(resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic));
-    Ok(())
+    resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic)
 }
 
 /// Resize image to exact width. Height is auto calculated.
@@ -240,8 +237,7 @@ pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> RasterResult<()
     let resize_width  = w;
     let resize_height = (w as f32 / ratio).round() as i32;
 
-    try!(resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic));
-    Ok(())
+    resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic)
 }
 
 /// Resize image to fill all the space in the given dimension. Excess parts are removed.
@@ -260,10 +256,8 @@ pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<(
         optimum_height = h;
     }
 
-    try!(resample(&mut src, optimum_width, optimum_height, InterpolationMode::Bicubic));
-    try!(crop(&mut src, w, h, PositionMode::Center, 0, 0)); // Trim excess parts
-
-    Ok(())
+    resample(&mut src, optimum_width, optimum_height, InterpolationMode::Bicubic)
+        .and_then(|_| crop(&mut src, w, h, PositionMode::Center, 0, 0)) // Trim excess parts
 }
 
 /// Resize an image to fit within the given width and height.
@@ -283,8 +277,7 @@ pub fn resize_fit<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()
         resize_width  = (h as f64 * ratio).round() as i32;
     }
 
-    try!(resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic));
-    Ok(())
+    resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic)
 }
 
 // Private functions

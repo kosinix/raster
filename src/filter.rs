@@ -60,7 +60,7 @@ pub fn blur<'a>(mut src: &'a mut Image, mode: BlurMode) -> RasterResult<()>{
     match mode {
         BlurMode::Box => blur_box(&mut src),
         BlurMode::Gaussian => blur_gaussian(&mut src)
-    }.map(|_| ())
+    }
 }
 
 /// Apply brightness.
@@ -237,9 +237,7 @@ pub fn emboss(mut src: &mut Image) -> RasterResult<()>{
         [0, 1, 2]
     ];
 
-    try!(convolve(&mut src, matrix, 1));
-
-    Ok(())
+    convolve(&mut src, matrix, 1)
 }
 
 /// Apply a gamma correction.
@@ -397,9 +395,7 @@ pub fn sharpen(mut src: &mut Image) -> RasterResult<()>{
         [0, -1, 0]
     ];
 
-    try!(convolve(&mut src, matrix, 1));
-
-    Ok(())
+    convolve(&mut src, matrix, 1)
 }
 
 
@@ -413,9 +409,7 @@ fn blur_box(mut src: &mut Image) -> RasterResult<()>{
         [1,1,1]
     ];
 
-    try!(convolve(&mut src, matrix, 9));
-
-    Ok(())
+    convolve(&mut src, matrix, 9)
 }
 
 // Gaussian
@@ -426,7 +420,5 @@ fn blur_gaussian(mut src: &mut Image) -> RasterResult<()>{
         [1,2,1]
     ];
 
-    try!(convolve(&mut src, matrix, 16));
-
-    Ok(())
+    convolve(&mut src, matrix, 16)
 }

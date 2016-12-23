@@ -427,5 +427,5 @@ pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: ResizeMode) -> R
         ResizeMode::ExactHeight => transform::resize_exact_height(&mut src, h),
         ResizeMode::Fit => transform::resize_fit(&mut src, w, h),
         ResizeMode::Fill => transform::resize_fill(&mut src, w, h)
-    }.map(|_| ())
+    }
 }
