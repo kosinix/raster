@@ -20,7 +20,7 @@ use transform;
 ///
 /// Opacity is any value from 0.0 - 1.0
 ///
-/// The offset_x and offset_y are added to the final position. Can also be negative offsets.
+/// The `offset_x` and `offset_y` are added to the final position. Can also be negative offsets.
 ///
 /// # Errors
 ///
@@ -160,7 +160,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity:
 
 /// Crop the image to the given dimension and position.
 ///
-/// The offset_x and offset_y are added to the final position. Can also be negative offsets. Offsets can be used to nudge the final position. Or you can set the position to PositionType::TopLeft and use the offsets as a normal screen x and y coordinates.
+/// The `offset_x` and `offset_y` are added to the final position. Can also be negative offsets. Offsets can be used to nudge the final position. Or you can set the position to `PositionType::TopLeft` and use the offsets as a normal screen x and y coordinates.
 ///
 /// # Examples
 ///
@@ -311,11 +311,11 @@ pub enum ResizeMode {
 ///
 /// Modes:
 ///
-/// * Exact - Resize image to exact dimensions ignoring aspect ratio.
-/// * ExactWidth - Resize image to exact width. Height parameter is ignored and is auto calculated instead.
-/// * ExactHeight - Resize image to exact height. Width parameter is ignored and is auto calculated instead.
-/// * Fit - Resize an image to fit within the given width and height.
-/// * Fill - Resize image to fill all the space in the given dimension. Excess parts are cropped.
+/// * `Exact` - Resize image to exact dimensions ignoring aspect ratio.
+/// * `ExactWidth` - Resize image to exact width. Height parameter is ignored and is auto calculated instead.
+/// * `ExactHeight` - Resize image to exact height. Width parameter is ignored and is auto calculated instead.
+/// * `Fit` - Resize an image to fit within the given width and height.
+/// * `Fill` - Resize image to fill all the space in the given dimension. Excess parts are cropped.
 ///
 /// # Examples
 /// ### Resize Fit
