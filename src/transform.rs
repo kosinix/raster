@@ -19,18 +19,13 @@ use editor::crop;
 
 #[derive(Debug)]
 pub enum TransformMode {
-    /// Horizontal transform.
-    X,
-    /// Vertical transform.
-    Y
+    /// Transform on x axis.
+    Horizontal,
+    /// Transform on y axis.
+    Vertical
 }
 
 /// Flip an image on its x or y axis.
-///
-/// Mode:
-///
-/// * `X` - Flip image horizontally.
-/// * `Y` - Flip image vertically.
 ///
 /// # Examples
 ///
@@ -42,7 +37,7 @@ pub enum TransformMode {
 /// //...
 ///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
-/// transform::flip(&mut image, TransformMode::X).unwrap();
+/// transform::flip(&mut image, TransformMode::Horizontal).unwrap();
 /// raster::save(&image, "tests/out/test_transform_flip_x.png");
 /// ```
 ///
@@ -56,7 +51,7 @@ pub enum TransformMode {
 /// //...
 ///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
-/// transform::flip(&mut image, TransformMode::Y).unwrap();
+/// transform::flip(&mut image, TransformMode::Vertical).unwrap();
 /// raster::save(&image, "tests/out/test_transform_flip_y.png");
 /// ```
 ///
@@ -68,7 +63,7 @@ pub fn flip(mut src: &mut Image, mode: TransformMode ) -> RasterResult<()> {
     let h: i32 = src.height;
 
     match mode {
-        TransformMode::X => {
+        TransformMode::Horizontal => {
             for x in 0..w {
                 let src_x = x;
                 let dest_x = w - x - 1;
@@ -88,7 +83,7 @@ pub fn flip(mut src: &mut Image, mode: TransformMode ) -> RasterResult<()> {
 
             Ok(())
         },
-        TransformMode::Y => {
+        TransformMode::Vertical => {
             for y in 0..h {
                 let src_y = y;
                 let dest_y = h - y - 1;
@@ -121,8 +116,7 @@ pub fn flip(mut src: &mut Image, mode: TransformMode ) -> RasterResult<()> {
 /// ### Rotate 45 degrees with a black background color:
 ///
 /// ```
-/// use raster::transform;
-/// use raster::Color;
+/// use raster::{transform, Color};
 ///
 /// //...
 ///
@@ -137,8 +131,7 @@ pub fn flip(mut src: &mut Image, mode: TransformMode ) -> RasterResult<()> {
 /// ### Rotate 45 degrees counter-clockwise with a red background color:
 ///
 /// ```
-/// use raster::transform;
-/// use raster::Color;
+/// use raster::{transform, Color};
 ///
 /// //...
 ///
