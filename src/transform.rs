@@ -14,7 +14,7 @@ use error::RasterResult;
 use Image;
 use Color;
 use interpolate::{resample, InterpolationMode};
-use position::PositionType;
+use position::PositionMode;
 use editor::crop;
 
 #[derive(Debug)]
@@ -267,7 +267,7 @@ pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<(
     }
 
     try!(resample(&mut src, optimum_width, optimum_height, InterpolationMode::Bicubic));
-    try!(crop(&mut src, w, h, PositionType::Center, 0, 0)); // Trim excess parts
+    try!(crop(&mut src, w, h, PositionMode::Center, 0, 0)); // Trim excess parts
 
     Ok(())
 }

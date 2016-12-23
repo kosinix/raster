@@ -13,7 +13,7 @@
 use error::RasterResult;
 
 #[derive(Debug)]
-pub enum PositionType {
+pub enum PositionMode {
     TopLeft,
     TopCenter,
     TopRight,
@@ -27,13 +27,13 @@ pub enum PositionType {
 
 /// Struct for computing position on an image.
 pub struct Position {
-    position: PositionType,
+    position: PositionMode,
     offset_x: i32,
     offset_y: i32
 }
 
 impl Position {
-    pub fn new(position: PositionType, offset_x: i32, offset_y: i32) -> Position {
+    pub fn new(position: PositionMode, offset_x: i32, offset_y: i32) -> Position {
         Position {
             position: position,
             offset_x: offset_x,
@@ -47,41 +47,41 @@ impl Position {
         let offset_y = self.offset_y;
 
         match self.position {
-            PositionType::TopLeft => {
+            PositionMode::TopLeft => {
                 Ok((offset_x, offset_y))
             },
-            PositionType::TopCenter => {
+            PositionMode::TopCenter => {
                 let x = ((canvas_width / 2) - (image_width / 2)) + offset_x;
                 Ok((x, offset_y))
             },
-            PositionType::TopRight => {
+            PositionMode::TopRight => {
                 let x = (canvas_width - image_width) + offset_x;
                 Ok((x, offset_y))
             },
-            PositionType::CenterLeft => {
+            PositionMode::CenterLeft => {
                 let y = ((canvas_height / 2) - (image_height / 2)) + offset_x;
                 Ok((offset_x, y))
             },
-            PositionType::Center => {
+            PositionMode::Center => {
                 let x = ((canvas_width / 2) - (image_width / 2)) + offset_x;
                 let y = ((canvas_height / 2) - (image_height / 2)) + offset_y;
                 Ok((x, y))
             },
-            PositionType::CenterRight => {
+            PositionMode::CenterRight => {
                 let x = (canvas_width - image_width) + offset_x;
                 let y = ((canvas_height / 2) - (image_height / 2)) + offset_y;
                 Ok((x, y))
             },
-            PositionType::BottomLeft => {
+            PositionMode::BottomLeft => {
                 let y = (canvas_height - image_height) + offset_y;
                 Ok((offset_x, y))
             },
-            PositionType::BottomCenter => {
+            PositionMode::BottomCenter => {
                 let x = ((canvas_width / 2) - (image_width / 2)) + offset_x;
                 let y = (canvas_height - image_height) + offset_y;
                 Ok((x, y))
             },
-            PositionType::BottomRight => {
+            PositionMode::BottomRight => {
                 let x = (canvas_width - image_width) + offset_y;
                 let y = (canvas_height - image_height) + offset_y;
                 Ok((x, y))

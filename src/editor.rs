@@ -13,7 +13,7 @@ use error::{RasterError, RasterResult};
 use blend::{self, BlendMode};
 use Color;
 use Image;
-use position::{Position, PositionType};
+use position::{Position, PositionMode};
 use transform;
 
 /// Blend 2 images into one. The image1 is the base and image2 is the top.
@@ -28,20 +28,20 @@ use transform;
 ///
 /// # Examples
 /// ```
-/// use raster::{editor, BlendMode, PositionType};
+/// use raster::{editor, BlendMode, PositionMode};
 ///
 /// // Create images from file
 /// let image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let image2 = raster::open("tests/in/watermark.png").unwrap();
 ///
 /// // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
-/// let normal = editor::blend(&image1, &image2, BlendMode::Normal, 1.0, PositionType::Center, 0, 0).unwrap();
+/// let normal = editor::blend(&image1, &image2, BlendMode::Normal, 1.0, PositionMode::Center, 0, 0).unwrap();
 ///
 /// // All the other blend modes
-/// let difference = editor::blend(&image1, &image2, BlendMode::Difference, 1.0, PositionType::Center, 0, 0).unwrap();
-/// let multiply = editor::blend(&image1, &image2, BlendMode::Multiply, 1.0, PositionType::Center, 0, 0).unwrap();
-/// let overlay = editor::blend(&image1, &image2, BlendMode::Overlay, 1.0, PositionType::Center, 0, 0).unwrap();
-/// let screen = editor::blend(&image1, &image2, BlendMode::Screen, 1.0, PositionType::Center, 0, 0).unwrap();
+/// let difference = editor::blend(&image1, &image2, BlendMode::Difference, 1.0, PositionMode::Center, 0, 0).unwrap();
+/// let multiply = editor::blend(&image1, &image2, BlendMode::Multiply, 1.0, PositionMode::Center, 0, 0).unwrap();
+/// let overlay = editor::blend(&image1, &image2, BlendMode::Overlay, 1.0, PositionMode::Center, 0, 0).unwrap();
+/// let screen = editor::blend(&image1, &image2, BlendMode::Screen, 1.0, PositionMode::Center, 0, 0).unwrap();
 ///
 /// // Save it
 /// raster::save(&normal, "tests/out/test_blend_normal.png");
@@ -85,7 +85,7 @@ use transform;
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_screen.png)
 ///
-pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32, position: PositionType, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
+pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
 
     let mut opacity = opacity;
     if opacity > 1.0 {
@@ -160,7 +160,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity:
 
 /// Crop the image to the given dimension and position.
 ///
-/// The `offset_x` and `offset_y` are added to the final position. Can also be negative offsets. Offsets can be used to nudge the final position. Or you can set the position to `PositionType::TopLeft` and use the offsets as a normal screen x and y coordinates.
+/// The `offset_x` and `offset_y` are added to the final position. Can also be negative offsets. Offsets can be used to nudge the final position. Or you can set the position to `PositionMode::TopLeft` and use the offsets as a normal screen x and y coordinates.
 ///
 /// # Examples
 ///
@@ -171,7 +171,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity:
 /// ### Code
 ///
 /// ```
-/// use raster::{editor, PositionType};
+/// use raster::{editor, PositionMode};
 ///
 /// // Create image from file
 /// let mut top_left = raster::open("tests/in/crop-test.jpg").unwrap();
@@ -189,17 +189,17 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity:
 /// let mut bottom_right = top_left.clone();
 ///
 /// // Crop it
-/// editor::crop(&mut top_left, 167, 93, PositionType::TopLeft, 0, 0).unwrap();
-/// editor::crop(&mut top_center, 166, 93, PositionType::TopCenter, 0, 0).unwrap();
-/// editor::crop(&mut top_right, 167, 93, PositionType::TopRight, 0, 0).unwrap();
+/// editor::crop(&mut top_left, 167, 93, PositionMode::TopLeft, 0, 0).unwrap();
+/// editor::crop(&mut top_center, 166, 93, PositionMode::TopCenter, 0, 0).unwrap();
+/// editor::crop(&mut top_right, 167, 93, PositionMode::TopRight, 0, 0).unwrap();
 ///
-/// editor::crop(&mut center_left, 167, 93, PositionType::CenterLeft, 0, 0).unwrap();
-/// editor::crop(&mut center, 166, 93, PositionType::Center, 0, 0).unwrap();
-/// editor::crop(&mut center_right, 167, 93, PositionType::CenterRight, 0, 0).unwrap();
+/// editor::crop(&mut center_left, 167, 93, PositionMode::CenterLeft, 0, 0).unwrap();
+/// editor::crop(&mut center, 166, 93, PositionMode::Center, 0, 0).unwrap();
+/// editor::crop(&mut center_right, 167, 93, PositionMode::CenterRight, 0, 0).unwrap();
 ///
-/// editor::crop(&mut bottom_left, 167, 93, PositionType::BottomLeft, 0, 0).unwrap();
-/// editor::crop(&mut bottom_center, 166, 93, PositionType::BottomCenter, 0, 0).unwrap();
-/// editor::crop(&mut bottom_right, 167, 93, PositionType::BottomRight, 0, 0).unwrap();
+/// editor::crop(&mut bottom_left, 167, 93, PositionMode::BottomLeft, 0, 0).unwrap();
+/// editor::crop(&mut bottom_center, 166, 93, PositionMode::BottomCenter, 0, 0).unwrap();
+/// editor::crop(&mut bottom_right, 167, 93, PositionMode::BottomRight, 0, 0).unwrap();
 ///
 /// // Save it
 /// raster::save(&top_left, "tests/out/test_crop_top_left.jpg");
@@ -228,7 +228,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity:
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg)
 ///
-pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: PositionType, offset_x: i32, offset_y: i32) -> RasterResult<()> {
+pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<()> {
 
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
@@ -320,7 +320,7 @@ pub enum ResizeMode {
 /// # Examples
 /// ### Resize Fit
 /// ```
-/// use raster::{editor, Color, Image, ResizeMode, BlendMode, PositionType};
+/// use raster::{editor, Color, Image, ResizeMode, BlendMode, PositionMode};
 ///
 /// // Create an image from file
 /// let mut image1 = raster::open("tests/in/sample.jpg").unwrap();
@@ -334,8 +334,8 @@ pub enum ResizeMode {
 /// let mut bg = Image::blank(200, 200);
 /// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
 ///
-/// let image1 = editor::blend(&bg, &image1, BlendMode::Normal, 1.0, PositionType::TopLeft, 0, 0).unwrap();
-/// let image2 = editor::blend(&bg, &image2, BlendMode::Normal, 1.0, PositionType::TopLeft, 0, 0).unwrap();
+/// let image1 = editor::blend(&bg, &image1, BlendMode::Normal, 1.0, PositionMode::TopLeft, 0, 0).unwrap();
+/// let image2 = editor::blend(&bg, &image2, BlendMode::Normal, 1.0, PositionMode::TopLeft, 0, 0).unwrap();
 ///
 /// raster::save(&image1, "tests/out/test_resize_fit_1.jpg");
 /// raster::save(&image2, "tests/out/test_resize_fit_2.jpg");

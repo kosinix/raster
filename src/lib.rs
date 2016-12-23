@@ -106,7 +106,7 @@ pub use blend::BlendMode;
 pub use editor::ResizeMode;
 pub use filter::BlurMode;
 pub use interpolate::InterpolationMode;
-pub use position::PositionType;
+pub use position::PositionMode;
 pub use transform::TransformMode;
 
 /// Create an image from an image file.
