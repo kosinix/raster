@@ -17,6 +17,7 @@ use interpolate::{resample, InterpolationMode};
 use position::PositionMode;
 use editor::crop;
 
+/// An enum for the various modes that can be used for transforming.
 #[derive(Debug)]
 pub enum TransformMode {
     /// Transform on x axis.

@@ -14,6 +14,7 @@ use error::{RasterError, RasterResult};
 use Image;
 use Color;
 
+/// An enum for the various modes that can be used for blurring.
 #[derive(Debug)]
 pub enum BlurMode {
     Box,

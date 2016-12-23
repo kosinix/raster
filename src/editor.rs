@@ -293,6 +293,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> RasterResult<()> {
     Ok(())
 }
 
+/// An enum for the various modes that can be used for resizing.
 #[derive(Debug)]
 pub enum ResizeMode {
     /// Resize image to exact dimensions ignoring aspect ratio.

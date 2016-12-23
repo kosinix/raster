@@ -14,6 +14,7 @@ use error::RasterResult;
 use Image;
 use Color;
 
+/// An enum for the various modes that can be used for interpolation.
 #[derive(Debug)]
 pub enum InterpolationMode {
     Bilinear,
