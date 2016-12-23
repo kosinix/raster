@@ -14,17 +14,24 @@ use error::{RasterError, RasterResult};
 use Image;
 use Color;
 
+/// An enum for the various modes that can be used for blurring.
+#[derive(Debug)]
+pub enum BlurMode {
+    Box,
+    Gaussian
+}
+
 /// Apply box or Gaussian blur.
 ///
 /// # Examples
 /// ### Box Blur
 ///
 /// ```
-/// use raster::filter;
+/// use raster::{filter, BlurMode};
 ///
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// filter::blur(&mut image, "box").unwrap();
+/// filter::blur(&mut image, BlurMode::Box).unwrap();
 /// raster::save(&image, "tests/out/test_filter_box_blur.jpg");
 /// ```
 /// ### Before
@@ -36,11 +43,11 @@ use Color;
 /// ### Gaussian Blur
 ///
 /// ```
-/// use raster::filter;
+/// use raster::{filter, BlurMode};
 ///
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
-/// filter::blur(&mut image, "gaussian").unwrap();
+/// filter::blur(&mut image, BlurMode::Gaussian).unwrap();
 /// raster::save(&image, "tests/out/test_filter_gaussian_blur.jpg");
 /// ```
 /// ### Before
@@ -49,11 +56,10 @@ use Color;
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_gaussian_blur.jpg)
 ///
-pub fn blur<'a>(mut src: &'a mut Image, mode: &str) -> RasterResult<()>{
+pub fn blur<'a>(mut src: &'a mut Image, mode: BlurMode) -> RasterResult<()>{
     match mode {
-        "box" => blur_box(&mut src),
-        "gaussian" => blur_gaussian(&mut src),
-        _ => Err(RasterError::InvalidBlurMode(mode.to_string()))
+        BlurMode::Box => blur_box(&mut src),
+        BlurMode::Gaussian => blur_gaussian(&mut src)
     }.map(|_| ())
 }
 

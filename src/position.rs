@@ -10,17 +10,31 @@
 
 
 // from local crate
-use error::{RasterError, RasterResult};
+use error::RasterResult;
+
+/// An enum for the various modes that can be used for positioning.
+#[derive(Debug)]
+pub enum PositionMode {
+    TopLeft,
+    TopCenter,
+    TopRight,
+    CenterLeft,
+    Center,
+    CenterRight,
+    BottomLeft,
+    BottomCenter,
+    BottomRight
+}
 
 /// Struct for computing position on an image.
-pub struct Position<'a> {
-    position: &'a str,
+pub struct Position {
+    position: PositionMode,
     offset_x: i32,
     offset_y: i32
 }
 
-impl<'a> Position<'a> {
-    pub fn new(position: &'a str, offset_x: i32, offset_y: i32) -> Position {
+impl Position {
+    pub fn new(position: PositionMode, offset_x: i32, offset_y: i32) -> Position {
         Position {
             position: position,
             offset_x: offset_x,
@@ -34,46 +48,45 @@ impl<'a> Position<'a> {
         let offset_y = self.offset_y;
 
         match self.position {
-            "top-left" => {
+            PositionMode::TopLeft => {
                 Ok((offset_x, offset_y))
             },
-            "top-center" => {
+            PositionMode::TopCenter => {
                 let x = ((canvas_width / 2) - (image_width / 2)) + offset_x;
                 Ok((x, offset_y))
             },
-            "top-right" => {
+            PositionMode::TopRight => {
                 let x = (canvas_width - image_width) + offset_x;
                 Ok((x, offset_y))
             },
-            "center-left" => {
+            PositionMode::CenterLeft => {
                 let y = ((canvas_height / 2) - (image_height / 2)) + offset_x;
                 Ok((offset_x, y))
             },
-            "center-right" => {
+            PositionMode::Center => {
+                let x = ((canvas_width / 2) - (image_width / 2)) + offset_x;
+                let y = ((canvas_height / 2) - (image_height / 2)) + offset_y;
+                Ok((x, y))
+            },
+            PositionMode::CenterRight => {
                 let x = (canvas_width - image_width) + offset_x;
                 let y = ((canvas_height / 2) - (image_height / 2)) + offset_y;
                 Ok((x, y))
             },
-            "bottom-left" => {
+            PositionMode::BottomLeft => {
                 let y = (canvas_height - image_height) + offset_y;
                 Ok((offset_x, y))
             },
-            "bottom-center" => {
+            PositionMode::BottomCenter => {
                 let x = ((canvas_width / 2) - (image_width / 2)) + offset_x;
                 let y = (canvas_height - image_height) + offset_y;
                 Ok((x, y))
             },
-            "bottom-right" => {
+            PositionMode::BottomRight => {
                 let x = (canvas_width - image_width) + offset_y;
                 let y = (canvas_height - image_height) + offset_y;
                 Ok((x, y))
-            },
-            "center" => {
-                let x = ((canvas_width / 2) - (image_width / 2)) + offset_x;
-                let y = ((canvas_height / 2) - (image_height / 2)) + offset_y;
-                Ok((x, y))
-            },
-            _ => Err(RasterError::InvalidPositionType(self.position.to_string()))
+            }
         }
     }
 }

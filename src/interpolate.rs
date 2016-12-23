@@ -10,17 +10,24 @@ use std::cmp;
 
 
 // from local crate
-use error::{RasterError, RasterResult};
+use error::RasterResult;
 use Image;
 use Color;
 
+/// An enum for the various modes that can be used for interpolation.
+#[derive(Debug)]
+pub enum InterpolationMode {
+    Bilinear,
+    Bicubic,
+    Nearest
+}
+
 /// Resample an image into a new size using a given interpolation method.
-pub fn resample<'a>(mut src: &'a mut Image, w: i32, h: i32, interpolation: &str) -> RasterResult<()> {
+pub fn resample<'a>(mut src: &'a mut Image, w: i32, h: i32, interpolation: InterpolationMode) -> RasterResult<()> {
     match interpolation {
-        "bilinear" => bilinear(&mut src, w, h),
-        "bicubic" => bilinear(&mut src, w, h), // TODO: bicubic
-        "nearest" => nearest(&mut src, w, h),
-        _ => Err(RasterError::InvalidInterpolationMode(interpolation.to_string()))
+        InterpolationMode::Bilinear => bilinear(&mut src, w, h),
+        InterpolationMode::Bicubic => bilinear(&mut src, w, h), // TODO: bicubic
+        InterpolationMode::Nearest => nearest(&mut src, w, h)
     }.map(|_| ())
 }
 
