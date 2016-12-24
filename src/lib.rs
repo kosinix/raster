@@ -230,15 +230,13 @@ impl<'a> Image {
     /// assert_eq!(image.check_pixel(3, 3), false);
     /// ```
     pub fn check_pixel(&self, x: i32, y:i32) -> bool {
-
         if y < 0 || y > self.height { // TODO: check on actual vectors and not just width and height?
-            return false;
-
+            false
         } else if x < 0 || x > self.width {
-            return false;
+            false
+        } else {
+            true
         }
-
-        true
     }
 
     /// Create a clone of an image as another image.
@@ -676,11 +674,11 @@ impl<'a> Color {
             h = 360.0 - h; // Invert if > 0 to 359
         }
         let v = max;
-        let mut s = 0.0;
-        if v != 0.0 {
-
-            s = chroma / v;
-        }
+        let s = if v != 0.0 {
+            chroma / v
+        } else {
+            0.0
+        };
 
         ( h.round() as u16, s * 100.0, v * 100.0  )
     }
