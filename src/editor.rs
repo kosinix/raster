@@ -146,15 +146,15 @@ pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32
 
     match blend_mode {
         BlendMode::Normal =>
-            blend::normal(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::normal(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
         BlendMode::Difference =>
-            blend::difference(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::difference(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
         BlendMode::Multiply =>
-            blend::multiply(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::multiply(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
         BlendMode::Overlay =>
-            blend::overlay(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::overlay(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
         BlendMode::Screen =>
-            blend::screen(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::screen(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
     }
 }
 
