@@ -209,13 +209,13 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
 
 /// Resize image to exact dimensions ignoring aspect ratio.
 /// Useful if you want to force exact width and height.
-pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
+pub fn resize_exact(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
     resample(&mut src, w, h, InterpolationMode::Bicubic)
 }
 
 /// Resize image to exact height. Width is auto calculated.
 /// Useful for creating row of images with the same height.
-pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> RasterResult<()> {
+pub fn resize_exact_height(mut src: &mut Image, h: i32) -> RasterResult<()> {
 
     let width = src.width;
     let height = src.height;
@@ -229,7 +229,7 @@ pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> RasterResult<(
 
 /// Resize image to exact width. Height is auto calculated.
 /// Useful for creating column of images with the same width.
-pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> RasterResult<()> {
+pub fn resize_exact_width(mut src: &mut Image, w: i32) -> RasterResult<()> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -241,7 +241,7 @@ pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> RasterResult<()
 }
 
 /// Resize image to fill all the space in the given dimension. Excess parts are removed.
-pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
+pub fn resize_fill(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -263,7 +263,7 @@ pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<(
 /// Resize an image to fit within the given width and height.
 /// The re-sized image will not exceed the given dimension.
 /// Preserves the aspect ratio.
-pub fn resize_fit<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
+pub fn resize_fit(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
 
     let ratio: f64 = src.width as f64 / src.height as f64;
 
