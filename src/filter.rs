@@ -145,15 +145,14 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterR
             let mut accum_blue: i32 = 0;
             let mut accum_alpha: i32 = 0;
 
-            let mut m_index_y = 0;
-            for mut src_y in mstarty..mstarty + m_size {
+            for (m_index_y, mut src_y) in (0..).zip(mstarty..mstarty + m_size) {
                 if src_y < 0 {
                     src_y = 0;
                 } else if src_y > h - 1 {
                     src_y = h - 1;
                 }
-                let mut m_index_x = 0;
-                for mut src_x in mstartx..mstartx + m_size {
+
+                for (m_index_x, mut src_x) in (0..).zip(mstartx..mstartx + m_size) {
                     if src_x < 0 {
                         src_x = 0;
                     } else if src_x > w - 1 {
@@ -165,10 +164,7 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterR
                     accum_green += pixel.g as i32 * matrix[m_index_y][m_index_x];
                     accum_blue += pixel.b as i32 * matrix[m_index_y][m_index_x];
                     accum_alpha += pixel.a as i32 * matrix[m_index_y][m_index_x];
-
-                    m_index_x+=1;
                 }
-                m_index_y+=1;
             }
 
             if divisor != 1 {

@@ -181,11 +181,8 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
     let h2 = ((min_y as f32).abs() + (max_y as f32).abs()) as i32 + 1;
     let mut dest = Image::blank(w2, h2);
 
-    let mut dest_y = 0;
-    for y in min_y..max_y+1 {
-
-        let mut dest_x = 0;
-        for x in min_x..max_x+1{
+    for (dest_y, y) in (0..).zip(min_y..max_y + 1) {
+        for (dest_x, x) in (0..).zip(min_x..max_x + 1) {
             let point: (i32, i32) = _rotate((x,y), -degree);
 
             if point.0 >= 0 && point.0 < w1 && point.1 >=0 && point.1 < h1 {
@@ -194,10 +191,7 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
             } else {
                 try!(dest.set_pixel(dest_x, dest_y, Color::rgba(bg.r, bg.g, bg.b, bg.a)));
             }
-            dest_x += 1;
-
         }
-        dest_y += 1;
     }
 
     src.width = dest.width;
