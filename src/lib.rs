@@ -109,6 +109,8 @@ pub use interpolate::InterpolationMode;
 pub use position::PositionMode;
 pub use transform::TransformMode;
 
+pub type Histogram = (HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>);
+
 /// Create an image from an image file.
 ///
 /// # Errors
@@ -317,7 +319,7 @@ impl<'a> Image {
     ///
     /// ![](https://kosinix.github.io/raster/in/histogram-ps.png)
     ///
-    pub fn histogram(&self) -> RasterResult<(HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>)> {
+    pub fn histogram(&self) -> RasterResult<Histogram> {
         let w = self.width;
         let h = self.height;
 
