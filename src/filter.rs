@@ -56,7 +56,7 @@ pub enum BlurMode {
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_gaussian_blur.jpg)
 ///
-pub fn blur<'a>(mut src: &'a mut Image, mode: BlurMode) -> RasterResult<()>{
+pub fn blur(mut src: &mut Image, mode: BlurMode) -> RasterResult<()>{
     match mode {
         BlurMode::Box => blur_box(&mut src),
         BlurMode::Gaussian => blur_gaussian(&mut src)

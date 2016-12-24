@@ -85,7 +85,7 @@ use transform;
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_screen.png)
 ///
-pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
+pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
 
     let mut opacity = opacity;
     if opacity > 1.0 {
@@ -228,7 +228,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity:
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg)
 ///
-pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<()> {
+pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<()> {
 
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
@@ -420,7 +420,7 @@ pub enum ResizeMode {
 ///
 /// ![](https://kosinix.github.io/raster/out/test_resize_exact_1.jpg) ![](https://kosinix.github.io/raster/out/test_resize_exact_2.jpg)
 ///
-pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: ResizeMode) -> RasterResult<()> {
+pub fn resize(mut src: &mut Image, w: i32, h: i32, mode: ResizeMode) -> RasterResult<()> {
     match mode {
         ResizeMode::Exact => transform::resize_exact(&mut src, w, h),
         ResizeMode::ExactWidth => transform::resize_exact_width(&mut src, w),
