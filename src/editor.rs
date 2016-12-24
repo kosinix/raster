@@ -87,12 +87,13 @@ use transform;
 ///
 pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
 
-    let mut opacity = opacity;
-    if opacity > 1.0 {
-        opacity = 1.0
+    let opacity = if opacity > 1.0 {
+        1.0
     } else if opacity < 0.0 {
-        opacity = 0.0
-    }
+        0.0
+    } else {
+        opacity
+    };
 
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
@@ -237,16 +238,23 @@ pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: Po
     let offset_x = if offset_x < 0 { 0 } else { offset_x };
     let offset_y = if offset_y < 0 { 0 } else { offset_y };
 
+    let height2 = {
+        let height2 = offset_y + crop_height;
+        if height2 > src.height {
+            src.height
+        } else {
+            height2
+        }
+    };
 
-    let mut height2 = offset_y + crop_height;
-    if height2 > src.height {
-        height2 = src.height
-    }
-
-    let mut width2 = offset_x + crop_width;
-    if width2 > src.width {
-        width2 = src.width
-    }
+    let width2 = {
+        let width2 = offset_x + crop_width;
+        if width2 > src.width {
+            src.width
+        } else {
+            width2
+        }
+    };
 
     let mut dest = Image::blank(width2-offset_x, height2-offset_y);
 

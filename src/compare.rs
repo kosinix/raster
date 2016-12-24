@@ -56,8 +56,7 @@ pub fn equal(image1: &Image, image2: &Image)-> RasterResult<bool> {
     // Check if image dimensions are equal
     if image1.width != image2.width || image1.height != image2.height {
 
-        return Ok(false);
-
+        Ok(false)
     } else {
 
         // Loop using image1
@@ -80,9 +79,9 @@ pub fn equal(image1: &Image, image2: &Image)-> RasterResult<bool> {
                 }
             }
         }
-    }
 
-    Ok(true)
+        Ok(true)
+    }
 }
 
 // Private functions

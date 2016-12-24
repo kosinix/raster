@@ -81,10 +81,14 @@ fn bilinear_width(mut src: &mut Image, w2: i32) -> RasterResult<()> {
     for y in 0..h1 {
         for x in x_start..x_end {
 
-            let mut src_x = x as f64 * x_ratio;
-            if src_x < 0.0 {
-                src_x = 0.0; // limit lower bound to 0
-            }
+            let src_x = {
+                let src_x = x as f64 * x_ratio;
+                if src_x < 0.0 {
+                    0.0 // limit lower bound to 0
+                } else {
+                    src_x
+                }
+            };
 
             let src_x_int = (src_x).floor() as i32;
 
@@ -137,11 +141,14 @@ fn bilinear_height(mut src: &mut Image, h2: i32) -> RasterResult<()> {
     for x in 0..w1 {
         for y in y_start..y_end {
 
-            let mut src_y = y as f64 * y_ratio;
-
-            if src_y < 0.0 {
-                src_y = 0.0; // limit lower bound to 0
-            }
+            let src_y = {
+                let src_y = y as f64 * y_ratio;
+                if src_y < 0.0 {
+                    0.0 // limit lower bound to 0
+                } else {
+                    src_y
+                }
+            };
 
             let src_y_int = (src_y).floor() as i32;
 

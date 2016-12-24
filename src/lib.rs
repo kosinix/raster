@@ -416,7 +416,33 @@ impl<'a> Image {
     }
 }
 
+fn rgb_min(r: f32, g: f32, b: f32) -> f32 {
+    let min = if g < r {
+        g
+    } else {
+        r
+    };
 
+    if b < min {
+        b
+    } else {
+        min
+    }
+}
+
+fn rgb_max(r: f32, g: f32, b: f32) -> f32 {
+    let max = if g > r {
+        g
+    } else {
+        r
+    };
+
+    if b > max {
+        b
+    } else {
+        max
+    }
+}
 
 /// A struct for representing and creating color.
 #[derive(Debug, Clone)]
@@ -605,44 +631,34 @@ impl<'a> Color {
         let g = g as f32 / 255.0;
         let b = b as f32 / 255.0;
 
-        let mut min = r;
-        if g < min {
-            min = g;
-        }
-        if b < min {
-            min = b;
-        }
-
-        let mut max = r;
-        if g > max {
-            max = g;
-        }
-        if b > max {
-            max = b;
-        }
-
+        let min = rgb_min(r, g, b);
+        let max = rgb_max(r, g, b);
 
         let chroma = max - min;
-        let mut h = 0.0;
 
-        if chroma != 0.0 {
+        let h = {
+            let mut h = 0.0;
 
-            if max == r {
-                h = 60.0 * ((g - b) / chroma);
-                if h < 0.0 {
-                    h += 360.0;
+            if chroma != 0.0 {
+                if max == r {
+                    h = 60.0 * ((g - b) / chroma);
+                    if h < 0.0 {
+                        h += 360.0;
+                    }
+                } else if max == g {
+                    h = 60.0 * (((b - r) / chroma) + 2.0);
+                } else if max == b {
+                    h = 60.0 * (((r - g) / chroma) + 4.0);
                 }
-            } else if max == g {
-                h = 60.0 * (((b - r) / chroma) + 2.0);
-            } else if max == b {
-                h = 60.0 * (((r - g) / chroma) + 4.0);
             }
 
-        }
+            if h > 359.0 {
+                h = 360.0 - h; // Invert if > 0 to 359
+            }
 
-        if h > 359.0 {
-            h = 360.0 - h; // Invert if > 0 to 359
-        }
+            h
+        };
+
         let v = max;
         let s = if v != 0.0 {
             chroma / v
