@@ -540,14 +540,14 @@ impl<'a> Color {
     /// assert_eq!(255, color.g);
     /// ```
     pub fn hex(hex: &str) -> RasterResult<Color> {
-        if hex.len() == 9 && hex.starts_with("#") { // #FFFFFFFF (Red Green Blue Alpha)
+        if hex.len() == 9 && hex.starts_with('#') { // #FFFFFFFF (Red Green Blue Alpha)
             Ok(Color {
                 r: try!(_hex_dec(&hex[1..3])),
                 g: try!(_hex_dec(&hex[3..5])),
                 b: try!(_hex_dec(&hex[5..7])),
                 a: try!(_hex_dec(&hex[7..9])),
             })
-        } else if hex.len() == 7 && hex.starts_with("#") { // #FFFFFF (Red Green Blue)
+        } else if hex.len() == 7 && hex.starts_with('#') { // #FFFFFF (Red Green Blue)
             Ok(Color {
                 r: try!(_hex_dec(&hex[1..3])),
                 g: try!(_hex_dec(&hex[3..5])),
