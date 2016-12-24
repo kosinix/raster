@@ -171,7 +171,7 @@ pub fn save(image: &Image, out: &str) -> RasterResult<()> {
 }
 
 /// A struct for easily representing a raster image.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Image {
     /// Width of image in pixels.
     pub width: i32, //  i32 type is used as computation with negative integers is common.
@@ -236,24 +236,6 @@ impl<'a> Image {
             false
         } else {
             true
-        }
-    }
-
-    /// Create a clone of an image as another image.
-    ///
-    /// # Examples
-    /// ```
-    /// // Create image from file
-    /// let original = raster::open("tests/in/sample.jpg").unwrap();
-    ///
-    /// // Clone it
-    /// let clone = original.clone();
-    /// ```
-    pub fn clone(&self) -> Image {
-        Image{
-            width: self.width,
-            height: self.height,
-            bytes: self.bytes.clone(),
         }
     }
 
@@ -439,7 +421,7 @@ impl<'a> Image {
 
 
 /// A struct for representing and creating color.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Color {
     /// Red channel 0 - 255
     pub r: u8,
@@ -473,16 +455,6 @@ impl<'a> Color {
             g: 0,
             b: 255,
             a: 255,
-        }
-    }
-
-    /// Clones a Color.
-    pub fn clone(&self) -> Color {
-        Color {
-            r: self.r,
-            g: self.g,
-            b: self.b,
-            a: self.a,
         }
     }
 
