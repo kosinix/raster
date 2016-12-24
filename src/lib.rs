@@ -232,10 +232,8 @@ impl<'a> Image {
     pub fn check_pixel(&self, x: i32, y:i32) -> bool {
         if y < 0 || y > self.height { // TODO: check on actual vectors and not just width and height?
             false
-        } else if x < 0 || x > self.width {
-            false
         } else {
-            true
+            !(x < 0 || x > self.width)
         }
     }
 
