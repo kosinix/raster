@@ -109,6 +109,8 @@ pub use interpolate::InterpolationMode;
 pub use position::PositionMode;
 pub use transform::TransformMode;
 
+pub type Histogram = (HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>);
+
 /// Create an image from an image file.
 ///
 /// # Errors
@@ -169,7 +171,7 @@ pub fn save(image: &Image, out: &str) -> RasterResult<()> {
 }
 
 /// A struct for easily representing a raster image.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Image {
     /// Width of image in pixels.
     pub width: i32, //  i32 type is used as computation with negative integers is common.
@@ -228,32 +230,10 @@ impl<'a> Image {
     /// assert_eq!(image.check_pixel(3, 3), false);
     /// ```
     pub fn check_pixel(&self, x: i32, y:i32) -> bool {
-
         if y < 0 || y > self.height { // TODO: check on actual vectors and not just width and height?
-            return false;
-
-        } else if x < 0 || x > self.width {
-            return false;
-        }
-
-        true
-    }
-
-    /// Create a clone of an image as another image.
-    ///
-    /// # Examples
-    /// ```
-    /// // Create image from file
-    /// let original = raster::open("tests/in/sample.jpg").unwrap();
-    ///
-    /// // Clone it
-    /// let clone = original.clone();
-    /// ```
-    pub fn clone(&self) -> Image {
-        Image{
-            width: self.width,
-            height: self.height,
-            bytes: self.bytes.clone(),
+            false
+        } else {
+            !(x < 0 || x > self.width)
         }
     }
 
@@ -317,7 +297,7 @@ impl<'a> Image {
     ///
     /// ![](https://kosinix.github.io/raster/in/histogram-ps.png)
     ///
-    pub fn histogram(&self) -> RasterResult<(HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>)> {
+    pub fn histogram(&self) -> RasterResult<Histogram> {
         let w = self.width;
         let h = self.height;
 
@@ -436,10 +416,36 @@ impl<'a> Image {
     }
 }
 
+fn rgb_min(r: f32, g: f32, b: f32) -> f32 {
+    let min = if g < r {
+        g
+    } else {
+        r
+    };
 
+    if b < min {
+        b
+    } else {
+        min
+    }
+}
+
+fn rgb_max(r: f32, g: f32, b: f32) -> f32 {
+    let max = if g > r {
+        g
+    } else {
+        r
+    };
+
+    if b > max {
+        b
+    } else {
+        max
+    }
+}
 
 /// A struct for representing and creating color.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Color {
     /// Red channel 0 - 255
     pub r: u8,
@@ -473,16 +479,6 @@ impl<'a> Color {
             g: 0,
             b: 255,
             a: 255,
-        }
-    }
-
-    /// Clones a Color.
-    pub fn clone(&self) -> Color {
-        Color {
-            r: self.r,
-            g: self.g,
-            b: self.b,
-            a: self.a,
         }
     }
 
@@ -538,14 +534,14 @@ impl<'a> Color {
     /// assert_eq!(255, color.g);
     /// ```
     pub fn hex(hex: &str) -> RasterResult<Color> {
-        if hex.len() == 9 && hex.starts_with("#") { // #FFFFFFFF (Red Green Blue Alpha)
+        if hex.len() == 9 && hex.starts_with('#') { // #FFFFFFFF (Red Green Blue Alpha)
             Ok(Color {
                 r: try!(_hex_dec(&hex[1..3])),
                 g: try!(_hex_dec(&hex[3..5])),
                 b: try!(_hex_dec(&hex[5..7])),
                 a: try!(_hex_dec(&hex[7..9])),
             })
-        } else if hex.len() == 7 && hex.starts_with("#") { // #FFFFFF (Red Green Blue)
+        } else if hex.len() == 7 && hex.starts_with('#') { // #FFFFFF (Red Green Blue)
             Ok(Color {
                 r: try!(_hex_dec(&hex[1..3])),
                 g: try!(_hex_dec(&hex[3..5])),
@@ -635,50 +631,40 @@ impl<'a> Color {
         let g = g as f32 / 255.0;
         let b = b as f32 / 255.0;
 
-        let mut min = r;
-        if g < min {
-            min = g;
-        }
-        if b < min {
-            min = b;
-        }
-
-        let mut max = r;
-        if g > max {
-            max = g;
-        }
-        if b > max {
-            max = b;
-        }
-
+        let min = rgb_min(r, g, b);
+        let max = rgb_max(r, g, b);
 
         let chroma = max - min;
-        let mut h = 0.0;
 
-        if chroma != 0.0 {
+        let h = {
+            let mut h = 0.0;
 
-            if max == r {
-                h = 60.0 * ((g - b) / chroma);
-                if h < 0.0 {
-                    h += 360.0;
+            if chroma != 0.0 {
+                if max == r {
+                    h = 60.0 * ((g - b) / chroma);
+                    if h < 0.0 {
+                        h += 360.0;
+                    }
+                } else if max == g {
+                    h = 60.0 * (((b - r) / chroma) + 2.0);
+                } else if max == b {
+                    h = 60.0 * (((r - g) / chroma) + 4.0);
                 }
-            } else if max == g {
-                h = 60.0 * (((b - r) / chroma) + 2.0);
-            } else if max == b {
-                h = 60.0 * (((r - g) / chroma) + 4.0);
             }
 
-        }
+            if h > 359.0 {
+                h = 360.0 - h; // Invert if > 0 to 359
+            }
 
-        if h > 359.0 {
-            h = 360.0 - h; // Invert if > 0 to 359
-        }
+            h
+        };
+
         let v = max;
-        let mut s = 0.0;
-        if v != 0.0 {
-
-            s = chroma / v;
-        }
+        let s = if v != 0.0 {
+            chroma / v
+        } else {
+            0.0
+        };
 
         ( h.round() as u16, s * 100.0, v * 100.0  )
     }

@@ -56,11 +56,11 @@ pub enum BlurMode {
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_gaussian_blur.jpg)
 ///
-pub fn blur<'a>(mut src: &'a mut Image, mode: BlurMode) -> RasterResult<()>{
+pub fn blur(mut src: &mut Image, mode: BlurMode) -> RasterResult<()>{
     match mode {
-        BlurMode::Box => blur_box(&mut src),
-        BlurMode::Gaussian => blur_gaussian(&mut src)
-    }.map(|_| ())
+        BlurMode::Box => blur_box(src),
+        BlurMode::Gaussian => blur_gaussian(src)
+    }
 }
 
 /// Apply brightness.
@@ -145,15 +145,14 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterR
             let mut accum_blue: i32 = 0;
             let mut accum_alpha: i32 = 0;
 
-            let mut m_index_y = 0;
-            for mut src_y in mstarty..mstarty + m_size {
+            for (m_index_y, mut src_y) in (0..).zip(mstarty..mstarty + m_size) {
                 if src_y < 0 {
                     src_y = 0;
                 } else if src_y > h - 1 {
                     src_y = h - 1;
                 }
-                let mut m_index_x = 0;
-                for mut src_x in mstartx..mstartx + m_size {
+
+                for (m_index_x, mut src_x) in (0..).zip(mstartx..mstartx + m_size) {
                     if src_x < 0 {
                         src_x = 0;
                     } else if src_x > w - 1 {
@@ -165,10 +164,7 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterR
                     accum_green += pixel.g as i32 * matrix[m_index_y][m_index_x];
                     accum_blue += pixel.b as i32 * matrix[m_index_y][m_index_x];
                     accum_alpha += pixel.a as i32 * matrix[m_index_y][m_index_x];
-
-                    m_index_x+=1;
                 }
-                m_index_y+=1;
             }
 
             if divisor != 1 {
@@ -237,9 +233,7 @@ pub fn emboss(mut src: &mut Image) -> RasterResult<()>{
         [0, 1, 2]
     ];
 
-    try!(convolve(&mut src, matrix, 1));
-
-    Ok(())
+    convolve(src, matrix, 1)
 }
 
 /// Apply a gamma correction.
@@ -397,9 +391,7 @@ pub fn sharpen(mut src: &mut Image) -> RasterResult<()>{
         [0, -1, 0]
     ];
 
-    try!(convolve(&mut src, matrix, 1));
-
-    Ok(())
+    convolve(src, matrix, 1)
 }
 
 
@@ -413,9 +405,7 @@ fn blur_box(mut src: &mut Image) -> RasterResult<()>{
         [1,1,1]
     ];
 
-    try!(convolve(&mut src, matrix, 9));
-
-    Ok(())
+    convolve(src, matrix, 9)
 }
 
 // Gaussian
@@ -426,7 +416,5 @@ fn blur_gaussian(mut src: &mut Image) -> RasterResult<()>{
         [1,2,1]
     ];
 
-    try!(convolve(&mut src, matrix, 16));
-
-    Ok(())
+    convolve(src, matrix, 16)
 }

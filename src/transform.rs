@@ -181,11 +181,8 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
     let h2 = ((min_y as f32).abs() + (max_y as f32).abs()) as i32 + 1;
     let mut dest = Image::blank(w2, h2);
 
-    let mut dest_y = 0;
-    for y in min_y..max_y+1 {
-
-        let mut dest_x = 0;
-        for x in min_x..max_x+1{
+    for (dest_y, y) in (0..).zip(min_y..max_y + 1) {
+        for (dest_x, x) in (0..).zip(min_x..max_x + 1) {
             let point: (i32, i32) = _rotate((x,y), -degree);
 
             if point.0 >= 0 && point.0 < w1 && point.1 >=0 && point.1 < h1 {
@@ -194,10 +191,7 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
             } else {
                 try!(dest.set_pixel(dest_x, dest_y, Color::rgba(bg.r, bg.g, bg.b, bg.a)));
             }
-            dest_x += 1;
-
         }
-        dest_y += 1;
     }
 
     src.width = dest.width;
@@ -209,15 +203,13 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
 
 /// Resize image to exact dimensions ignoring aspect ratio.
 /// Useful if you want to force exact width and height.
-pub fn resize_exact<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
-
-    try!(resample(&mut src, w, h, InterpolationMode::Bicubic));
-    Ok(())
+pub fn resize_exact(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
+    resample(src, w, h, InterpolationMode::Bicubic)
 }
 
 /// Resize image to exact height. Width is auto calculated.
 /// Useful for creating row of images with the same height.
-pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> RasterResult<()> {
+pub fn resize_exact_height(mut src: &mut Image, h: i32) -> RasterResult<()> {
 
     let width = src.width;
     let height = src.height;
@@ -226,13 +218,12 @@ pub fn resize_exact_height<'a>(mut src: &'a mut Image, h: i32) -> RasterResult<(
     let resize_height = h;
     let resize_width = (h as f32 * ratio) as i32;
 
-    try!(resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic));
-    Ok(())
+    resample(src, resize_width, resize_height, InterpolationMode::Bicubic)
 }
 
 /// Resize image to exact width. Height is auto calculated.
 /// Useful for creating column of images with the same width.
-pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> RasterResult<()> {
+pub fn resize_exact_width(mut src: &mut Image, w: i32) -> RasterResult<()> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -240,12 +231,11 @@ pub fn resize_exact_width<'a>(mut src: &'a mut Image, w: i32) -> RasterResult<()
     let resize_width  = w;
     let resize_height = (w as f32 / ratio).round() as i32;
 
-    try!(resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic));
-    Ok(())
+    resample(src, resize_width, resize_height, InterpolationMode::Bicubic)
 }
 
 /// Resize image to fill all the space in the given dimension. Excess parts are removed.
-pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
+pub fn resize_fill(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
     let width  = src.width;
     let height = src.height;
     let ratio  = width as f32 / height as f32;
@@ -260,16 +250,14 @@ pub fn resize_fill<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<(
         optimum_height = h;
     }
 
-    try!(resample(&mut src, optimum_width, optimum_height, InterpolationMode::Bicubic));
-    try!(crop(&mut src, w, h, PositionMode::Center, 0, 0)); // Trim excess parts
-
-    Ok(())
+    resample(src, optimum_width, optimum_height, InterpolationMode::Bicubic)
+        .and_then(|_| crop(src, w, h, PositionMode::Center, 0, 0)) // Trim excess parts
 }
 
 /// Resize an image to fit within the given width and height.
 /// The re-sized image will not exceed the given dimension.
 /// Preserves the aspect ratio.
-pub fn resize_fit<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
+pub fn resize_fit(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
 
     let ratio: f64 = src.width as f64 / src.height as f64;
 
@@ -283,8 +271,7 @@ pub fn resize_fit<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()
         resize_width  = (h as f64 * ratio).round() as i32;
     }
 
-    try!(resample(&mut src, resize_width, resize_height, InterpolationMode::Bicubic));
-    Ok(())
+    resample(src, resize_width, resize_height, InterpolationMode::Bicubic)
 }
 
 // Private functions

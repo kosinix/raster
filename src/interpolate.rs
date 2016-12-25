@@ -23,16 +23,16 @@ pub enum InterpolationMode {
 }
 
 /// Resample an image into a new size using a given interpolation method.
-pub fn resample<'a>(mut src: &'a mut Image, w: i32, h: i32, interpolation: InterpolationMode) -> RasterResult<()> {
+pub fn resample(mut src: &mut Image, w: i32, h: i32, interpolation: InterpolationMode) -> RasterResult<()> {
     match interpolation {
-        InterpolationMode::Bilinear => bilinear(&mut src, w, h),
-        InterpolationMode::Bicubic => bilinear(&mut src, w, h), // TODO: bicubic
-        InterpolationMode::Nearest => nearest(&mut src, w, h)
-    }.map(|_| ())
+        InterpolationMode::Bilinear => bilinear(src, w, h),
+        InterpolationMode::Bicubic => bilinear(src, w, h), // TODO: bicubic
+        InterpolationMode::Nearest => nearest(src, w, h)
+    }
 }
 
 /// Interpolate using nearest neighbor.
-pub fn nearest<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
+pub fn nearest(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
 
     let x_ratio: f64 = src.width as f64 / w as f64;
     let y_ratio: f64 = src.height as f64 / h as f64;
@@ -56,18 +56,15 @@ pub fn nearest<'a>(mut src: &'a mut Image, w: i32, h: i32) -> RasterResult<()> {
 }
 
 /// Interpolate using linear function.
-pub fn bilinear<'a>(mut src: &'a mut Image, w2: i32, h2: i32) -> RasterResult<()> {
-
-    try!(bilinear_width(&mut src, w2));
-    try!(bilinear_height(&mut src, h2));
-
-    Ok(())
+pub fn bilinear(mut src: &mut Image, w2: i32, h2: i32) -> RasterResult<()> {
+    bilinear_width(src, w2)
+        .and_then(|_| bilinear_height(src, h2))
 }
 
 // Private functions
 
 /// Interpolate the width using linear function.
-fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> RasterResult<()> {
+fn bilinear_width(mut src: &mut Image, w2: i32) -> RasterResult<()> {
 
     let w1 = src.width;
     let h1 = src.height;
@@ -84,10 +81,14 @@ fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> RasterResult<()> {
     for y in 0..h1 {
         for x in x_start..x_end {
 
-            let mut src_x = x as f64 * x_ratio;
-            if src_x < 0.0 {
-                src_x = 0.0; // limit lower bound to 0
-            }
+            let src_x = {
+                let src_x = x as f64 * x_ratio;
+                if src_x < 0.0 {
+                    0.0 // limit lower bound to 0
+                } else {
+                    src_x
+                }
+            };
 
             let src_x_int = (src_x).floor() as i32;
 
@@ -123,7 +124,7 @@ fn bilinear_width<'a>(mut src: &'a mut Image, w2: i32) -> RasterResult<()> {
 }
 
 /// Interpolate the height using linear function.
-fn bilinear_height<'a>(mut src: &'a mut Image, h2: i32) -> RasterResult<()> {
+fn bilinear_height(mut src: &mut Image, h2: i32) -> RasterResult<()> {
 
     let w1 = src.width;
     let h1 = src.height;
@@ -140,11 +141,14 @@ fn bilinear_height<'a>(mut src: &'a mut Image, h2: i32) -> RasterResult<()> {
     for x in 0..w1 {
         for y in y_start..y_end {
 
-            let mut src_y = y as f64 * y_ratio;
-
-            if src_y < 0.0 {
-                src_y = 0.0; // limit lower bound to 0
-            }
+            let src_y = {
+                let src_y = y as f64 * y_ratio;
+                if src_y < 0.0 {
+                    0.0 // limit lower bound to 0
+                } else {
+                    src_y
+                }
+            };
 
             let src_y_int = (src_y).floor() as i32;
 

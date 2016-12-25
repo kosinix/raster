@@ -85,14 +85,15 @@ use transform;
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_screen.png)
 ///
-pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
+pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
 
-    let mut opacity = opacity;
-    if opacity > 1.0 {
-        opacity = 1.0
+    let opacity = if opacity > 1.0 {
+        1.0
     } else if opacity < 0.0 {
-        opacity = 0.0
-    }
+        0.0
+    } else {
+        opacity
+    };
 
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
@@ -146,15 +147,15 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity:
 
     match blend_mode {
         BlendMode::Normal =>
-            blend::normal(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::normal(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
         BlendMode::Difference =>
-            blend::difference(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::difference(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
         BlendMode::Multiply =>
-            blend::multiply(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::multiply(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
         BlendMode::Overlay =>
-            blend::overlay(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::overlay(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
         BlendMode::Screen =>
-            blend::screen(&image1, &image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+            blend::screen(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
     }
 }
 
@@ -228,7 +229,7 @@ pub fn blend<'a>(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity:
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg)
 ///
-pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<()> {
+pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<()> {
 
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
@@ -237,16 +238,23 @@ pub fn crop<'a>(mut src: &'a mut Image, crop_width: i32, crop_height: i32, posit
     let offset_x = if offset_x < 0 { 0 } else { offset_x };
     let offset_y = if offset_y < 0 { 0 } else { offset_y };
 
+    let height2 = {
+        let height2 = offset_y + crop_height;
+        if height2 > src.height {
+            src.height
+        } else {
+            height2
+        }
+    };
 
-    let mut height2 = offset_y + crop_height;
-    if height2 > src.height {
-        height2 = src.height
-    }
-
-    let mut width2 = offset_x + crop_width;
-    if width2 > src.width {
-        width2 = src.width
-    }
+    let width2 = {
+        let width2 = offset_x + crop_width;
+        if width2 > src.width {
+            src.width
+        } else {
+            width2
+        }
+    };
 
     let mut dest = Image::blank(width2-offset_x, height2-offset_y);
 
@@ -420,12 +428,12 @@ pub enum ResizeMode {
 ///
 /// ![](https://kosinix.github.io/raster/out/test_resize_exact_1.jpg) ![](https://kosinix.github.io/raster/out/test_resize_exact_2.jpg)
 ///
-pub fn resize<'a>(mut src: &'a mut Image, w: i32, h: i32, mode: ResizeMode) -> RasterResult<()> {
+pub fn resize(mut src: &mut Image, w: i32, h: i32, mode: ResizeMode) -> RasterResult<()> {
     match mode {
-        ResizeMode::Exact => transform::resize_exact(&mut src, w, h),
-        ResizeMode::ExactWidth => transform::resize_exact_width(&mut src, w),
-        ResizeMode::ExactHeight => transform::resize_exact_height(&mut src, h),
-        ResizeMode::Fit => transform::resize_fit(&mut src, w, h),
-        ResizeMode::Fill => transform::resize_fill(&mut src, w, h)
-    }.map(|_| ())
+        ResizeMode::Exact => transform::resize_exact(src, w, h),
+        ResizeMode::ExactWidth => transform::resize_exact_width(src, w),
+        ResizeMode::ExactHeight => transform::resize_exact_height(src, h),
+        ResizeMode::Fit => transform::resize_fit(src, w, h),
+        ResizeMode::Fill => transform::resize_fill(src, w, h)
+    }
 }
