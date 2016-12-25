@@ -25,9 +25,9 @@ pub enum InterpolationMode {
 /// Resample an image into a new size using a given interpolation method.
 pub fn resample(mut src: &mut Image, w: i32, h: i32, interpolation: InterpolationMode) -> RasterResult<()> {
     match interpolation {
-        InterpolationMode::Bilinear => bilinear(&mut src, w, h),
-        InterpolationMode::Bicubic => bilinear(&mut src, w, h), // TODO: bicubic
-        InterpolationMode::Nearest => nearest(&mut src, w, h)
+        InterpolationMode::Bilinear => bilinear(src, w, h),
+        InterpolationMode::Bicubic => bilinear(src, w, h), // TODO: bicubic
+        InterpolationMode::Nearest => nearest(src, w, h)
     }
 }
 
@@ -57,8 +57,8 @@ pub fn nearest(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
 
 /// Interpolate using linear function.
 pub fn bilinear(mut src: &mut Image, w2: i32, h2: i32) -> RasterResult<()> {
-    bilinear_width(&mut src, w2)
-        .and_then(|_| bilinear_height(&mut src, h2))
+    bilinear_width(src, w2)
+        .and_then(|_| bilinear_height(src, h2))
 }
 
 // Private functions

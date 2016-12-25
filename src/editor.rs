@@ -430,10 +430,10 @@ pub enum ResizeMode {
 ///
 pub fn resize(mut src: &mut Image, w: i32, h: i32, mode: ResizeMode) -> RasterResult<()> {
     match mode {
-        ResizeMode::Exact => transform::resize_exact(&mut src, w, h),
-        ResizeMode::ExactWidth => transform::resize_exact_width(&mut src, w),
-        ResizeMode::ExactHeight => transform::resize_exact_height(&mut src, h),
-        ResizeMode::Fit => transform::resize_fit(&mut src, w, h),
-        ResizeMode::Fill => transform::resize_fill(&mut src, w, h)
+        ResizeMode::Exact => transform::resize_exact(src, w, h),
+        ResizeMode::ExactWidth => transform::resize_exact_width(src, w),
+        ResizeMode::ExactHeight => transform::resize_exact_height(src, h),
+        ResizeMode::Fit => transform::resize_fit(src, w, h),
+        ResizeMode::Fill => transform::resize_fill(src, w, h)
     }
 }
