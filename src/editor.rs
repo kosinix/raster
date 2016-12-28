@@ -220,16 +220,9 @@ pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32
 /// ### Output
 /// The cropped images arranged in a grid, showing how you can easily set the crop position.
 ///
-/// ![](https://kosinix.github.io/raster/out/test_crop_top_left.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_top_center.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_top_right.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_center_left.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_center.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_center_right.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_bottom_left.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg)
-/// ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg)
-///
+/// ![](https://kosinix.github.io/raster/out/test_crop_top_left.jpg) ![](https://kosinix.github.io/raster/out/test_crop_top_center.jpg) ![](https://kosinix.github.io/raster/out/test_crop_top_right.jpg)   
+/// ![](https://kosinix.github.io/raster/out/test_crop_center_left.jpg) ![](https://kosinix.github.io/raster/out/test_crop_center.jpg) ![](https://kosinix.github.io/raster/out/test_crop_center_right.jpg)   
+/// ![](https://kosinix.github.io/raster/out/test_crop_bottom_left.jpg) ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg) ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg)
 pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<()> {
 
     // Turn into positioner struct
