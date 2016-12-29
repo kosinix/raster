@@ -640,14 +640,14 @@ impl<'a> Color {
             let mut h = 0.0;
 
             if chroma != 0.0 {
-                if max == r {
+                if (max - r).abs() < std::f32::EPSILON {
                     h = 60.0 * ((g - b) / chroma);
                     if h < 0.0 {
                         h += 360.0;
                     }
-                } else if max == g {
+                } else if (max - g).abs() < std::f32::EPSILON {
                     h = 60.0 * (((b - r) / chroma) + 2.0);
-                } else if max == b {
+                } else if (max - b).abs() < std::f32::EPSILON {
                     h = 60.0 * (((r - g) / chroma) + 4.0);
                 }
             }
