@@ -129,14 +129,11 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
 
     let src = try!(image::open(image_file).map_err(RasterError::Image)); // Returns image::DynamicImage
     let (w, h) = src.dimensions();
-    let mut bytes = Vec::new();
+    let mut bytes = Vec::with_capacity((w * h) as usize * 4);
     for y in 0..h {
         for x in 0..w {
             let p = src.get_pixel(x, y);
-            bytes.push(p.data[0]);
-            bytes.push(p.data[1]);
-            bytes.push(p.data[2]);
-            bytes.push(p.data[3]);
+            bytes.extend_from_slice(&p.data[0..4]);
         }
     }
     Ok(Image{
@@ -201,13 +198,10 @@ impl<'a> Image {
     /// ```
     pub fn blank(w:i32, h:i32) -> Image {
 
-        let mut bytes = Vec::new();
+        let mut bytes = Vec::with_capacity((w * h) as usize * 4);
         for _ in 0..h {
             for _ in 0..w {
-                bytes.push(0);
-                bytes.push(0);
-                bytes.push(0);
-                bytes.push(255);
+                bytes.extend_from_slice(&[0, 0, 0, 255]);
             }
         }
         Image {
@@ -351,7 +345,7 @@ impl<'a> Image {
     /// ```
     pub fn get_pixel(&self, x: i32, y:i32) -> RasterResult<Color> {
         let rgba = 4;
-        let start = (y * &self.width) + x;
+        let start = (y * self.width) + x;
         let start = start * rgba;
         let end = start + rgba;
         let len = self.bytes.len();
@@ -698,30 +692,32 @@ impl<'a> Color {
         let mut g = 0.0;
         let mut b = 0.0;
 
-        if h >= 0.0 && h < 1.0 {
-            r = chroma;
-            g = x;
-            b = 0.0;
-        } else if h >= 1.0 && h < 2.0 {
-            r = x;
-            g = chroma;
-            b = 0.0;
-        } else if h >= 2.0 && h < 3.0 {
-            r = 0.0;
-            g = chroma;
-            b = x;
-        } else if h >= 3.0 && h < 4.0 {
-            r = 0.0;
-            g = x;
-            b = chroma;
-        } else if h >= 4.0 && h < 5.0 {
-            r = x;
-            g = 0.0;
-            b = chroma;
-        } else if h >= 5.0 && h < 6.0 {
-            r = chroma;
-            g = 0.0;
-            b = x;
+        if h >= 0.0 {
+            if h < 1.0 {
+                r = chroma;
+                g = x;
+                b = 0.0;
+            } else if h < 2.0 {
+                r = x;
+                g = chroma;
+                b = 0.0;
+            } else if h < 3.0 {
+                r = 0.0;
+                g = chroma;
+                b = x;
+            } else if h < 4.0 {
+                r = 0.0;
+                g = x;
+                b = chroma;
+            } else if h < 5.0 {
+                r = x;
+                g = 0.0;
+                b = chroma;
+            } else if h < 6.0 {
+                r = chroma;
+                g = 0.0;
+                b = x;
+            }
         }
 
         let m = v - chroma;

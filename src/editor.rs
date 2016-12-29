@@ -4,6 +4,7 @@
 extern crate image;
 
 // from rust
+use std::cmp;
 
 // from external crate
 
@@ -235,25 +236,17 @@ pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: Po
     let positioner = Position::new(position, offset_x, offset_y);
 
     let (offset_x, offset_y) = try!(positioner.get_x_y( src.width, src.height, crop_width, crop_height));
-    let offset_x = if offset_x < 0 { 0 } else { offset_x };
-    let offset_y = if offset_y < 0 { 0 } else { offset_y };
+    let offset_x = cmp::max(0, offset_x);
+    let offset_y = cmp::max(0, offset_y);
 
     let height2 = {
         let height2 = offset_y + crop_height;
-        if height2 > src.height {
-            src.height
-        } else {
-            height2
-        }
+        cmp::min(height2, src.height)
     };
 
     let width2 = {
         let width2 = offset_x + crop_width;
-        if width2 > src.width {
-            src.width
-        } else {
-            width2
-        }
+        cmp::min(width2, src.width)
     };
 
     let mut dest = Image::blank(width2-offset_x, height2-offset_y);
