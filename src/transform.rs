@@ -281,7 +281,9 @@ fn _rotate(p: (i32, i32), deg: f32) -> (i32, i32) {
     let radians:f32 = deg.to_radians();
     let px: f32 = p.0 as f32;
     let py: f32 = p.1 as f32;
-    let x = ((px * radians.cos()) - (py * radians.sin())).round();
-    let y = ((px * radians.sin()) + (py * radians.cos())).round();
+    let cos = radians.cos();
+    let sin = radians.sin();
+    let x = ((px * cos) - (py * sin)).round();
+    let y = ((px * sin) + (py * cos)).round();
     (x as i32, y as i32)
 }
