@@ -4,6 +4,7 @@ use std::io::Error as IoError;
 use std::num::ParseIntError;
 use image::ImageError;
 
+/// Enumeration of raster's errors.
 #[derive(Debug)]
 pub enum RasterError {
     Io(IoError),
@@ -21,4 +22,5 @@ pub enum RasterError {
     Image(ImageError)
 }
 
+/// [Type alias](https://doc.rust-lang.org/book/error-handling.html#the-result-type-alias-idiom) for Result. 
 pub type RasterResult<T> = Result<T, RasterError>;
