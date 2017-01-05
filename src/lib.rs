@@ -109,6 +109,7 @@ pub use interpolate::InterpolationMode;
 pub use position::PositionMode;
 pub use transform::TransformMode;
 
+/// Holds histogram information.
 pub type Histogram = (HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>);
 
 /// Create an image from an image file.
