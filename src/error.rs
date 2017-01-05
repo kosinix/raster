@@ -3,6 +3,7 @@
 use std::io::Error as IoError;
 use std::num::ParseIntError;
 use image::ImageError;
+use png;
 
 /// Enumeration of raster's errors.
 #[derive(Debug)]
@@ -19,7 +20,31 @@ pub enum RasterError {
     In an ideal world, image's error type needn't be exposed
     (but we don't live in an ideal world yet)
     */
-    Image(ImageError)
+    Image(ImageError),
+    PngDecoding(png::DecodingError),
+    PngEncoding(png::EncodingError),
+    UnsupportedFormat(String),
+}
+
+/// Convert std::io::Error to RasterError::Io
+impl From<IoError> for RasterError {
+    fn from(err: IoError) -> RasterError {
+        RasterError::Io(err)
+    }
+}
+
+/// Convert png::DecodingError to RasterError::PngDecoding
+impl From<png::DecodingError> for RasterError {
+    fn from(err: png::DecodingError) -> RasterError {
+        RasterError::PngDecoding(err)
+    }
+}
+
+/// Convert png::EncodingError to RasterError::PngEncoding
+impl From<png::EncodingError> for RasterError {
+    fn from(err: png::EncodingError) -> RasterError {
+        RasterError::PngEncoding(err)
+    }
 }
 
 /// [Type alias](https://doc.rust-lang.org/book/error-handling.html#the-result-type-alias-idiom) for Result. 

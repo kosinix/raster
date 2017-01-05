@@ -81,6 +81,8 @@
 //!
 //! More options are available, checkout the modules below.
 //!
+
+// modules
 pub mod error;
 pub mod compare;
 pub mod editor;
@@ -92,13 +94,18 @@ mod position;
 
 // crates
 extern crate image;
+extern crate png;
 
 // from rust
 use std::path::Path;
+use std::fs::File;
+use std::io::BufWriter;
 use std::collections::HashMap;
+use std::ascii::AsciiExt;
 
 // from external crate
 use self::image::GenericImage;
+use png::HasParameters; // to use set()
 
 // from local crate
 use error::{RasterError, RasterResult};
@@ -128,21 +135,35 @@ pub type Histogram = (HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, Hash
 /// ```
 pub fn open(image_file: &str) -> RasterResult<Image> {
 
-    let src = try!(image::open(image_file).map_err(RasterError::Image)); // Returns image::DynamicImage
-    let (w, h) = src.dimensions();
-    let mut bytes = Vec::with_capacity((w * h) as usize * 4);
-    for y in 0..h {
-        for x in 0..w {
-            let p = src.get_pixel(x, y);
-            bytes.extend_from_slice(&p.data[0..4]);
-        }
-    }
-    Ok(Image{
-        width: w as i32,
-        height: h as i32,
-        bytes: bytes
-    })
+    let path = Path::new(image_file);
+    let ext = path.extension().and_then(|s| s.to_str())
+                  .map_or("".to_string(), |s| s.to_ascii_lowercase());
 
+
+    match &ext[..] {
+        "jpg" | "jpeg" | "gif"  => {
+            let src = try!(image::open(image_file).map_err(RasterError::Image)); // Returns image::DynamicImage
+            let (w, h) = src.dimensions();
+            let mut bytes = Vec::with_capacity((w * h) as usize * 4);
+            for y in 0..h {
+                for x in 0..w {
+                    let p = src.get_pixel(x, y);
+                    bytes.extend_from_slice(&p.data[0..4]);
+                }
+            }
+            Ok(Image{
+                width: w as i32,
+                height: h as i32,
+                bytes: bytes
+            })
+        },
+        "png"  => {
+            Ok(try!(_decode_png(image_file)))
+        },
+        _ => {
+            Err(RasterError::UnsupportedFormat(ext))
+        }
+    } 
 }
 
 /// Save an image to an image file. The image type is detected from the file extension of the file name.
@@ -159,13 +180,28 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
 /// raster::save(&image, "tests/out/test.png");
 /// ```
 pub fn save(image: &Image, out: &str) -> RasterResult<()> {
-    image::save_buffer(
-        &Path::new(out),
-        &image.bytes,
-        image.width as u32,
-        image.height as u32,
-        image::RGBA(8)
-    ).map_err(RasterError::Io)
+
+    let path = Path::new(out);
+    let ext = path.extension().and_then(|s| s.to_str())
+                  .map_or("".to_string(), |s| s.to_ascii_lowercase());
+
+    match &ext[..] {
+        "jpg" | "jpeg" | "gif"  => {
+            image::save_buffer(
+                &Path::new(out),
+                &image.bytes,
+                image.width as u32,
+                image.height as u32,
+                image::RGBA(8)
+            ).map_err(RasterError::Io)
+        },
+        "png"  => {
+            Ok(try!(_encode_png(&image, &path)))
+        },
+        _ => {
+            Err(RasterError::UnsupportedFormat(ext))
+        }
+    } 
 }
 
 /// A struct for easily representing a raster image.
@@ -746,4 +782,43 @@ fn _hex_dec(hex_string: &str) -> RasterResult<u8> {
     u8::from_str_radix(hex_string, 16)
         .map(|o| o as u8)
         .map_err(RasterError::HexParse)
+}
+
+// Decode PNG
+fn _decode_png(image_file: &str) -> RasterResult<Image>{
+    let f = try!(File::open(image_file));
+    let decoder = png::Decoder::new(f);
+    let (info, mut reader) = try!(decoder.read_info());
+    let mut bytes = vec![0; info.buffer_size()];
+    
+    try!(reader.next_frame(&mut bytes));
+
+    if info.color_type == png::ColorType::RGB { // Applies only to RGB
+
+        let mut insert_count = 0;
+        let len = (info.width * info.height) as usize;
+        for i in 0..len {
+            let insert_pos = 3 * (i+1) + insert_count;
+            bytes.insert(insert_pos, 255);
+            insert_count+=1;
+        }
+    } //  TODO other ::ColorType
+    Ok(
+        Image {
+            width: info.width as i32,
+            height: info.height as i32,
+            bytes: bytes
+        }
+    )
+}
+
+// Encode PNG
+fn _encode_png(image: &Image, path: &Path) -> RasterResult<()>{
+    let file = try!(File::create(path));
+    let ref mut w = BufWriter::new(file);
+
+    let mut encoder = png::Encoder::new(w, image.width as u32, image.height as u32);
+    encoder.set(png::ColorType::RGBA).set(png::BitDepth::Eight);
+    let mut writer = try!(encoder.write_header());
+    Ok(try!(writer.write_image_data(&image.bytes)))
 }

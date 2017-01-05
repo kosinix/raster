@@ -20,4 +20,7 @@ repository = "https://github.com/kosinix/raster.git"
 [dependencies.image]
 version = "0.10.3"
 default-features = false
-features = ["gif_codec", "jpeg", "ico", "png_codec"]
+features = ["gif_codec", "jpeg", "ico"]
+
+[dependencies.png]
+version = "0.5.2"
