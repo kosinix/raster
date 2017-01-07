@@ -826,10 +826,7 @@ fn _encode_gif(image: &Image, path: &Path) -> RasterResult<()> {
     // Open the file with basic error check
     let file = try!(File::create(path));
     let writer = BufWriter::new(file);
-
-    let mut bytes = image.bytes.clone(); // TODO: Perf issue?
-    let frame = gif::Frame::from_rgba(image.width as u16, image.height as u16, &mut bytes); // TODO: Perf issue?
-    
+    let frame = gif::Frame::from_rgba(image.width as u16, image.height as u16, &mut image.bytes.clone()); // TODO: Perf issue?
     let mut encoder = try!(
         gif::Encoder::new(writer, frame.width, frame.height, &[])
     );
