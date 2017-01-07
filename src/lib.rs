@@ -95,6 +95,7 @@ mod position;
 // crates
 extern crate image;
 extern crate png;
+extern crate gif;
 
 // from rust
 use std::path::Path;
@@ -105,7 +106,6 @@ use std::ascii::AsciiExt;
 
 // from external crate
 use self::image::GenericImage;
-use png::HasParameters; // to use set()
 
 // from local crate
 use error::{RasterError, RasterResult};
@@ -141,7 +141,10 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
 
 
     match &ext[..] {
-        "jpg" | "jpeg" | "gif"  => {
+        "gif"  => {
+            Ok(try!(_decode_gif(image_file)))
+        },
+        "jpg" | "jpeg" => {
             let src = try!(image::open(image_file).map_err(RasterError::Image)); // Returns image::DynamicImage
             let (w, h) = src.dimensions();
             let mut bytes = Vec::with_capacity((w * h) as usize * 4);
@@ -186,7 +189,10 @@ pub fn save(image: &Image, out: &str) -> RasterResult<()> {
                   .map_or("".to_string(), |s| s.to_ascii_lowercase());
 
     match &ext[..] {
-        "jpg" | "jpeg" | "gif"  => {
+        "gif"  => {
+            Err(RasterError::UnsupportedFormat(ext)) //TODO:
+        },
+        "jpg" | "jpeg" => {
             image::save_buffer(
                 &Path::new(out),
                 &image.bytes,
@@ -784,6 +790,36 @@ fn _hex_dec(hex_string: &str) -> RasterResult<u8> {
         .map_err(RasterError::HexParse)
 }
 
+// Decode GIF
+fn _decode_gif(image_file: &str) -> RasterResult<Image>{
+    
+    // Open the file
+    let f = try!(File::open(image_file));
+    let mut decoder = gif::Decoder::new(f);
+
+    // Configure the decoder such that it will expand the image to RGBA.
+    gif::SetParameter::set(&mut decoder, gif::ColorOutput::RGBA);
+
+    // Read the file header
+    let mut reader = try!(decoder.read_info());
+    
+    // Read frame 1. 
+    // TODO: Work on all frames
+    if let Some(_) = try!(reader.next_frame_info()) {
+        let mut bytes = vec![0; reader.buffer_size()];
+        try!(reader.read_into_buffer(&mut bytes));
+        Ok(
+            Image {
+                width: reader.width() as i32,
+                height: reader.height() as i32,
+                bytes: bytes
+            }
+        )
+    } else {
+        Err(RasterError::GifDecoding(gif::DecodingError::Internal("Bad")))
+    }
+}
+
 // Decode PNG
 fn _decode_png(image_file: &str) -> RasterResult<Image>{
     let f = try!(File::open(image_file));
@@ -818,7 +854,9 @@ fn _encode_png(image: &Image, path: &Path) -> RasterResult<()>{
     let ref mut w = BufWriter::new(file);
 
     let mut encoder = png::Encoder::new(w, image.width as u32, image.height as u32);
-    encoder.set(png::ColorType::RGBA).set(png::BitDepth::Eight);
+    // encoder.set(png::ColorType::RGBA).set(png::BitDepth::Eight);
+    png::HasParameters::set(&mut encoder, png::ColorType::RGBA);
+    png::HasParameters::set(&mut encoder, png::BitDepth::Eight);
     let mut writer = try!(encoder.write_header());
     Ok(try!(writer.write_image_data(&image.bytes)))
 }

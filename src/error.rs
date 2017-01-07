@@ -4,6 +4,7 @@ use std::io::Error as IoError;
 use std::num::ParseIntError;
 use image::ImageError;
 use png;
+use gif;
 
 /// Enumeration of raster's errors.
 #[derive(Debug)]
@@ -21,6 +22,7 @@ pub enum RasterError {
     (but we don't live in an ideal world yet)
     */
     Image(ImageError),
+    GifDecoding(gif::DecodingError),
     PngDecoding(png::DecodingError),
     PngEncoding(png::EncodingError),
     UnsupportedFormat(String),
@@ -30,6 +32,14 @@ pub enum RasterError {
 impl From<IoError> for RasterError {
     fn from(err: IoError) -> RasterError {
         RasterError::Io(err)
+    }
+}
+
+// GIF
+/// Convert gif::DecodingError to RasterError::GifDecoding
+impl From<gif::DecodingError> for RasterError {
+    fn from(err: gif::DecodingError) -> RasterError {
+        RasterError::GifDecoding(err)
     }
 }
 
