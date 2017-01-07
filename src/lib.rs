@@ -190,9 +190,6 @@ pub fn save(image: &Image, out: &str) -> RasterResult<()> {
     let ext = path.extension().and_then(|s| s.to_str())
                   .map_or("".to_string(), |s| s.to_ascii_lowercase());
 
-    // Open the file with basic error check
-    let file = try!(File::open(out));
-
     match &ext[..] {
         "gif"  => {
             Err(RasterError::UnsupportedFormat(ext)) //TODO:
@@ -207,7 +204,7 @@ pub fn save(image: &Image, out: &str) -> RasterResult<()> {
             ).map_err(RasterError::Io)
         },
         "png"  => {
-            Ok(try!(_encode_png(&image, &file)))
+            Ok(try!(_encode_png(&image, &path)))
         },
         _ => {
             Err(RasterError::UnsupportedFormat(ext))
@@ -823,6 +820,13 @@ fn _decode_gif(image_file: &File) -> RasterResult<Image>{
     }
 }
 
+// Encode GIF
+fn _encode_gif(image: &Image, file: &File) -> RasterResult<()> {
+    let mut bytes = image.bytes.clone(); // TODO: Perf issue?
+    let frame = gif::Frame::from_rgba(image.width as u16, image.height as u16, &mut bytes);
+    Ok(())
+}
+
 // Decode PNG
 fn _decode_png(image_file: &File) -> RasterResult<Image>{
     let decoder = png::Decoder::new(image_file);
@@ -851,8 +855,10 @@ fn _decode_png(image_file: &File) -> RasterResult<Image>{
 }
 
 // Encode PNG
-fn _encode_png(image: &Image, file: &File) -> RasterResult<()>{
+fn _encode_png(image: &Image, path: &Path) -> RasterResult<()>{
     
+    // Open the file with basic error check
+    let file = try!(File::create(path));
     let ref mut w = BufWriter::new(file);
 
     let mut encoder = png::Encoder::new(w, image.width as u32, image.height as u32);
