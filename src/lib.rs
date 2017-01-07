@@ -139,10 +139,12 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
     let ext = path.extension().and_then(|s| s.to_str())
                   .map_or("".to_string(), |s| s.to_ascii_lowercase());
 
+    // Open the file with basic error check
+    let file = try!(File::open(image_file));
 
     match &ext[..] {
         "gif"  => {
-            Ok(try!(_decode_gif(image_file)))
+            Ok(try!(_decode_gif(&file)))
         },
         "jpg" | "jpeg" => {
             let src = try!(image::open(image_file).map_err(RasterError::Image)); // Returns image::DynamicImage
@@ -161,7 +163,7 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
             })
         },
         "png"  => {
-            Ok(try!(_decode_png(image_file)))
+            Ok(try!(_decode_png(&file)))
         },
         _ => {
             Err(RasterError::UnsupportedFormat(ext))
@@ -791,11 +793,9 @@ fn _hex_dec(hex_string: &str) -> RasterResult<u8> {
 }
 
 // Decode GIF
-fn _decode_gif(image_file: &str) -> RasterResult<Image>{
+fn _decode_gif(image_file: &File) -> RasterResult<Image>{
     
-    // Open the file
-    let f = try!(File::open(image_file));
-    let mut decoder = gif::Decoder::new(f);
+    let mut decoder = gif::Decoder::new(image_file);
 
     // Configure the decoder such that it will expand the image to RGBA.
     gif::SetParameter::set(&mut decoder, gif::ColorOutput::RGBA);
@@ -821,9 +821,8 @@ fn _decode_gif(image_file: &str) -> RasterResult<Image>{
 }
 
 // Decode PNG
-fn _decode_png(image_file: &str) -> RasterResult<Image>{
-    let f = try!(File::open(image_file));
-    let decoder = png::Decoder::new(f);
+fn _decode_png(image_file: &File) -> RasterResult<Image>{
+    let decoder = png::Decoder::new(image_file);
     let (info, mut reader) = try!(decoder.read_info());
     let mut bytes = vec![0; info.buffer_size()];
     
