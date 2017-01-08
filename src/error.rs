@@ -9,6 +9,8 @@ use gif;
 use piston_image::ImageError;
 use png;
 
+// from local crate
+
 /// Enumeration of raster's errors.
 #[derive(Debug)]
 pub enum RasterError {

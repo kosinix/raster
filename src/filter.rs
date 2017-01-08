@@ -1,7 +1,5 @@
 //!  A module for filtering pixels.
 
-// crates
-
 
 // from rust
 use std::cmp;

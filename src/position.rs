@@ -1,8 +1,5 @@
 //!  A module for computing position on an image.
 
-// crates
-
-
 // from rust
 
 

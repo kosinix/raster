@@ -1,18 +1,13 @@
 //!  A module for encoding/decoding.
 
-// See https://en.wikipedia.org/wiki/Alpha_compositing
-
-// crates
-extern crate gif;
-extern crate png;
-
 // from rust
 use std::path::Path;
 use std::fs::File;
 use std::io::BufWriter;
 
 // from external crate
-
+use gif;
+use png;
 
 // from local crate
 use error::{RasterError, RasterResult};

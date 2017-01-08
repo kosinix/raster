@@ -1,8 +1,5 @@
 //!  A module for interpolating pixels.
 
-// crates
-extern crate image;
-
 // from rust
 use std::cmp;
 

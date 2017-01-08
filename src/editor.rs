@@ -1,8 +1,5 @@
 //!  A module for common image editing operations.
 
-// crates
-extern crate image;
-
 // from rust
 use std::cmp;
 

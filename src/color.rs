@@ -1,7 +1,5 @@
 //!  A module for handling colors.
 
-// crates
-
 
 // from rust
 use std;

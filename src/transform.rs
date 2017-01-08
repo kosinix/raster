@@ -1,7 +1,5 @@
 //!  A module for 2D transformation.
 
-// crates
-
 
 // from rust
 use std::cmp;

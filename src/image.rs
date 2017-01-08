@@ -1,7 +1,5 @@
 //!  A module for generic representation of image.
 
-// crates
-
 
 // from rust
 use std::collections::HashMap;

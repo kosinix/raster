@@ -1,6 +1,6 @@
 //!  A module for blending 2 images.
-
 // See https://en.wikipedia.org/wiki/Alpha_compositing
+
 
 // from rust
 

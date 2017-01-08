@@ -1,6 +1,5 @@
 //!  A module for comparing images.
 
-// crates
 
 // from rust
 
