@@ -2,9 +2,6 @@
 
 // See https://en.wikipedia.org/wiki/Alpha_compositing
 
-// crates
-extern crate image;
-
 // from rust
 
 
