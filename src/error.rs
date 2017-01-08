@@ -1,10 +1,16 @@
 //!  A module for error types.
 
+// crates
+extern crate gif;
+extern crate png;
+
+// from rust
 use std::io::Error as IoError;
 use std::num::ParseIntError;
+
+// from external crates
 use image::ImageError;
-use png;
-use gif;
+
 
 /// Enumeration of raster's errors.
 #[derive(Debug)]
