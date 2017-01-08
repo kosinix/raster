@@ -101,9 +101,9 @@ extern crate image as piston_image;
 extern crate png;
 
 // from rust
-use std::path::Path;
-use std::fs::File;
 use std::ascii::AsciiExt;
+use std::fs::File;
+use std::path::Path;
 
 // from external crate
 use piston_image::GenericImage;
@@ -113,14 +113,15 @@ use error::{RasterError, RasterResult};
 
 // re-exports
 pub use blend::BlendMode;
+pub use color::Color;
 pub use editor::ResizeMode;
 pub use filter::BlurMode;
+pub use image::Histogram;
+pub use image::Image;
 pub use interpolate::InterpolationMode;
 pub use position::PositionMode;
 pub use transform::TransformMode;
-pub use color::Color;
-pub use image::Image;
-pub use image::Histogram;
+
 
 /// Create an image from an image file.
 ///
