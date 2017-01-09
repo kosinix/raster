@@ -22,15 +22,13 @@ pub enum RasterError {
     BlendingImageFallsOutsideCanvas,
     InvalidGamma(f32),
 
-    /*
-    In an ideal world, image's error type needn't be exposed
-    (but we don't live in an ideal world yet)
-    */
-    Image(ImageError),
-    GifDecoding(gif::DecodingError),
-    PngDecoding(png::DecodingError),
-    PngEncoding(png::EncodingError),
+    GifDecode(gif::DecodingError),
+    JpegDecode(ImageError),
+    JpegEncode(ImageError),
+    PngDecode(png::DecodingError),
+    PngEncode(png::EncodingError),
     UnsupportedFormat(String),
+    Unexpected,
 }
 
 /// Convert std::io::Error to RasterError::Io
@@ -41,24 +39,24 @@ impl From<IoError> for RasterError {
 }
 
 // GIF
-/// Convert gif::DecodingError to RasterError::GifDecoding
+/// Convert gif::DecodingError to RasterError::GifDecode
 impl From<gif::DecodingError> for RasterError {
     fn from(err: gif::DecodingError) -> RasterError {
-        RasterError::GifDecoding(err)
+        RasterError::GifDecode(err)
     }
 }
 
-/// Convert png::DecodingError to RasterError::PngDecoding
+/// Convert png::DecodingError to RasterError::PngDecode
 impl From<png::DecodingError> for RasterError {
     fn from(err: png::DecodingError) -> RasterError {
-        RasterError::PngDecoding(err)
+        RasterError::PngDecode(err)
     }
 }
 
-/// Convert png::EncodingError to RasterError::PngEncoding
+/// Convert png::EncodingError to RasterError::PngEncode
 impl From<png::EncodingError> for RasterError {
     fn from(err: png::EncodingError) -> RasterError {
-        RasterError::PngEncoding(err)
+        RasterError::PngEncode(err)
     }
 }
 
