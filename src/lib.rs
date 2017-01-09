@@ -151,7 +151,7 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
             Ok(try!(endec::decode_gif(&file)))
         },
         "jpg" | "jpeg" => {
-            let src = try!(piston_image::open(image_file).map_err(RasterError::Image)); // Returns image::DynamicImage
+            let src = try!(piston_image::open(image_file).map_err(RasterError::Image));
             let (w, h) = src.dimensions();
             let mut bytes = Vec::with_capacity((w * h) as usize * 4);
             for y in 0..h {
