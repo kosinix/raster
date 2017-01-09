@@ -37,7 +37,7 @@ pub fn decode_gif(image_file: &File) -> RasterResult<Image>{
             }
         )
     } else {
-        Err(RasterError::GifDecoding(gif::DecodingError::Internal("Bad")))
+        Err(RasterError::GifDecode(gif::DecodingError::Format("Error getting frame info")))
     }
 }
 
