@@ -127,8 +127,8 @@ pub use transform::TransformMode;
 ///
 /// # Errors
 ///
-/// At present, this function relies on [image](https://github.com/PistonDevelopers/image), and
-/// thus returns `RasterError::Image` upon failure.
+/// This function can return `RasterError::Io`, any of the `RasterError::{format}Decode`, or `RasterError::UnsupportedFormat` upon failure. 
+/// See error module for more info.
 ///
 /// # Examples
 ///
@@ -179,7 +179,8 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
 ///
 /// # Errors
 ///
-/// If writing to a file fails, this function returns `RasterError::Io`.
+/// This function can return `RasterError::Io`, any of the `RasterError::{format}Encode`, or `RasterError::UnsupportedFormat` upon failure. 
+/// See error module for more info.
 ///
 /// # Examples
 ///
