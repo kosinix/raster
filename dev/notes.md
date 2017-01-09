@@ -6,6 +6,10 @@ cargo test
 
 cargo test --test filter_tests
 
+## Test with output 
+
+cargo test -- --nocapture
+
 # Updating documentation
 
 git checkout master
