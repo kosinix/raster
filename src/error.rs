@@ -14,20 +14,35 @@ use png;
 /// Enumeration of raster's errors.
 #[derive(Debug)]
 pub enum RasterError {
+    /// File system read/write errors.
     Io(IoError),
+    /// Getting or setting pixels outside of image bounds.
     PixelOutOfBounds(i32, i32),
+    /// Invalid start index.
     InvalidStartIndex(i32),
+    /// Hex format not supported.
     InvalidHex,
+    /// Error parsing a hex string.
     HexParse(ParseIntError),
+    /// Blending error.
     BlendingImageFallsOutsideCanvas,
+    /// Invalid gamma parameter.
     InvalidGamma(f32),
-
+    /// Error during GIF decoding.
     GifDecode(gif::DecodingError),
+    /// Error during GIF encoding.
+    GifEncode(gif::DecodingError), // TODO: Currently unused. And gif::EncodingError does not exist in gif crate.
+    /// Error during JPEG decoding.
     JpegDecode(ImageError),
+    /// Error during JPEG encoding.
     JpegEncode(ImageError),
+    /// Error during PNG decoding.
     PngDecode(png::DecodingError),
+    /// Error during PNG encoding.
     PngEncode(png::EncodingError),
+    /// Unsupported image format.
     UnsupportedFormat(String),
+    /// Error that does not belong in other variants.
     Unexpected,
 }
 
