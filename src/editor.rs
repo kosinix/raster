@@ -368,7 +368,7 @@ pub enum ResizeMode {
 ///
 /// The images will have a width of 200. The height is auto-calculated.
 ///
-/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_1.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_1.jpg)  
 /// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_2.jpg)
 ///
 /// ### Resize to Exact Height
