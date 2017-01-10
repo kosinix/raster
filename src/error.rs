@@ -6,10 +6,11 @@ use std::num::ParseIntError;
 
 // from external crates
 use gif;
-use piston_image::ImageError;
+use piston_image;
 use png;
 
 // from local crate
+use ImageFormat;
 
 /// Enumeration of raster's errors.
 #[derive(Debug)]
@@ -28,18 +29,10 @@ pub enum RasterError {
     BlendingImageFallsOutsideCanvas,
     /// Invalid gamma parameter.
     InvalidGamma(f32),
-    /// Error during GIF decoding.
-    GifDecode(gif::DecodingError),
-    /// Error during GIF encoding.
-    GifEncode(gif::DecodingError), // TODO: Currently unused. And gif::EncodingError does not exist in gif crate.
-    /// Error during JPEG decoding.
-    JpegDecode(ImageError),
-    /// Error during JPEG encoding.
-    JpegEncode(ImageError),
-    /// Error during PNG decoding.
-    PngDecode(png::DecodingError),
-    /// Error during PNG encoding.
-    PngEncode(png::EncodingError),
+    /// Error during decoding.
+    Decode(ImageFormat, String),
+    /// Error during encoding.
+    Encode(ImageFormat, String),
     /// Unsupported image format.
     UnsupportedFormat(String),
     /// Error that does not belong in other variants.
@@ -54,25 +47,57 @@ impl From<IoError> for RasterError {
 }
 
 // GIF
-/// Convert gif::DecodingError to RasterError::GifDecode
+/// Convert gif::DecodingError to RasterError::Decode
 impl From<gif::DecodingError> for RasterError {
     fn from(err: gif::DecodingError) -> RasterError {
-        RasterError::GifDecode(err)
+        match err {
+            gif::DecodingError::Format(msg) => RasterError::Decode(ImageFormat::Gif, msg.to_string()),
+            gif::DecodingError::Internal(msg) => RasterError::Decode(ImageFormat::Gif, msg.to_string()),
+            gif::DecodingError::Io(io_err) => RasterError::Io(io_err),
+        }
+    }
+}
+// NOTE: gif::EncodingError does not exist in gif crate.
+
+// JPEG
+/// Convert gif::DecodingError to RasterError::Decode
+// NOTE: We assume that we are in decoding jpeg since this error's entry point is only in raster::open
+impl From<piston_image::ImageError> for RasterError {
+    fn from(err: piston_image::ImageError) -> RasterError {
+        match err {
+            piston_image::ImageError::FormatError(msg) => RasterError::Decode(ImageFormat::Jpeg, msg),
+            piston_image::ImageError::DimensionError => RasterError::Decode(ImageFormat::Jpeg, "DimensionError".to_string()),
+            piston_image::ImageError::UnsupportedError(msg) => RasterError::Decode(ImageFormat::Jpeg,msg),
+            piston_image::ImageError::UnsupportedColor(_) => RasterError::Decode(ImageFormat::Jpeg, "UnsupportedColor".to_string()),
+            piston_image::ImageError::NotEnoughData => RasterError::Decode(ImageFormat::Jpeg, "NotEnoughData".to_string()),
+            piston_image::ImageError::IoError(io_err) => RasterError::Io(io_err),
+            piston_image::ImageError::ImageEnd => RasterError::Decode(ImageFormat::Jpeg, "ImageEnd".to_string()),
+        }
     }
 }
 
 // PNG
-/// Convert png::DecodingError to RasterError::PngDecode
+/// Convert png::DecodingError to RasterError::Decode
 impl From<png::DecodingError> for RasterError {
     fn from(err: png::DecodingError) -> RasterError {
-        RasterError::PngDecode(err)
+        match err {
+            png::DecodingError::IoError(io_err) => RasterError::Io(io_err),
+            png::DecodingError::Format(_) => RasterError::Decode(ImageFormat::Png, "Format".to_string()),
+            png::DecodingError::InvalidSignature => RasterError::Decode(ImageFormat::Png, "InvalidSignature".to_string()),
+            png::DecodingError::CrcMismatch {..} => RasterError::Decode(ImageFormat::Png, "CrcMismatch".to_string()),
+            png::DecodingError::Other(_) => RasterError::Decode(ImageFormat::Png, "Other".to_string()),
+            png::DecodingError::CorruptFlateStream => RasterError::Decode(ImageFormat::Png, "CorruptFlateStream".to_string()),
+        }
     }
 }
 
-/// Convert png::EncodingError to RasterError::PngEncode
+/// Convert png::EncodingError to RasterError::Encode
 impl From<png::EncodingError> for RasterError {
     fn from(err: png::EncodingError) -> RasterError {
-        RasterError::PngEncode(err)
+        match err {
+            png::EncodingError::IoError(io_err) => RasterError::Io(io_err),
+            png::EncodingError::Format(_) => RasterError::Encode(ImageFormat::Png, "Format".to_string()),
+        }
     }
 }
 

@@ -118,6 +118,7 @@ pub use editor::ResizeMode;
 pub use filter::BlurMode;
 pub use image::Histogram;
 pub use image::Image;
+pub use image::ImageFormat;
 pub use interpolate::InterpolationMode;
 pub use position::PositionMode;
 pub use transform::TransformMode;
@@ -127,7 +128,7 @@ pub use transform::TransformMode;
 ///
 /// # Errors
 ///
-/// This function can return `RasterError::Io`, any of the `RasterError::{format}Decode`, or `RasterError::UnsupportedFormat` upon failure. 
+/// This function can return `RasterError::Io`, `RasterError::Decode`, or `RasterError::UnsupportedFormat` upon failure. 
 /// See error module for more info.
 ///
 /// # Examples
@@ -151,7 +152,7 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
             Ok(try!(endec::decode_gif(&file)))
         },
         "jpg" | "jpeg" => {
-            let src = try!(piston_image::open(image_file).map_err(RasterError::JpegDecode));
+            let src = try!(piston_image::open(image_file));
             let (w, h) = src.dimensions();
             let mut bytes = Vec::with_capacity((w * h) as usize * 4);
             for y in 0..h {
@@ -179,7 +180,7 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
 ///
 /// # Errors
 ///
-/// This function can return `RasterError::Io`, any of the `RasterError::{format}Encode`, or `RasterError::UnsupportedFormat` upon failure. 
+/// This function can return `RasterError::Io`, `RasterError::Encode`, or `RasterError::UnsupportedFormat` upon failure. 
 /// See error module for more info.
 ///
 /// # Examples
@@ -206,7 +207,7 @@ pub fn save(image: &Image, out: &str) -> RasterResult<()> {
                 image.width as u32,
                 image.height as u32,
                 piston_image::RGBA(8)
-            ).map_err(RasterError::Io)
+            ).map_err(|_| RasterError::Encode(ImageFormat::Jpeg, "Format".to_string()))
         },
         "png"  => {
             Ok(try!(endec::encode_png(&image, &path)))

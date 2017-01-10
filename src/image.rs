@@ -256,3 +256,11 @@ impl<'a> Image {
 
 /// Holds histogram information.
 pub type Histogram = (HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>);
+
+/// Enumeration of supported raster formats.
+#[derive(Debug)]
+pub enum ImageFormat {
+    Gif,
+    Jpeg,
+    Png,
+}

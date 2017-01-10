@@ -12,6 +12,7 @@ use png;
 // from local crate
 use error::{RasterError, RasterResult};
 use Image;
+use ImageFormat;
 
 // Decode GIF
 pub fn decode_gif(image_file: &File) -> RasterResult<Image>{
@@ -37,7 +38,7 @@ pub fn decode_gif(image_file: &File) -> RasterResult<Image>{
             }
         )
     } else {
-        Err(RasterError::GifDecode(gif::DecodingError::Format("Error getting frame info")))
+        Err(RasterError::Decode(ImageFormat::Gif, "Error getting frame info".to_string()))
     }
 }
 
