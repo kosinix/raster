@@ -61,6 +61,7 @@ impl From<gif::DecodingError> for RasterError {
     }
 }
 
+// PNG
 /// Convert png::DecodingError to RasterError::PngDecode
 impl From<png::DecodingError> for RasterError {
     fn from(err: png::DecodingError) -> RasterError {
