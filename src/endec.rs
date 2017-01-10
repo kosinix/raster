@@ -67,7 +67,7 @@ pub fn decode_png(image_file: &File) -> RasterResult<Image>{
 
         let mut insert_count = 0;
         let len = (info.width * info.height) as usize;
-        for i in 0..len {
+        for i in 0..len { // TODO: This is slow!
             let insert_pos = 3 * (i+1) + insert_count;
             bytes.insert(insert_pos, 255);
             insert_count+=1;
