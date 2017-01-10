@@ -311,12 +311,12 @@ pub enum ResizeMode {
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
 ///
 /// // Resize it
-/// editor::resize(&mut image1, 200, 200, ResizeMode::Fit);
-/// editor::resize(&mut image2, 200, 200, ResizeMode::Fit);
+/// editor::resize(&mut image1, 200, 200, ResizeMode::Fit).unwrap();
+/// editor::resize(&mut image2, 200, 200, ResizeMode::Fit).unwrap();
 ///
 /// // Superimpose images on a gray background
 /// let mut bg = Image::blank(200, 200);
-/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap());
+/// editor::fill(&mut bg, Color::hex("#CCCCCC").unwrap()).unwrap();
 ///
 /// let image1 = editor::blend(&bg, &image1, BlendMode::Normal, 1.0, PositionMode::TopLeft, 0, 0).unwrap();
 /// let image2 = editor::blend(&bg, &image2, BlendMode::Normal, 1.0, PositionMode::TopLeft, 0, 0).unwrap();
@@ -339,8 +339,8 @@ pub enum ResizeMode {
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
 ///
 /// // Resize it
-/// editor::resize(&mut image1, 200, 200, ResizeMode::Fill);
-/// editor::resize(&mut image2, 200, 200, ResizeMode::Fill);
+/// editor::resize(&mut image1, 200, 200, ResizeMode::Fill).unwrap();
+/// editor::resize(&mut image2, 200, 200, ResizeMode::Fill).unwrap();
 ///
 /// raster::save(&image1, "tests/out/test_resize_fill_1.jpg").unwrap();
 /// raster::save(&image2, "tests/out/test_resize_fill_2.jpg").unwrap();
@@ -359,8 +359,8 @@ pub enum ResizeMode {
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
 ///
 /// // Resize it
-/// editor::resize(&mut image1, 200, 200, ResizeMode::ExactWidth);
-/// editor::resize(&mut image2, 200, 200, ResizeMode::ExactWidth);
+/// editor::resize(&mut image1, 200, 200, ResizeMode::ExactWidth).unwrap();
+/// editor::resize(&mut image2, 200, 200, ResizeMode::ExactWidth).unwrap();
 ///
 /// raster::save(&image1, "tests/out/test_resize_exact_width_1.jpg").unwrap();
 /// raster::save(&image2, "tests/out/test_resize_exact_width_2.jpg").unwrap();
@@ -380,8 +380,8 @@ pub enum ResizeMode {
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
 ///
 /// // Resize it
-/// editor::resize(&mut image1, 200, 200, ResizeMode::ExactHeight);
-/// editor::resize(&mut image2, 200, 200, ResizeMode::ExactHeight);
+/// editor::resize(&mut image1, 200, 200, ResizeMode::ExactHeight).unwrap();
+/// editor::resize(&mut image2, 200, 200, ResizeMode::ExactHeight).unwrap();
 ///
 /// raster::save(&image1, "tests/out/test_resize_exact_height_1.jpg").unwrap();
 /// raster::save(&image2, "tests/out/test_resize_exact_height_2.jpg").unwrap();
@@ -400,8 +400,8 @@ pub enum ResizeMode {
 /// let mut image2 = raster::open("tests/in/portrait.jpg").unwrap();
 ///
 /// // Resize it
-/// editor::resize(&mut image1, 200, 200, ResizeMode::Exact);
-/// editor::resize(&mut image2, 200, 200, ResizeMode::Exact);
+/// editor::resize(&mut image1, 200, 200, ResizeMode::Exact).unwrap();
+/// editor::resize(&mut image2, 200, 200, ResizeMode::Exact).unwrap();
 ///
 /// raster::save(&image1, "tests/out/test_resize_exact_1.jpg").unwrap();
 /// raster::save(&image2, "tests/out/test_resize_exact_2.jpg").unwrap();
