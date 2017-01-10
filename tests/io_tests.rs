@@ -3,13 +3,15 @@ extern crate raster;
 #[test]
 fn open_fail(){
 
-    let fail = {
-        match raster::open(""){
-            Ok(_) => false,
-            Err(_) => true
+    assert!(
+        {
+            if let Err(_) = raster::open(""){
+                true
+            } else {
+                false
+            }
         }
-    };
-    assert!(fail);
+    );
 }
 
 #[test]
@@ -33,9 +35,10 @@ fn unsupported_format(){
 fn read_gif_format(){
 
     let ok = {
-        match raster::open("tests/in/sample.gif"){
-            Ok(_) => true,
-            Err(_) => false
+        if let Ok(_) = raster::open("tests/in/sample.gif"){
+            true
+        } else {
+            false
         }
     };
     assert!(ok);
@@ -45,9 +48,10 @@ fn read_gif_format(){
 fn read_jpg_format(){
 
     let ok = {
-        match raster::open("tests/in/sample.jpg"){
-            Ok(_) => true,
-            Err(_) => false
+        if let Ok(_) = raster::open("tests/in/sample.jpg"){
+            true
+        } else {
+            false
         }
     };
     assert!(ok);
@@ -57,10 +61,86 @@ fn read_jpg_format(){
 fn read_png_format(){
 
     let ok = {
-        match raster::open("tests/in/sample.png"){
-            Ok(_) => true,
-            Err(_) => false
+        if let Ok(_) = raster::open("tests/in/sample.png"){
+            true
+        } else {
+            false
         }
     };
     assert!(ok);
+}
+
+#[test]
+fn read_gif_format_fail(){
+
+    assert!( 
+        {
+            if let Err(e) = raster::open("tests/in/not-a-gif.gif"){
+                if let raster::error::RasterError::Decode(format, _) = e {
+                    assert!( 
+                        {
+                            if let raster::ImageFormat::Gif = format { // Should be gif
+                                true
+                            } else {
+                                false
+                            }
+                        }
+                    );
+                }
+                true
+            } else {
+                false
+            }
+        }
+    );
+}
+
+#[test]
+fn read_jpeg_format_fail(){
+
+    assert!( 
+        {
+            if let Err(e) = raster::open("tests/in/not-a-jpeg.jpg"){
+                if let raster::error::RasterError::Decode(format, _) = e {
+                    assert!( 
+                        {
+                            if let raster::ImageFormat::Jpeg = format { // Should be jpg
+                                true
+                            } else {
+                                false
+                            }
+                        }
+                    );
+                }
+                true
+            } else {
+                false
+            }
+        }
+    );
+}
+
+#[test]
+fn read_png_format_fail(){
+
+    assert!( 
+        {
+            if let Err(e) = raster::open("tests/in/not-a-png.png"){
+                if let raster::error::RasterError::Decode(format, _) = e {
+                    assert!( 
+                        {
+                            if let raster::ImageFormat::Png = format { // Should be png
+                                true
+                            } else {
+                                false
+                            }
+                        }
+                    );
+                }
+                true
+            } else {
+                false
+            }
+        }
+    );
 }
