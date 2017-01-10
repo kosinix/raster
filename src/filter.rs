@@ -30,7 +30,7 @@ pub enum BlurMode {
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::blur(&mut image, BlurMode::Box).unwrap();
-/// raster::save(&image, "tests/out/test_filter_box_blur.jpg");
+/// raster::save(&image, "tests/out/test_filter_box_blur.jpg").unwrap();
 /// ```
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
@@ -46,7 +46,7 @@ pub enum BlurMode {
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::blur(&mut image, BlurMode::Gaussian).unwrap();
-/// raster::save(&image, "tests/out/test_filter_gaussian_blur.jpg");
+/// raster::save(&image, "tests/out/test_filter_gaussian_blur.jpg").unwrap();
 /// ```
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
@@ -71,7 +71,7 @@ pub fn blur(mut src: &mut Image, mode: BlurMode) -> RasterResult<()>{
 ///
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::brightness(&mut image, 1.5).unwrap();
-/// raster::save(&image, "tests/out/test_filter_brightness.jpg");
+/// raster::save(&image, "tests/out/test_filter_brightness.jpg").unwrap();
 /// ```
 ///
 /// ### Before
@@ -122,7 +122,7 @@ pub fn brightness(mut src: &mut Image, factor: f32) -> RasterResult<()>{
 ///     [0, 0, 0]
 /// ];
 /// filter::convolve(&mut image, matrix, 1).unwrap();
-/// raster::save(&image, "tests/out/test_filter_convolve.jpg");
+/// raster::save(&image, "tests/out/test_filter_convolve.jpg").unwrap();
 /// ```
 pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterResult<()> {
 
@@ -215,7 +215,7 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterR
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::emboss(&mut image).unwrap();
-/// raster::save(&image, "tests/out/test_filter_emboss.jpg");
+/// raster::save(&image, "tests/out/test_filter_emboss.jpg").unwrap();
 /// ```
 ///
 /// ### Before
@@ -245,7 +245,7 @@ pub fn emboss(mut src: &mut Image) -> RasterResult<()>{
 ///
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::gamma(&mut image, 2.0).unwrap();
-/// raster::save(&image, "tests/out/test_filter_gamma.jpg");
+/// raster::save(&image, "tests/out/test_filter_gamma.jpg").unwrap();
 /// ```
 ///
 /// ### Before
@@ -289,7 +289,7 @@ pub fn gamma(mut src: &mut Image, gamma: f32) -> RasterResult<()>{
 ///
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::grayscale(&mut image).unwrap();
-/// raster::save(&image, "tests/out/test_filter_grayscale.jpg");
+/// raster::save(&image, "tests/out/test_filter_grayscale.jpg").unwrap();
 /// ```
 ///
 /// ### Before
@@ -329,7 +329,7 @@ pub fn grayscale(mut src: &mut Image) -> RasterResult<()>{
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
 /// filter::saturation(&mut image, 0.5).unwrap();
-/// raster::save(&image, "tests/out/test_filter_saturation.jpg");
+/// raster::save(&image, "tests/out/test_filter_saturation.jpg").unwrap();
 /// ```
 ///
 /// ### Before
@@ -374,7 +374,7 @@ pub fn saturation(mut src: &mut Image, sat: f32) -> RasterResult<()>{
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::sharpen(&mut image).unwrap();
-/// raster::save(&image, "tests/out/test_filter_sharpen.jpg");
+/// raster::save(&image, "tests/out/test_filter_sharpen.jpg").unwrap();
 /// ```
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)

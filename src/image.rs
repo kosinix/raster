@@ -124,7 +124,7 @@ impl<'a> Image {
     ///     }
     /// }
     ///
-    /// raster::save(&image, "tests/out/histogram.png");
+    /// raster::save(&image, "tests/out/histogram.png").unwrap();
     /// ```
     ///
     /// Histogram:

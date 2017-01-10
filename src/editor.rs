@@ -42,11 +42,11 @@ use transform;
 /// let screen = editor::blend(&image1, &image2, BlendMode::Screen, 1.0, PositionMode::Center, 0, 0).unwrap();
 ///
 /// // Save it
-/// raster::save(&normal, "tests/out/test_blend_normal.png");
-/// raster::save(&difference, "tests/out/test_blend_difference.png");
-/// raster::save(&multiply, "tests/out/test_blend_multiply.png");
-/// raster::save(&overlay, "tests/out/test_blend_overlay.png");
-/// raster::save(&screen, "tests/out/test_blend_screen.png");
+/// raster::save(&normal, "tests/out/test_blend_normal.png").unwrap();
+/// raster::save(&difference, "tests/out/test_blend_difference.png").unwrap();
+/// raster::save(&multiply, "tests/out/test_blend_multiply.png").unwrap();
+/// raster::save(&overlay, "tests/out/test_blend_overlay.png").unwrap();
+/// raster::save(&screen, "tests/out/test_blend_screen.png").unwrap();
 /// ```
 /// ### Source Images
 ///
@@ -201,17 +201,17 @@ pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32
 /// editor::crop(&mut bottom_right, 167, 93, PositionMode::BottomRight, 0, 0).unwrap();
 ///
 /// // Save it
-/// raster::save(&top_left, "tests/out/test_crop_top_left.jpg");
-/// raster::save(&top_center, "tests/out/test_crop_top_center.jpg");
-/// raster::save(&top_right, "tests/out/test_crop_top_right.jpg");
+/// raster::save(&top_left, "tests/out/test_crop_top_left.jpg").unwrap();
+/// raster::save(&top_center, "tests/out/test_crop_top_center.jpg").unwrap();
+/// raster::save(&top_right, "tests/out/test_crop_top_right.jpg").unwrap();
 ///
-/// raster::save(&center_left, "tests/out/test_crop_center_left.jpg");
-/// raster::save(&center, "tests/out/test_crop_center.jpg");
-/// raster::save(&center_right, "tests/out/test_crop_center_right.jpg");
+/// raster::save(&center_left, "tests/out/test_crop_center_left.jpg").unwrap();
+/// raster::save(&center, "tests/out/test_crop_center.jpg").unwrap();
+/// raster::save(&center_right, "tests/out/test_crop_center_right.jpg").unwrap();
 ///
-/// raster::save(&bottom_left, "tests/out/test_crop_bottom_left.jpg");
-/// raster::save(&bottom_center, "tests/out/test_crop_bottom_center.jpg");
-/// raster::save(&bottom_right, "tests/out/test_crop_bottom_right.jpg");
+/// raster::save(&bottom_left, "tests/out/test_crop_bottom_left.jpg").unwrap();
+/// raster::save(&bottom_center, "tests/out/test_crop_bottom_center.jpg").unwrap();
+/// raster::save(&bottom_right, "tests/out/test_crop_bottom_right.jpg").unwrap();
 /// ```
 ///
 /// ### Output
@@ -269,7 +269,7 @@ pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: Po
 /// editor::fill(&mut image, Color::red()).unwrap();
 ///
 /// // Save it
-/// raster::save(&image, "tests/out/test_fill.png");
+/// raster::save(&image, "tests/out/test_fill.png").unwrap();
 /// ```
 ///
 ///
@@ -321,8 +321,8 @@ pub enum ResizeMode {
 /// let image1 = editor::blend(&bg, &image1, BlendMode::Normal, 1.0, PositionMode::TopLeft, 0, 0).unwrap();
 /// let image2 = editor::blend(&bg, &image2, BlendMode::Normal, 1.0, PositionMode::TopLeft, 0, 0).unwrap();
 ///
-/// raster::save(&image1, "tests/out/test_resize_fit_1.jpg");
-/// raster::save(&image2, "tests/out/test_resize_fit_2.jpg");
+/// raster::save(&image1, "tests/out/test_resize_fit_1.jpg").unwrap();
+/// raster::save(&image2, "tests/out/test_resize_fit_2.jpg").unwrap();
 /// ```
 ///
 /// The gray box shows the 200x200 imaginary box that the images "fit" in.
@@ -342,8 +342,8 @@ pub enum ResizeMode {
 /// editor::resize(&mut image1, 200, 200, ResizeMode::Fill);
 /// editor::resize(&mut image2, 200, 200, ResizeMode::Fill);
 ///
-/// raster::save(&image1, "tests/out/test_resize_fill_1.jpg");
-/// raster::save(&image2, "tests/out/test_resize_fill_2.jpg");
+/// raster::save(&image1, "tests/out/test_resize_fill_1.jpg").unwrap();
+/// raster::save(&image2, "tests/out/test_resize_fill_2.jpg").unwrap();
 /// ```
 ///
 /// The image fills up the entire 200x200 box.
@@ -362,8 +362,8 @@ pub enum ResizeMode {
 /// editor::resize(&mut image1, 200, 200, ResizeMode::ExactWidth);
 /// editor::resize(&mut image2, 200, 200, ResizeMode::ExactWidth);
 ///
-/// raster::save(&image1, "tests/out/test_resize_exact_width_1.jpg");
-/// raster::save(&image2, "tests/out/test_resize_exact_width_2.jpg");
+/// raster::save(&image1, "tests/out/test_resize_exact_width_1.jpg").unwrap();
+/// raster::save(&image2, "tests/out/test_resize_exact_width_2.jpg").unwrap();
 /// ```
 ///
 /// The images will have a width of 200. The height is auto-calculated.
@@ -383,8 +383,8 @@ pub enum ResizeMode {
 /// editor::resize(&mut image1, 200, 200, ResizeMode::ExactHeight);
 /// editor::resize(&mut image2, 200, 200, ResizeMode::ExactHeight);
 ///
-/// raster::save(&image1, "tests/out/test_resize_exact_height_1.jpg");
-/// raster::save(&image2, "tests/out/test_resize_exact_height_2.jpg");
+/// raster::save(&image1, "tests/out/test_resize_exact_height_1.jpg").unwrap();
+/// raster::save(&image2, "tests/out/test_resize_exact_height_2.jpg").unwrap();
 /// ```
 ///
 /// The images will have a height of 200. The width is auto-calculated.
@@ -403,8 +403,8 @@ pub enum ResizeMode {
 /// editor::resize(&mut image1, 200, 200, ResizeMode::Exact);
 /// editor::resize(&mut image2, 200, 200, ResizeMode::Exact);
 ///
-/// raster::save(&image1, "tests/out/test_resize_exact_1.jpg");
-/// raster::save(&image2, "tests/out/test_resize_exact_2.jpg");
+/// raster::save(&image1, "tests/out/test_resize_exact_1.jpg").unwrap();
+/// raster::save(&image2, "tests/out/test_resize_exact_2.jpg").unwrap();
 /// ```
 ///
 /// The images will be resized to the exact dimension ignoring aspect ratio.

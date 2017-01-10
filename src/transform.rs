@@ -37,7 +37,7 @@ pub enum TransformMode {
 ///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
 /// transform::flip(&mut image, TransformMode::Horizontal).unwrap();
-/// raster::save(&image, "tests/out/test_transform_flip_x.png");
+/// raster::save(&image, "tests/out/test_transform_flip_x.png").unwrap();
 /// ```
 ///
 /// ![](https://kosinix.github.io/raster/out/test_transform_flip_x.png)
@@ -51,7 +51,7 @@ pub enum TransformMode {
 ///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
 /// transform::flip(&mut image, TransformMode::Vertical).unwrap();
-/// raster::save(&image, "tests/out/test_transform_flip_y.png");
+/// raster::save(&image, "tests/out/test_transform_flip_y.png").unwrap();
 /// ```
 ///
 /// ![](https://kosinix.github.io/raster/out/test_transform_flip_y.png)
@@ -121,7 +121,7 @@ pub fn flip(mut src: &mut Image, mode: TransformMode ) -> RasterResult<()> {
 ///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
 /// transform::rotate(&mut image, 45, Color::rgb(0,0,0)).unwrap();
-/// raster::save(&image, "tests/out/test_transform_rotate_45.png");
+/// raster::save(&image, "tests/out/test_transform_rotate_45.png").unwrap();
 /// ```
 ///
 /// ![](https://kosinix.github.io/raster/out/test_transform_rotate_45.png)
@@ -136,7 +136,7 @@ pub fn flip(mut src: &mut Image, mode: TransformMode ) -> RasterResult<()> {
 ///
 /// let mut image = raster::open("tests/in/sample.png").unwrap();
 /// transform::rotate(&mut image, -45, Color::rgb(252,145,145)).unwrap();
-/// raster::save(&image, "tests/out/test_transform_rotate_45cc.png");
+/// raster::save(&image, "tests/out/test_transform_rotate_45cc.png").unwrap();
 /// ```
 ///
 /// ![](https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png)

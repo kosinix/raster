@@ -47,7 +47,7 @@
 //! let image = raster::open("tests/in/sample.png").unwrap();
 //!
 //! // Save opened image
-//! raster::save(&image, "tests/out/test_open_save.png");
+//! raster::save(&image, "tests/out/test_open_save.png").unwrap();
 //!
 //! ```
 //!
@@ -188,7 +188,7 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
 /// ```
 /// // Create an image from file
 /// let image = raster::open("tests/in/sample.png").unwrap();
-/// raster::save(&image, "tests/out/test.png");
+/// raster::save(&image, "tests/out/test.png").unwrap();
 /// ```
 pub fn save(image: &Image, out: &str) -> RasterResult<()> {
 
