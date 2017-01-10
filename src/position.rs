@@ -9,7 +9,7 @@
 // from local crate
 use error::RasterResult;
 
-/// An enum for the various modes that can be used for positioning.
+/// Enumeration for different anchor positions.
 #[derive(Debug)]
 pub enum PositionMode {
     TopLeft,

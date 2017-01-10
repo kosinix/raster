@@ -13,7 +13,7 @@ use error::RasterResult;
 use Image;
 use Color;
 
-/// An enum for the various modes that can be used for blending.
+/// Enumeration for blending modes.
 #[derive(Debug)]
 pub enum BlendMode {
     Normal,
