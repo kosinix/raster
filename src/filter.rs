@@ -262,7 +262,6 @@ pub fn gamma(mut src: &mut Image, gamma: f32) -> RasterResult<()>{
     if gamma < 0.01 || gamma > 9.99 {
         return Err(RasterError::InvalidGamma(gamma));
     }
-    let gamma = 1.0 / gamma;
 
     for y in 0..h {
         for x in 0..w {
