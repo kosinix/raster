@@ -270,9 +270,8 @@ pub fn gamma(mut src: &mut Image, gamma: f32) -> RasterResult<()>{
             let r = (p.r as f32 / 255.0).powf(gamma) * 255.0;
             let g = (p.g as f32 / 255.0).powf(gamma) * 255.0;
             let b = (p.b as f32 / 255.0).powf(gamma) * 255.0;
-            let a = (p.a as f32 / 255.0).powf(gamma) * 255.0;
 
-            try!(src.set_pixel(x, y, Color::rgba(r as u8, g as u8, b as u8, a as u8)));
+            try!(src.set_pixel(x, y, Color::rgba(r as u8, g as u8, b as u8, p.a as u8)));
 
         }
     }
