@@ -234,7 +234,7 @@ impl<'a> Image {
     /// assert_eq!(0, pixel.b);
     /// assert_eq!(255, pixel.a);
     /// ```
-    pub fn set_pixel(&mut self, x: i32, y:i32, color: Color ) -> RasterResult<()> {
+    pub fn set_pixel(&mut self, x: i32, y:i32, color: &Color ) -> RasterResult<()> {
         let rgba = 4; // length
         let start = (y * &self.width) + x;
         let start = start * rgba;
