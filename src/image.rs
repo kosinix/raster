@@ -116,7 +116,7 @@ impl<'a> Image {
     ///
     ///             for y in canvas_h-height..canvas_h {
     ///
-    ///                 image.set_pixel(x, y, Color::hex("#e22d11").unwrap()).unwrap();
+    ///                 image.set_pixel(x, y, &Color::hex("#e22d11").unwrap()).unwrap();
     ///
     ///             }
     ///         },
@@ -225,7 +225,7 @@ impl<'a> Image {
     ///
     /// let mut image = Image::blank(2, 2); // Creates a 2x2 black image.
     ///
-    /// let _ = image.set_pixel(0, 0, Color::rgba(255, 0, 0, 255)); // Set first pixel to red
+    /// let _ = image.set_pixel(0, 0, &Color::rgba(255, 0, 0, 255)); // Set first pixel to red
     ///
     /// let pixel = image.get_pixel(0, 0).unwrap();
     ///

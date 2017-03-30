@@ -48,7 +48,7 @@ pub fn difference(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i
             let b3 = ch_alpha_f(b1, b2, BlendFunction::Difference, a2);
             let a3 = 255;
 
-            try!(canvas.set_pixel(canvas_x, canvas_y, Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
+            try!(canvas.set_pixel(canvas_x, canvas_y, &Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
         }
     }
 
@@ -80,7 +80,7 @@ pub fn multiply(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32
             let b3 = ch_alpha_f(b1, b2, BlendFunction::Multiply, a2);
             let a3 = 255;
 
-            try!(canvas.set_pixel(canvas_x, canvas_y, Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
+            try!(canvas.set_pixel(canvas_x, canvas_y, &Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
         }
     }
 
@@ -112,7 +112,7 @@ pub fn normal(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, 
             let b3 = (a2 * b2) + ((1.0 - a2) * b1);
             let a3 = 255;
 
-            try!(canvas.set_pixel(canvas_x, canvas_y, Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
+            try!(canvas.set_pixel(canvas_x, canvas_y, &Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
         }
     }
 
@@ -144,7 +144,7 @@ pub fn overlay(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32,
             let b3 = ch_alpha_f(b1, b2, BlendFunction::Overlay, a2);
             let a3 = 255;
 
-            try!(canvas.set_pixel(canvas_x, canvas_y, Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
+            try!(canvas.set_pixel(canvas_x, canvas_y, &Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
         }
     }
 
@@ -176,7 +176,7 @@ pub fn screen(image1: &Image, image2: &Image, loop_start_y:i32, loop_end_y:i32, 
             let b3 = ch_alpha_f(b1, b2, BlendFunction::Screen, a2);
             let a3 = 255;
 
-            try!(canvas.set_pixel(canvas_x, canvas_y, Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
+            try!(canvas.set_pixel(canvas_x, canvas_y, &Color::rgba(r3 as u8, g3 as u8, b3 as u8, a3 as u8)));
         }
     }
 

@@ -74,8 +74,8 @@ pub fn flip(mut src: &mut Image, mode: TransformMode ) -> RasterResult<()> {
                     let pixel_left = try!(src.get_pixel(src_x, y));
                     let pixel_right = try!(src.get_pixel(dest_x, y));
 
-                    try!(src.set_pixel(dest_x, y, pixel_left));
-                    try!(src.set_pixel(src_x, y, pixel_right));
+                    try!(src.set_pixel(dest_x, y, &pixel_left));
+                    try!(src.set_pixel(src_x, y, &pixel_right));
 
                 }
             }
@@ -94,8 +94,8 @@ pub fn flip(mut src: &mut Image, mode: TransformMode ) -> RasterResult<()> {
                     let pixel_top = try!(src.get_pixel(x, src_y));
                     let pixel_bottom = try!(src.get_pixel(x, dest_y));
 
-                    try!(src.set_pixel(x, dest_y, pixel_top));
-                    try!(src.set_pixel(x, src_y, pixel_bottom));
+                    try!(src.set_pixel(x, dest_y, &pixel_top));
+                    try!(src.set_pixel(x, src_y, &pixel_bottom));
 
                 }
             }
@@ -185,9 +185,9 @@ pub fn rotate(mut src: &mut Image, degree: i32, bg: Color) -> RasterResult<()>{
 
             if point.0 >= 0 && point.0 < w1 && point.1 >=0 && point.1 < h1 {
                 let pixel = try!(src.get_pixel(point.0, point.1));
-                try!(dest.set_pixel(dest_x, dest_y, pixel));
+                try!(dest.set_pixel(dest_x, dest_y, &pixel));
             } else {
-                try!(dest.set_pixel(dest_x, dest_y, Color::rgba(bg.r, bg.g, bg.b, bg.a)));
+                try!(dest.set_pixel(dest_x, dest_y, &Color::rgba(bg.r, bg.g, bg.b, bg.a)));
             }
         }
     }

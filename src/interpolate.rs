@@ -42,7 +42,7 @@ pub fn nearest(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
             let py: i32 = ( y as f64 * y_ratio ).floor() as i32;
             let pixel = try!(src.get_pixel(px, py));
 
-            try!(dest.set_pixel(x, y, pixel));
+            try!(dest.set_pixel(x, y, &pixel));
         }
     }
     src.width = dest.width;
@@ -109,7 +109,7 @@ fn bilinear_width(mut src: &mut Image, w2: i32) -> RasterResult<()> {
             // alpha
             let alpha = _lerp(src_color1.a, src_color2.a, t_x);
 
-            try!(dest.set_pixel(x+offset_x, y, Color::rgba(red, green, blue, alpha)));
+            try!(dest.set_pixel(x+offset_x, y, &Color::rgba(red, green, blue, alpha)));
 
         }
     }
@@ -169,7 +169,7 @@ fn bilinear_height(mut src: &mut Image, h2: i32) -> RasterResult<()> {
             // alpha
             let alpha = _lerp(src_color1.a, src_color2.a, t_y);
 
-            try!(dest.set_pixel(x, y+offset_y, Color::rgba(red, green, blue, alpha)));
+            try!(dest.set_pixel(x, y+offset_y, &Color::rgba(red, green, blue, alpha)));
 
         }
     }

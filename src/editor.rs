@@ -244,7 +244,7 @@ pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: Po
     for y in 0..dest.height {
         for x in 0..dest.width {
             let pixel = try!(src.get_pixel(offset_x + x, offset_y + y));
-            try!(dest.set_pixel(x, y, Color::rgba(pixel.r, pixel.g, pixel.b, pixel.a)));
+            try!(dest.set_pixel(x, y, &Color::rgba(pixel.r, pixel.g, pixel.b, pixel.a)));
         }
     }
     src.width = dest.width;
@@ -277,7 +277,7 @@ pub fn fill(mut src: &mut Image, color: Color) -> RasterResult<()> {
 
     for y in 0..src.height {
         for x in 0..src.width {
-            try!(src.set_pixel(x, y, color.clone()));
+            try!(src.set_pixel(x, y, &color));
         }
     }
 
