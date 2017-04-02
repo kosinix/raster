@@ -116,6 +116,7 @@ pub use blend::BlendMode;
 pub use color::Color;
 pub use editor::ResizeMode;
 pub use filter::BlurMode;
+pub use filter::Orientation;
 pub use image::Histogram;
 pub use image::Image;
 pub use image::ImageFormat;

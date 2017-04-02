@@ -19,6 +19,17 @@ pub enum BlurMode {
     Gaussian
 }
 
+/// An enum to specify orientation of a filter.
+#[derive(Debug)]
+pub enum Orientation {
+    Horizontal,
+    Vertical,
+    DiagonalUp,
+    DiagonalDown,
+    DiagonalBoth,
+    Both
+}
+
 /// Apply box or Gaussian blur.
 ///
 /// # Examples
@@ -54,7 +65,7 @@ pub enum BlurMode {
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_gaussian_blur.jpg)
 ///
-pub fn blur(mut src: &mut Image, mode: BlurMode) -> RasterResult<()>{
+pub fn blur(mut src: &mut Image, mode: BlurMode) -> RasterResult<()> {
     match mode {
         BlurMode::Box => blur_box(src),
         BlurMode::Gaussian => blur_gaussian(src)
@@ -80,7 +91,7 @@ pub fn blur(mut src: &mut Image, mode: BlurMode) -> RasterResult<()>{
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_brightness.jpg)
 ///
-pub fn brightness(mut src: &mut Image, factor: f32) -> RasterResult<()>{
+pub fn brightness(mut src: &mut Image, factor: f32) -> RasterResult<()> {
     let w: i32 = src.width;
     let h: i32 = src.height;
 
@@ -91,7 +102,6 @@ pub fn brightness(mut src: &mut Image, factor: f32) -> RasterResult<()>{
 
     for y in 0..h {
         for x in 0..w {
-
             let p = try!(src.get_pixel(x, y));
             let r = cmp::max(0, cmp::min(255, (p.r as f32 * factor) as i32));
             let g = cmp::max(0, cmp::min(255, (p.g as f32 * factor) as i32));
@@ -99,7 +109,6 @@ pub fn brightness(mut src: &mut Image, factor: f32) -> RasterResult<()>{
             let a = cmp::max(0, cmp::min(255, (p.a as f32 * factor) as i32)); // TODO: Should alpha be included?
 
             try!(src.set_pixel(x, y, &Color::rgba(r as u8, g as u8, b as u8, a as u8)));
-
         }
     }
 
@@ -125,7 +134,6 @@ pub fn brightness(mut src: &mut Image, factor: f32) -> RasterResult<()>{
 /// raster::save(&image, "tests/out/test_filter_convolve.jpg").unwrap();
 /// ```
 pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterResult<()> {
-
     let w: i32 = src.width;
     let h: i32 = src.height;
     let m_size = 3; // Matrix size
@@ -134,7 +142,6 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterR
 
     for y in 0..h {
         for x in 0..w {
-
             let mstarty = y - 1;
             let mstartx = x - 1;
 
@@ -199,7 +206,6 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterR
             }
 
             try!(src.set_pixel(x, y, &Color::rgba(accum_red as u8, accum_green as u8, accum_blue as u8, accum_alpha as u8)));
-
         }
     }
 
@@ -224,7 +230,7 @@ pub fn convolve(src: &mut Image, matrix: [[i32; 3]; 3], divisor: i32) -> RasterR
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_emboss.jpg)
 ///
-pub fn emboss(mut src: &mut Image) -> RasterResult<()>{
+pub fn emboss(mut src: &mut Image) -> RasterResult<()> {
     let matrix: [[i32; 3]; 3] = [
         [-2, -1, 0],
         [-1, 1, 1],
@@ -232,6 +238,60 @@ pub fn emboss(mut src: &mut Image) -> RasterResult<()>{
     ];
 
     convolve(src, matrix, 1)
+}
+
+/// Apply sobel.
+///
+/// # Examples
+/// ```
+/// use raster::{filter, Orientation};
+///
+/// // Create image from file
+/// let mut image = raster::open("tests/in/sample.jpg").unwrap();
+/// filter::sobel(&mut image, Orientation::Horizontal).unwrap();
+/// raster::save(&image, "tests/out/test_filter_sobel.jpg").unwrap();
+/// ```
+///
+/// ### Before
+/// ![](https://kosinix.github.io/raster/in/sample.jpg)
+///
+/// ### After
+/// ![](https://kosinix.github.io/raster/out/test_filter_sobel.jpg)
+///
+pub fn sobel(mut src: &mut Image, mode: Orientation) -> RasterResult<()> {
+    grayscale(src).unwrap();
+    let matrix: [[i32; 3]; 3];
+
+    match mode {
+        Orientation::Horizontal => matrix = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]],
+        Orientation::Vertical => matrix = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]],
+        Orientation::DiagonalUp => matrix = [[0, -1, -2], [1, 0, -1], [2, 1, 0]],
+        Orientation::DiagonalDown => matrix = [[-2, -1, 0], [-1, 0, 1], [0, 1, 2]],
+        Orientation::Both => return sobel_both(src, [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], [[-1, -2, -1], [0, 0, 0], [1, 2, 1]]),
+        Orientation::DiagonalBoth => return sobel_both(src, [[0, -1, -2], [1, 0, -1], [2, 1, 0]], [[-2, -1, 0], [-1, 0, 1], [0, 1, 2]]),
+    }
+    convolve(src, matrix, 1)
+}
+
+fn sobel_both(mut src: &mut Image, matrix_one: [[i32; 3]; 3], matrix_two: [[i32; 3]; 3]) -> RasterResult<()> {
+    let mut image_x = src.clone();
+    let mut image_y = src.clone();
+    try!(convolve(&mut image_x, matrix_one, 1));
+    try!(convolve(&mut image_y, matrix_two, 1));
+
+    let w: i32 = src.width;
+    let h: i32 = src.height;
+    for y in 0..h {
+        for x in 0..w {
+            let pixel_x = try!(image_x.get_pixel(x, y));
+            let pixel_y = try!(image_y.get_pixel(x, y));
+            //Calculate the sum of the derivatives with sqrt((dImage/dx)²+(dImage/dy)²)
+            let pixel = ((pixel_x.r as f64).powi(2) + (pixel_y.r as f64).powi(2)).sqrt();
+            try!(src.set_pixel(x, y, &Color::rgba(pixel as u8, pixel as u8, pixel as u8, pixel_x.a as u8)));
+        }
+    }
+
+    Ok(())
 }
 
 /// Apply a gamma correction.
@@ -255,7 +315,7 @@ pub fn emboss(mut src: &mut Image) -> RasterResult<()>{
 /// ![](https://kosinix.github.io/raster/out/test_filter_gamma.jpg)
 ///
 // http://stackoverflow.com/questions/14088889/changing-a-color-brightness
-pub fn gamma(mut src: &mut Image, gamma: f32) -> RasterResult<()>{
+pub fn gamma(mut src: &mut Image, gamma: f32) -> RasterResult<()> {
     let w: i32 = src.width;
     let h: i32 = src.height;
 
@@ -265,14 +325,12 @@ pub fn gamma(mut src: &mut Image, gamma: f32) -> RasterResult<()>{
 
     for y in 0..h {
         for x in 0..w {
-
             let p = try!(src.get_pixel(x, y));
             let r = (p.r as f32 / 255.0).powf(gamma) * 255.0;
             let g = (p.g as f32 / 255.0).powf(gamma) * 255.0;
             let b = (p.b as f32 / 255.0).powf(gamma) * 255.0;
 
             try!(src.set_pixel(x, y, &Color::rgba(r as u8, g as u8, b as u8, p.a as u8)));
-
         }
     }
 
@@ -296,18 +354,16 @@ pub fn gamma(mut src: &mut Image, gamma: f32) -> RasterResult<()>{
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_grayscale.jpg)
 ///
-pub fn grayscale(mut src: &mut Image) -> RasterResult<()>{
+pub fn grayscale(mut src: &mut Image) -> RasterResult<()> {
     let w: i32 = src.width;
     let h: i32 = src.height;
 
     for y in 0..h {
         for x in 0..w {
-
             let p = try!(src.get_pixel(x, y));
             let gray = (p.r as f32 * 0.3) + (p.g as f32 * 0.59) + (p.b as f32 * 0.11);
 
             try!(src.set_pixel(x, y, &Color::rgba(gray as u8, gray as u8, gray as u8, gray as u8)));
-
         }
     }
 
@@ -336,13 +392,12 @@ pub fn grayscale(mut src: &mut Image) -> RasterResult<()>{
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_saturation.jpg)
 ///
-pub fn saturation(mut src: &mut Image, sat: f32) -> RasterResult<()>{
+pub fn saturation(mut src: &mut Image, sat: f32) -> RasterResult<()> {
     let w: i32 = src.width;
     let h: i32 = src.height;
 
     for y in 0..h {
         for x in 0..w {
-
             let p = try!(src.get_pixel(x, y));
             let hsv = Color::to_hsv(p.r, p.g, p.b);
             let s = hsv.1;
@@ -356,7 +411,6 @@ pub fn saturation(mut src: &mut Image, sat: f32) -> RasterResult<()>{
             let rgb = Color::to_rgb(hsv.0, new_s, hsv.2);
 
             try!(src.set_pixel(x, y, &Color::rgb(rgb.0, rgb.1, rgb.2)));
-
         }
     }
 
@@ -380,10 +434,10 @@ pub fn saturation(mut src: &mut Image, sat: f32) -> RasterResult<()>{
 /// ### After
 /// ![](https://kosinix.github.io/raster/out/test_filter_sharpen.jpg)
 ///
-pub fn sharpen(mut src: &mut Image) -> RasterResult<()>{
+pub fn sharpen(mut src: &mut Image) -> RasterResult<()> {
     let matrix: [[i32; 3]; 3] = [
         [0, -1, 0],
-        [-1, 5,-1],
+        [-1, 5, -1],
         [0, -1, 0]
     ];
 
@@ -394,22 +448,22 @@ pub fn sharpen(mut src: &mut Image) -> RasterResult<()>{
 // Private functions
 
 // Box
-fn blur_box(mut src: &mut Image) -> RasterResult<()>{
+fn blur_box(mut src: &mut Image) -> RasterResult<()> {
     let matrix: [[i32; 3]; 3] = [
-        [1,1,1],
-        [1,1,1],
-        [1,1,1]
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
     ];
 
     convolve(src, matrix, 9)
 }
 
 // Gaussian
-fn blur_gaussian(mut src: &mut Image) -> RasterResult<()>{
+fn blur_gaussian(mut src: &mut Image) -> RasterResult<()> {
     let matrix: [[i32; 3]; 3] = [
-        [1,2,1],
-        [2,4,2],
-        [1,2,1]
+        [1, 2, 1],
+        [2, 4, 2],
+        [1, 2, 1]
     ];
 
     convolve(src, matrix, 16)
