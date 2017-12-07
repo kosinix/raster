@@ -89,7 +89,7 @@ fn bilinear_width(mut src: &mut Image, w2: i32) -> RasterResult<()> {
 
             let src_x_int = (src_x).floor() as i32;
 
-            let src_x_int2 = cmp::min(src_x_int + 1, w1-1); // limit range withn $w1-1
+            let src_x_int2 = cmp::min(src_x_int + 1, w1-1); // limit range within $w1-1
 
             // limit range from 0 - 1
             let t_x = src_x - src_x_int as f64;
@@ -149,7 +149,7 @@ fn bilinear_height(mut src: &mut Image, h2: i32) -> RasterResult<()> {
 
             let src_y_int = (src_y).floor() as i32;
 
-            let src_y_int2 = cmp::min(src_y_int + 1, h1-1); // limit range withn $h1-1
+            let src_y_int2 = cmp::min(src_y_int + 1, h1-1); // limit range within $h1-1
 
             // limit range from 0 - 1
             let t_y = src_y - src_y_int as f64;
