@@ -240,7 +240,7 @@ pub fn emboss(mut src: &mut Image) -> RasterResult<()> {
     convolve(src, matrix, 1)
 }
 
-/// Apply sobel.
+/// Apply Sobel edge detection.
 ///
 /// # Examples
 /// ```
@@ -249,27 +249,25 @@ pub fn emboss(mut src: &mut Image) -> RasterResult<()> {
 /// // Create image from file
 /// let mut image = raster::open("tests/in/sample.jpg").unwrap();
 /// filter::sobel(&mut image, Orientation::Horizontal).unwrap();
-/// raster::save(&image, "tests/out/test_filter_sobel.jpg").unwrap();
+/// raster::save(&image, "tests/out/test_filter_sobel_x.jpg").unwrap();
 /// ```
 ///
 /// ### Before
 /// ![](https://kosinix.github.io/raster/in/sample.jpg)
 ///
 /// ### After
-/// ![](https://kosinix.github.io/raster/out/test_filter_sobel.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_filter_sobel_x.jpg)
 ///
 pub fn sobel(mut src: &mut Image, mode: Orientation) -> RasterResult<()> {
-    grayscale(src).unwrap();
-    let matrix: [[i32; 3]; 3];
-
-    match mode {
-        Orientation::Horizontal => matrix = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]],
-        Orientation::Vertical => matrix = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]],
-        Orientation::DiagonalUp => matrix = [[0, -1, -2], [1, 0, -1], [2, 1, 0]],
-        Orientation::DiagonalDown => matrix = [[-2, -1, 0], [-1, 0, 1], [0, 1, 2]],
+    try!(grayscale(src));
+    let matrix = match mode {
+        Orientation::Horizontal => [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]],
+        Orientation::Vertical => [[-1, -2, -1], [0, 0, 0], [1, 2, 1]],
+        Orientation::DiagonalUp => [[0, -1, -2], [1, 0, -1], [2, 1, 0]],
+        Orientation::DiagonalDown => [[-2, -1, 0], [-1, 0, 1], [0, 1, 2]],
         Orientation::Both => return sobel_both(src, [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], [[-1, -2, -1], [0, 0, 0], [1, 2, 1]]),
         Orientation::DiagonalBoth => return sobel_both(src, [[0, -1, -2], [1, 0, -1], [2, 1, 0]], [[-2, -1, 0], [-1, 0, 1], [0, 1, 2]]),
-    }
+    };
     convolve(src, matrix, 1)
 }
 
