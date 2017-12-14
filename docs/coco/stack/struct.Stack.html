@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Stack` struct in crate `coco`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Stack">
+
+    <title>coco::stack::Stack - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'>Struct Stack</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.is_empty">is_empty</a><a href="#method.push">push</a><a href="#method.pop">pop</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">Send</a><a href="#impl-Sync">Sync</a><a href="#impl-Drop">Drop</a></div></div><p class='location'><a href='../index.html'>coco</a>::<wbr><a href='index.html'>stack</a></p><script>window.sidebarCurrent = {name: 'Stack', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>coco</a>::<wbr><a href='index.html'>stack</a>::<wbr><a class="struct" href=''>Stack</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/coco/stack.rs.html#21-23' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Stack&lt;T&gt; { /* fields omitted */ }</pre><div class='docblock'><p>A lock-free stack.</p>
+
+<p>It can be used with multiple producers and multiple consumers at the same time.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class="struct" href="../../coco/stack/struct.Stack.html" title="struct coco::stack::Stack">Stack</a>&lt;T&gt;</code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/coco/stack.rs.html#28-126' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/coco/stack.rs.html#38-40' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns a new, empty stack.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">coco</span>::<span class="ident">Stack</span>;
+
+<span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">Stack</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>::<span class="ident">new</span>();</pre>
+</div><h4 id='method.is_empty' class="method"><span id='is_empty.v' class='invisible'><code>pub fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/coco/stack.rs.html#54-56' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns <code>true</code> if the stack is empty.</p>
+
+<h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">coco</span>::<span class="ident">Stack</span>;
+
+<span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">Stack</span>::<span class="ident">new</span>();
+<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">s</span>.<span class="ident">is_empty</span>());
+<span class="ident">s</span>.<span class="ident">push</span>(<span class="string">&quot;hello&quot;</span>);
+<span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">s</span>.<span class="ident">is_empty</span>());</pre>
+</div><h4 id='method.push' class="method"><span id='push.v' class='invisible'><code>pub fn <a href='#method.push' class='fnname'>push</a>(&amp;self, value: T)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/coco/stack.rs.html#69-88' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Pushes a new value onto the stack.</p>
+
+<h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">coco</span>::<span class="ident">Stack</span>;
+
+<span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">Stack</span>::<span class="ident">new</span>();
+<span class="ident">s</span>.<span class="ident">push</span>(<span class="number">1</span>);
+<span class="ident">s</span>.<span class="ident">push</span>(<span class="number">2</span>);</pre>
+</div><h4 id='method.pop' class="method"><span id='pop.v' class='invisible'><code>pub fn <a href='#method.pop' class='fnname'>pop</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/coco/stack.rs.html#106-125' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Attemps to pop an value from the stack.</p>
+
+<p>Returns <code>None</code> if the stack is empty.</p>
+
+<h1 id='examples-3' class='section-header'><a href='#examples-3'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">coco</span>::<span class="ident">Stack</span>;
+
+<span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">Stack</span>::<span class="ident">new</span>();
+<span class="ident">s</span>.<span class="ident">push</span>(<span class="number">1</span>);
+<span class="ident">s</span>.<span class="ident">push</span>(<span class="number">2</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>.<span class="ident">pop</span>(), <span class="prelude-val">Some</span>(<span class="number">2</span>));
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>.<span class="ident">pop</span>(), <span class="prelude-val">Some</span>(<span class="number">1</span>));
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>.<span class="ident">pop</span>(), <span class="prelude-val">None</span>);</pre>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../../coco/stack/struct.Stack.html" title="struct coco::stack::Stack">Stack</a>&lt;T&gt;</code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/coco/stack.rs.html#25' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../../coco/stack/struct.Stack.html" title="struct coco::stack::Stack">Stack</a>&lt;T&gt;</code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/coco/stack.rs.html#26' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-Drop' class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html" title="trait core::ops::drop::Drop">Drop</a> for <a class="struct" href="../../coco/stack/struct.Stack.html" title="struct coco::stack::Stack">Stack</a>&lt;T&gt;</code><a href='#impl-Drop' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/coco/stack.rs.html#128-140' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class="method"><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/coco/stack.rs.html#129-139' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Executes the destructor for this type. <a href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "coco";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["InterpolationMode","An enum for the various modes that can be used for interpolation."]],"fn":[["bilinear","Interpolate using linear function."],["nearest","Interpolate using nearest neighbor."],["resample","Resample an image into a new size using a given interpolation method."]]});

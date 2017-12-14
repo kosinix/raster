@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `RasterError` enum in crate `raster`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, RasterError">
+
+    <title>raster::error::RasterError - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc enum">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'>Enum RasterError</p><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.Io">Io</a><a href="#variant.PixelOutOfBounds">PixelOutOfBounds</a><a href="#variant.InvalidStartIndex">InvalidStartIndex</a><a href="#variant.InvalidHex">InvalidHex</a><a href="#variant.HexParse">HexParse</a><a href="#variant.BlendingImageFallsOutsideCanvas">BlendingImageFallsOutsideCanvas</a><a href="#variant.InvalidGamma">InvalidGamma</a><a href="#variant.Decode">Decode</a><a href="#variant.Encode">Encode</a><a href="#variant.UnsupportedFormat">UnsupportedFormat</a><a href="#variant.Unexpected">Unexpected</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a><a href="#impl-From%3CIoError%3E">From&lt;IoError&gt;</a><a href="#impl-From%3CDecodingError%3E">From&lt;DecodingError&gt;</a><a href="#impl-From%3CImageError%3E">From&lt;ImageError&gt;</a><a href="#impl-From%3CEncodingError%3E">From&lt;EncodingError&gt;</a></div></div><p class='location'><a href='../index.html'>raster</a>::<wbr><a href='index.html'>error</a></p><script>window.sidebarCurrent = {name: 'RasterError', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>raster</a>::<wbr><a href='index.html'>error</a>::<wbr><a class="enum" href=''>RasterError</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/raster/error.rs.html#17-40' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum RasterError {
+    Io(<a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">IoError</a>),
+    PixelOutOfBounds(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>,&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>),
+    InvalidStartIndex(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>),
+    InvalidHex,
+    HexParse(<a class="struct" href="https://doc.rust-lang.org/nightly/core/num/struct.ParseIntError.html" title="struct core::num::ParseIntError">ParseIntError</a>),
+    BlendingImageFallsOutsideCanvas,
+    InvalidGamma(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f32.html">f32</a>),
+    Decode(<a class="enum" href="../../raster/enum.ImageFormat.html" title="enum raster::ImageFormat">ImageFormat</a>,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>),
+    Encode(<a class="enum" href="../../raster/enum.ImageFormat.html" title="enum raster::ImageFormat">ImageFormat</a>,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>),
+    UnsupportedFormat(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>),
+    Unexpected,
+}</pre><div class='docblock'><p>Enumeration of raster&#39;s errors.</p>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id="variant.Io" class="variant small-section-header"><a href="#variant.Io" class="anchor field"></a><span id='Io.v' class='invisible'><code>Io(<a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">IoError</a>)</code></span></span><div class='docblock'><p>File system read/write errors.</p>
+</div><span id="variant.PixelOutOfBounds" class="variant small-section-header"><a href="#variant.PixelOutOfBounds" class="anchor field"></a><span id='PixelOutOfBounds.v' class='invisible'><code>PixelOutOfBounds(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>,&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>)</code></span></span><div class='docblock'><p>Getting or setting pixels outside of image bounds.</p>
+</div><span id="variant.InvalidStartIndex" class="variant small-section-header"><a href="#variant.InvalidStartIndex" class="anchor field"></a><span id='InvalidStartIndex.v' class='invisible'><code>InvalidStartIndex(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>)</code></span></span><div class='docblock'><p>Invalid start index.</p>
+</div><span id="variant.InvalidHex" class="variant small-section-header"><a href="#variant.InvalidHex" class="anchor field"></a><span id='InvalidHex.v' class='invisible'><code>InvalidHex</code></span></span><div class='docblock'><p>Hex format not supported.</p>
+</div><span id="variant.HexParse" class="variant small-section-header"><a href="#variant.HexParse" class="anchor field"></a><span id='HexParse.v' class='invisible'><code>HexParse(<a class="struct" href="https://doc.rust-lang.org/nightly/core/num/struct.ParseIntError.html" title="struct core::num::ParseIntError">ParseIntError</a>)</code></span></span><div class='docblock'><p>Error parsing a hex string.</p>
+</div><span id="variant.BlendingImageFallsOutsideCanvas" class="variant small-section-header"><a href="#variant.BlendingImageFallsOutsideCanvas" class="anchor field"></a><span id='BlendingImageFallsOutsideCanvas.v' class='invisible'><code>BlendingImageFallsOutsideCanvas</code></span></span><div class='docblock'><p>Blending error.</p>
+</div><span id="variant.InvalidGamma" class="variant small-section-header"><a href="#variant.InvalidGamma" class="anchor field"></a><span id='InvalidGamma.v' class='invisible'><code>InvalidGamma(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f32.html">f32</a>)</code></span></span><div class='docblock'><p>Invalid gamma parameter.</p>
+</div><span id="variant.Decode" class="variant small-section-header"><a href="#variant.Decode" class="anchor field"></a><span id='Decode.v' class='invisible'><code>Decode(<a class="enum" href="../../raster/enum.ImageFormat.html" title="enum raster::ImageFormat">ImageFormat</a>,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Error during decoding.</p>
+</div><span id="variant.Encode" class="variant small-section-header"><a href="#variant.Encode" class="anchor field"></a><span id='Encode.v' class='invisible'><code>Encode(<a class="enum" href="../../raster/enum.ImageFormat.html" title="enum raster::ImageFormat">ImageFormat</a>,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Error during encoding.</p>
+</div><span id="variant.UnsupportedFormat" class="variant small-section-header"><a href="#variant.UnsupportedFormat" class="anchor field"></a><span id='UnsupportedFormat.v' class='invisible'><code>UnsupportedFormat(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Unsupported image format.</p>
+</div><span id="variant.Unexpected" class="variant small-section-header"><a href="#variant.Unexpected" class="anchor field"></a><span id='Unexpected.v' class='invisible'><code>Unexpected</code></span></span><div class='docblock'><p>Error that does not belong in other variants.</p>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#16' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#16' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div><h3 id='impl-From%3CIoError%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">IoError</a>&gt; for <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code><a href='#impl-From%3CIoError%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#43-47' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Convert std::io::Error to RasterError::Io</p>
+</div><div class='impl-items'><h4 id='method.from' class="method"><span id='from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(err: <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">IoError</a>) -&gt; <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#44-46' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3CDecodingError%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;<a class="enum" href="../../gif/reader/decoder/enum.DecodingError.html" title="enum gif::reader::decoder::DecodingError">DecodingError</a>&gt; for <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code><a href='#impl-From%3CDecodingError%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#51-63' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Convert gif::DecodingError to RasterError::Decode</p>
+</div><div class='impl-items'><h4 id='method.from-1' class="method"><span id='from.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(err: <a class="enum" href="../../gif/reader/decoder/enum.DecodingError.html" title="enum gif::reader::decoder::DecodingError">DecodingError</a>) -&gt; <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#52-62' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3CImageError%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;<a class="enum" href="../../image/image/enum.ImageError.html" title="enum image::image::ImageError">ImageError</a>&gt; for <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code><a href='#impl-From%3CImageError%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#70-94' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Convert gif::DecodingError to RasterError::Decode</p>
+</div><div class='impl-items'><h4 id='method.from-2' class="method"><span id='from.v-2' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(err: <a class="enum" href="../../image/image/enum.ImageError.html" title="enum image::image::ImageError">ImageError</a>) -&gt; <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#71-93' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3CDecodingError%3E-1' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;<a class="enum" href="../../png/decoder/stream/enum.DecodingError.html" title="enum png::decoder::stream::DecodingError">DecodingError</a>&gt; for <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code><a href='#impl-From%3CDecodingError%3E-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#98-119' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Convert png::DecodingError to RasterError::Decode</p>
+</div><div class='impl-items'><h4 id='method.from-3' class="method"><span id='from.v-3' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(err: <a class="enum" href="../../png/decoder/stream/enum.DecodingError.html" title="enum png::decoder::stream::DecodingError">DecodingError</a>) -&gt; <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#99-118' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3CEncodingError%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;<a class="enum" href="../../png/encoder/enum.EncodingError.html" title="enum png::encoder::EncodingError">EncodingError</a>&gt; for <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code><a href='#impl-From%3CEncodingError%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#122-131' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Convert png::EncodingError to RasterError::Encode</p>
+</div><div class='impl-items'><h4 id='method.from-4' class="method"><span id='from.v-4' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(err: <a class="enum" href="../../png/encoder/enum.EncodingError.html" title="enum png::encoder::EncodingError">EncodingError</a>) -&gt; <a class="enum" href="../../raster/error/enum.RasterError.html" title="enum raster::error::RasterError">RasterError</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/raster/error.rs.html#123-130' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "raster";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>
