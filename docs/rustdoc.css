@@ -171,11 +171,10 @@ nav.sub {
 
 .sidebar {
 	width: 200px;
-	position: fixed;
+	position: absolute;
 	left: 0;
 	top: 0;
-	height: 100vh;
-	overflow: auto;
+	min-height: 100%;
 }
 
 .sidebar .current {
@@ -188,27 +187,20 @@ nav.sub {
 
 .js-only, .hidden { display: none !important; }
 
+.sidebar {
+	padding: 10px;
+}
 .sidebar img {
 	margin: 20px auto;
 	display: block;
-	margin-top: 10px;
 }
 
 .sidebar .location {
 	border: 1px solid;
 	font-size: 17px;
-	margin: 30px 10px 20px 10px;
+	margin: 30px 0 20px 0;
 	text-align: center;
 	word-wrap: break-word;
-}
-
-.sidebar .version {
-	font-size: 15px;
-	text-align: center;
-	border-bottom: #DDDDDD 1px solid;
-	overflow-wrap: break-word;
-	word-wrap: break-word; /* deprecated */
-	word-break: break-word; /* Chrome, non-standard */
 }
 
 .location:empty {
@@ -218,7 +210,7 @@ nav.sub {
 .location a:first-child { font-weight: 500; }
 
 .block {
-	padding: 0;
+	padding: 0 10px;
 	margin-bottom: 14px;
 }
 .block h2, .block h3 {
@@ -227,7 +219,7 @@ nav.sub {
 	text-align: center;
 }
 .block ul, .block li {
-	margin: 0 10px;
+	margin: 0;
 	padding: 0;
 	list-style: none;
 }
@@ -241,23 +233,6 @@ nav.sub {
 	font-size: 14px;
 	font-weight: 300;
 	transition: border 500ms ease-out;
-}
-
-.sidebar-title {
-	border-top: 1px solid #777;
-	border-bottom: 1px solid #777;
-	text-align: center;
-	font-size: 17px;
-	margin-bottom: 5px;
-}
-
-.sidebar-links {
-	margin-bottom: 15px;
-}
-
-.sidebar-links > a {
-	padding-left: 10px;
-	width: 100%;
 }
 
 .content {
@@ -410,7 +385,7 @@ h4 > code, h3 > code, .invisible > code {
 	padding: 0;
 }
 
-.content .item-list li { margin-bottom: 1em; }
+.content .item-list li { margin-bottom: 3px; }
 
 .content .multi-column {
 	-moz-column-count: 5;
@@ -545,8 +520,7 @@ a {
 .content .search-results td:first-child { padding-right: 0; }
 .content .search-results td:first-child a { padding-right: 10px; }
 
-tr.result span.primitive::after {
-	content: ' (primitive type)'; font-style: italic; color: black;
+tr.result span.primitive::after { content: ' (primitive type)'; font-style: italic; color: black;
 }
 
 body.blur > :not(#help) {
@@ -569,7 +543,7 @@ body.blur > :not(#help) {
 	flex: 0 0 auto;
 	box-shadow: 0 0 6px rgba(0,0,0,.2);
 	width: 550px;
-	height: 354px;
+	height: 330px;
 	border: 1px solid;
 }
 #help dt {
@@ -582,14 +556,13 @@ body.blur > :not(#help) {
 	display: block;
 	margin-top: -1px;
 }
-#help dd { margin: 5px 35px; }
+#help dd { margin: 5px 33px; }
 #help .infos { padding-left: 0; }
 #help h1, #help h2 { margin-top: 0; }
 #help > div div {
 	width: 50%;
 	float: left;
 	padding: 20px;
-	padding-left: 17px;
 }
 
 .stab {
@@ -763,15 +736,6 @@ span.since {
 	margin-top: 5px;
 }
 
-.docblock > .section-header:first-child {
-	margin-left: 15px;
-	margin-top: 0;
-}
-
-.docblock > .section-header:first-child:hover > a:before {
-	left: -10px;
-}
-
 .enum > .collapsed, .struct > .collapsed {
 	margin-bottom: 25px;
 }
@@ -800,19 +764,17 @@ span.since {
 	}
 
 	.sidebar {
-		height: 45px;
+		height: 40px;
 		min-height: 40px;
-		width: calc(100% + 30px);
-		margin: 0;
-		margin-left: -15px;
-		padding: 0 15px;
+		width: 100%;
+		margin: 0px;
+		padding: 0px;
 		position: static;
 	}
 
 	.sidebar .location {
 		float: right;
 		margin: 0px;
-		margin-top: 2px;
 		padding: 3px 10px 1px 10px;
 		min-height: 39px;
 		background: inherit;
@@ -827,7 +789,7 @@ span.since {
 	.sidebar img {
 		width: 35px;
 		margin-top: 5px;
-		margin-bottom: 5px;
+		margin-bottom: 0px;
 		float: left;
 	}
 
@@ -847,8 +809,8 @@ span.since {
 		width: 100%;
 	}
 
-	.content h4 > .out-of-band {
-		position: inherit;
+	.content .out-of-band {
+		display: none;
 	}
 
 	.toggle-wrapper > .collapse-toggle {
@@ -857,14 +819,6 @@ span.since {
 
 	.toggle-wrapper {
 		height: 1.5em;
-	}
-
-	#search {
-		margin-left: 0;
-	}
-
-	.content .impl-items .method, .content .impl-items > .type, .impl-items > .associatedconstant {
-		display: flex;
 	}
 }
 
@@ -918,36 +872,4 @@ span.since {
 
 pre.rust {
 	position: relative;
-}
-
-.search-failed {
-	text-align: center;
-	margin-top: 20px;
-}
-
-#titles {
-	height: 35px;
-}
-
-#titles > div {
-	float: left;
-	width: 33.3%;
-	text-align: center;
-	border-bottom: 1px solid #ccc;
-	font-size: 18px;
-	cursor: pointer;
-}
-
-#titles > div.selected {
-	border-bottom: 3px solid #0078ee;
-}
-
-#titles > div:hover {
-	border-bottom: 3px solid #0089ff;
-}
-
-#titles > div > div.count {
-	display: inline-block;
-	color: #888;
-	font-size: 16px;
 }

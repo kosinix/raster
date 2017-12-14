@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'>Struct Writer</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.write_chunk">write_chunk</a><a href="#method.write_image_data">write_image_data</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Drop">Drop</a></div></div><p class='location'><a href='index.html'>png</a></p><script>window.sidebarCurrent = {name: 'Writer', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Writer</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>png</a></p><script>window.sidebarCurrent = {name: 'Writer', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -55,8 +55,8 @@
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
                 <h3 id='impl' class='impl'><span class='in-band'><code>impl&lt;W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt; <a class="struct" href="../png/struct.Writer.html" title="struct png::Writer">Writer</a>&lt;W&gt;</code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/encoder.rs.html#89-139' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.write_chunk' class="method"><span id='write_chunk.v' class='invisible'><code>pub fn <a href='#method.write_chunk' class='fnname'>write_chunk</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;name: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 4]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="enum" href="../png/enum.EncodingError.html" title="enum png::EncodingError">EncodingError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/encoder.rs.html#107-116' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.write_image_data' class="method"><span id='write_image_data.v' class='invisible'><code>pub fn <a href='#method.write_image_data' class='fnname'>write_image_data</a>(&amp;mut self, data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="enum" href="../png/enum.EncodingError.html" title="enum png::EncodingError">EncodingError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/encoder.rs.html#119-138' title='goto source code'>[src]</a></span></h4>
+<div class='impl-items'><h4 id='method.write_chunk' class="method"><span id='write_chunk.v' class='invisible'><code>pub fn <a href='#method.write_chunk' class='fnname'>write_chunk</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;name: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 4]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../png/enum.EncodingError.html" title="enum png::EncodingError">EncodingError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/encoder.rs.html#107-116' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.write_image_data' class="method"><span id='write_image_data.v' class='invisible'><code>pub fn <a href='#method.write_image_data' class='fnname'>write_image_data</a>(&amp;mut self, data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../png/enum.EncodingError.html" title="enum png::EncodingError">EncodingError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/encoder.rs.html#119-138' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Writes the image data.</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
@@ -82,15 +82,13 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt>&larrb;</dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt>&rarrb;</dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
-                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
+                    <dt>+</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
