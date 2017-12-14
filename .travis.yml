@@ -1,11 +1,25 @@
 language: rust
+cache: cargo
 rust:
   - stable
   - beta
-  - nightly
 matrix:
-  allow_failures:
+  include:
     - rust: nightly
-
+      env: RUSTFMT=0.3.1
+      install:
+        - export LD_LIBRARY_PATH=$(rustc --print sysroot)/lib:$LD_LIBRARY_PATH
+        - if [[ `rustfmt --version` != $RUSTFMT* ]] ; then travis_wait cargo install --force rustfmt-nightly --vers $RUSTFMT; fi
+        - export PATH="$PATH:$HOME/.cargo/bin"
+      script:
+        - rustfmt --write-mode=diff src/lib.rs
+        - cargo build
+        - cargo test
 before_script:
   - sudo chmod -R 0777 /home/travis/build/kosinix/raster/tests/
+script:
+  - cargo build
+  - cargo test
+  - cargo doc
+after_success:
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash deploy-docs.sh

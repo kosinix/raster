@@ -51,8 +51,12 @@ impl From<IoError> for RasterError {
 impl From<gif::DecodingError> for RasterError {
     fn from(err: gif::DecodingError) -> RasterError {
         match err {
-            gif::DecodingError::Format(msg) => RasterError::Decode(ImageFormat::Gif, msg.to_string()),
-            gif::DecodingError::Internal(msg) => RasterError::Decode(ImageFormat::Gif, msg.to_string()),
+            gif::DecodingError::Format(msg) => {
+                RasterError::Decode(ImageFormat::Gif, msg.to_string())
+            }
+            gif::DecodingError::Internal(msg) => {
+                RasterError::Decode(ImageFormat::Gif, msg.to_string())
+            }
             gif::DecodingError::Io(io_err) => RasterError::Io(io_err),
         }
     }
@@ -61,17 +65,30 @@ impl From<gif::DecodingError> for RasterError {
 
 // JPEG
 /// Convert gif::DecodingError to RasterError::Decode
-// NOTE: We assume that we are in decoding jpeg since this error's entry point is only in raster::open
+// NOTE: We assume that we are in decoding jpeg since this error's entry point is only in
+// raster::open
 impl From<piston_image::ImageError> for RasterError {
     fn from(err: piston_image::ImageError) -> RasterError {
         match err {
-            piston_image::ImageError::FormatError(msg) => RasterError::Decode(ImageFormat::Jpeg, msg),
-            piston_image::ImageError::DimensionError => RasterError::Decode(ImageFormat::Jpeg, "DimensionError".to_string()),
-            piston_image::ImageError::UnsupportedError(msg) => RasterError::Decode(ImageFormat::Jpeg,msg),
-            piston_image::ImageError::UnsupportedColor(_) => RasterError::Decode(ImageFormat::Jpeg, "UnsupportedColor".to_string()),
-            piston_image::ImageError::NotEnoughData => RasterError::Decode(ImageFormat::Jpeg, "NotEnoughData".to_string()),
+            piston_image::ImageError::FormatError(msg) => {
+                RasterError::Decode(ImageFormat::Jpeg, msg)
+            }
+            piston_image::ImageError::DimensionError => {
+                RasterError::Decode(ImageFormat::Jpeg, "DimensionError".to_string())
+            }
+            piston_image::ImageError::UnsupportedError(msg) => {
+                RasterError::Decode(ImageFormat::Jpeg, msg)
+            }
+            piston_image::ImageError::UnsupportedColor(_) => {
+                RasterError::Decode(ImageFormat::Jpeg, "UnsupportedColor".to_string())
+            }
+            piston_image::ImageError::NotEnoughData => {
+                RasterError::Decode(ImageFormat::Jpeg, "NotEnoughData".to_string())
+            }
             piston_image::ImageError::IoError(io_err) => RasterError::Io(io_err),
-            piston_image::ImageError::ImageEnd => RasterError::Decode(ImageFormat::Jpeg, "ImageEnd".to_string()),
+            piston_image::ImageError::ImageEnd => {
+                RasterError::Decode(ImageFormat::Jpeg, "ImageEnd".to_string())
+            }
         }
     }
 }
@@ -82,11 +99,21 @@ impl From<png::DecodingError> for RasterError {
     fn from(err: png::DecodingError) -> RasterError {
         match err {
             png::DecodingError::IoError(io_err) => RasterError::Io(io_err),
-            png::DecodingError::Format(_) => RasterError::Decode(ImageFormat::Png, "Format".to_string()),
-            png::DecodingError::InvalidSignature => RasterError::Decode(ImageFormat::Png, "InvalidSignature".to_string()),
-            png::DecodingError::CrcMismatch {..} => RasterError::Decode(ImageFormat::Png, "CrcMismatch".to_string()),
-            png::DecodingError::Other(_) => RasterError::Decode(ImageFormat::Png, "Other".to_string()),
-            png::DecodingError::CorruptFlateStream => RasterError::Decode(ImageFormat::Png, "CorruptFlateStream".to_string()),
+            png::DecodingError::Format(_) => {
+                RasterError::Decode(ImageFormat::Png, "Format".to_string())
+            }
+            png::DecodingError::InvalidSignature => {
+                RasterError::Decode(ImageFormat::Png, "InvalidSignature".to_string())
+            }
+            png::DecodingError::CrcMismatch { .. } => {
+                RasterError::Decode(ImageFormat::Png, "CrcMismatch".to_string())
+            }
+            png::DecodingError::Other(_) => {
+                RasterError::Decode(ImageFormat::Png, "Other".to_string())
+            }
+            png::DecodingError::CorruptFlateStream => {
+                RasterError::Decode(ImageFormat::Png, "CorruptFlateStream".to_string())
+            }
         }
     }
 }
@@ -96,10 +123,13 @@ impl From<png::EncodingError> for RasterError {
     fn from(err: png::EncodingError) -> RasterError {
         match err {
             png::EncodingError::IoError(io_err) => RasterError::Io(io_err),
-            png::EncodingError::Format(_) => RasterError::Encode(ImageFormat::Png, "Format".to_string()),
+            png::EncodingError::Format(_) => {
+                RasterError::Encode(ImageFormat::Png, "Format".to_string())
+            }
         }
     }
 }
 
-/// [Type alias](https://doc.rust-lang.org/book/error-handling.html#the-result-type-alias-idiom) for Result. 
+/// [Type alias](https://doc.rust-lang.org/book/error-handling.html#the-result-type-alias-idiom)
+/// for Result.
 pub type RasterResult<T> = Result<T, RasterError>;

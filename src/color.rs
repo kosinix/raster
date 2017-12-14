@@ -1,11 +1,9 @@
 //!  A module for handling colors.
 
-
 // from rust
 use std;
 
 // from external crate
-
 
 // from local crate
 use error::{RasterError, RasterResult};
@@ -27,7 +25,6 @@ pub struct Color {
 }
 
 impl<'a> Color {
-
     /// Returns a black Color.
     pub fn black() -> Color {
         Color {
@@ -100,18 +97,20 @@ impl<'a> Color {
     /// assert_eq!(255, color.g);
     /// ```
     pub fn hex(hex: &str) -> RasterResult<Color> {
-        if hex.len() == 9 && hex.starts_with('#') { // #FFFFFFFF (Red Green Blue Alpha)
+        if hex.len() == 9 && hex.starts_with('#') {
+            // #FFFFFFFF (Red Green Blue Alpha)
             Ok(Color {
-                r: try!(_hex_dec(&hex[1..3])),
-                g: try!(_hex_dec(&hex[3..5])),
-                b: try!(_hex_dec(&hex[5..7])),
-                a: try!(_hex_dec(&hex[7..9])),
+                r: _hex_dec(&hex[1..3])?,
+                g: _hex_dec(&hex[3..5])?,
+                b: _hex_dec(&hex[5..7])?,
+                a: _hex_dec(&hex[7..9])?,
             })
-        } else if hex.len() == 7 && hex.starts_with('#') { // #FFFFFF (Red Green Blue)
+        } else if hex.len() == 7 && hex.starts_with('#') {
+            // #FFFFFF (Red Green Blue)
             Ok(Color {
-                r: try!(_hex_dec(&hex[1..3])),
-                g: try!(_hex_dec(&hex[3..5])),
-                b: try!(_hex_dec(&hex[5..7])),
+                r: _hex_dec(&hex[1..3])?,
+                g: _hex_dec(&hex[3..5])?,
+                b: _hex_dec(&hex[5..7])?,
                 a: 255,
             })
         } else {
@@ -145,13 +144,8 @@ impl<'a> Color {
     /// assert_eq!(rgb.b, 0);
     /// assert_eq!(rgb.a, 255);
     /// ```
-    pub fn rgb(r:u8, g:u8, b:u8) -> Color {
-        Color {
-            r: r,
-            g: g,
-            b: b,
-            a: 255,
-        }
+    pub fn rgb(r: u8, g: u8, b: u8) -> Color {
+        Color { r, g, b, a: 255 }
     }
 
     /// Create a RGBA color.
@@ -170,13 +164,8 @@ impl<'a> Color {
     /// assert_eq!(rgba.b, 255);
     /// assert_eq!(rgba.a, 255);
     /// ```
-    pub fn rgba(r:u8, g:u8, b:u8, a:u8) -> Color {
-        Color {
-            r: r,
-            g: g,
-            b: b,
-            a: a,
-        }
+    pub fn rgba(r: u8, g: u8, b: u8, a: u8) -> Color {
+        Color { r, g, b, a }
     }
 
     /// Convert RGB to HSV/HSB (Hue, Saturation, Brightness).
@@ -192,7 +181,6 @@ impl<'a> Color {
     /// ```
     // Using f32 for s,v for accuracy when converting from RGB-HSV and vice-versa.
     pub fn to_hsv(r: u8, g: u8, b: u8) -> (u16, f32, f32) {
-
         let r = r as f32 / 255.0;
         let g = g as f32 / 255.0;
         let b = b as f32 / 255.0;
@@ -226,13 +214,9 @@ impl<'a> Color {
         };
 
         let v = max;
-        let s = if v != 0.0 {
-            chroma / v
-        } else {
-            0.0
-        };
+        let s = if v != 0.0 { chroma / v } else { 0.0 };
 
-        ( h.round() as u16, s * 100.0, v * 100.0  )
+        (h.round() as u16, s * 100.0, v * 100.0)
     }
 
     /// Convert HSV/HSB (Hue, Saturation, Brightness) to RGB.
@@ -250,15 +234,14 @@ impl<'a> Color {
     /// assert_eq!(rgb1.2, rgb2.2);
     /// ```
     // Using f32 for s,v for accuracy when converting from RGB-HSV and vice-versa.
-    pub fn to_rgb(h:u16, s: f32, v: f32) -> (u8, u8, u8) {
-
+    pub fn to_rgb(h: u16, s: f32, v: f32) -> (u8, u8, u8) {
         let h = h as f32 / 60.0;
         let s = s as f32 / 100.0; // Convert to 0.0 - 1.0
         let v = v as f32 / 100.0;
 
         let chroma = v * s;
 
-        let x = chroma * ( 1.0 - ( (h % 2.0) - 1.0 ).abs() );
+        let x = chroma * (1.0 - ((h % 2.0) - 1.0).abs());
 
         let mut r = 0.0;
         let mut g = 0.0;
@@ -296,7 +279,11 @@ impl<'a> Color {
         r += m;
         g += m;
         b += m;
-        ( (r * 255.0).round() as u8, (g * 255.0).round() as u8, (b * 255.0).round() as u8)
+        (
+            (r * 255.0).round() as u8,
+            (g * 255.0).round() as u8,
+            (b * 255.0).round() as u8,
+        )
     }
 
     /// Returns a white Color.
@@ -320,11 +307,7 @@ fn _hex_dec(hex_string: &str) -> RasterResult<u8> {
 }
 
 fn rgb_min(r: f32, g: f32, b: f32) -> f32 {
-    let min = if g < r {
-        g
-    } else {
-        r
-    };
+    let min = if g < r { g } else { r };
 
     if b < min {
         b
@@ -334,11 +317,7 @@ fn rgb_min(r: f32, g: f32, b: f32) -> f32 {
 }
 
 fn rgb_max(r: f32, g: f32, b: f32) -> f32 {
-    let max = if g > r {
-        g
-    } else {
-        r
-    };
+    let max = if g > r { g } else { r };
 
     if b > max {
         b

@@ -1,11 +1,9 @@
 //!  A module for generic representation of image.
 
-
 // from rust
 use std::collections::HashMap;
 
 // from external crate
-
 
 // from local crate
 use error::{RasterError, RasterResult};
@@ -25,7 +23,6 @@ pub struct Image {
 }
 
 impl<'a> Image {
-
     /// Create a blank image. Default color is black.
     ///
     /// # Examples
@@ -40,8 +37,7 @@ impl<'a> Image {
     /// assert_eq!(image.width, 2);
     /// assert_eq!(image.height, 2);
     /// ```
-    pub fn blank(w:i32, h:i32) -> Image {
-
+    pub fn blank(w: i32, h: i32) -> Image {
         let mut bytes = Vec::with_capacity((w * h) as usize * 4);
         for _ in 0..h {
             for _ in 0..w {
@@ -51,7 +47,7 @@ impl<'a> Image {
         Image {
             width: w,
             height: h,
-            bytes: bytes
+            bytes: bytes,
         }
     }
 
@@ -67,8 +63,9 @@ impl<'a> Image {
     /// assert_eq!(image.check_pixel(0, 0), true);
     /// assert_eq!(image.check_pixel(3, 3), false);
     /// ```
-    pub fn check_pixel(&self, x: i32, y:i32) -> bool {
-        if y < 0 || y > self.height { // TODO: check on actual vectors and not just width and height?
+    pub fn check_pixel(&self, x: i32, y: i32) -> bool {
+        if y < 0 || y > self.height {
+            // TODO: check on actual vectors and not just width and height?
             false
         } else {
             !(x < 0 || x > self.width)
@@ -111,13 +108,10 @@ impl<'a> Image {
     ///     let key = x as u8;
     ///     match r_bin.get(&key) {
     ///         Some(count) => {
-    ///
     ///             let height = (canvas_h as f32 * (*count as f32 / max_r_bin as f32)).round() as i32;
     ///
     ///             for y in canvas_h-height..canvas_h {
-    ///
     ///                 image.set_pixel(x, y, &Color::hex("#e22d11").unwrap()).unwrap();
-    ///
     ///             }
     ///         },
     ///         None => {}
@@ -145,9 +139,11 @@ impl<'a> Image {
         let mut a_bin: HashMap<u8, u32> = HashMap::new();
         for y in 0..h {
             for x in 0..w {
-                let pixel = try!(self.get_pixel(x, y));
+                let pixel = self.get_pixel(x, y)?;
 
-                let r_bin_c = r_bin.entry(pixel.r).or_insert(0); // Insert the key with a value of 0 if key does not exist yet. Then return the count (which is zero).
+                // Insert the key with a value of 0 if key does not exist yet. Then return the
+                // count (which is zero).
+                let r_bin_c = r_bin.entry(pixel.r).or_insert(0);
                 *r_bin_c += 1; // +1 to the count.
 
                 let g_bin_c = g_bin.entry(pixel.g).or_insert(0);
@@ -158,7 +154,6 @@ impl<'a> Image {
 
                 let a_bin_c = a_bin.entry(pixel.a).or_insert(0);
                 *a_bin_c += 1;
-
             }
         }
 
@@ -187,7 +182,7 @@ impl<'a> Image {
     /// assert_eq!(0, pixel.b);
     /// assert_eq!(255, pixel.a);
     /// ```
-    pub fn get_pixel(&self, x: i32, y:i32) -> RasterResult<Color> {
+    pub fn get_pixel(&self, x: i32, y: i32) -> RasterResult<Color> {
         let rgba = 4;
         let start = (y * self.width) + x;
         let start = start * rgba;
@@ -234,7 +229,7 @@ impl<'a> Image {
     /// assert_eq!(0, pixel.b);
     /// assert_eq!(255, pixel.a);
     /// ```
-    pub fn set_pixel(&mut self, x: i32, y:i32, color: &Color ) -> RasterResult<()> {
+    pub fn set_pixel(&mut self, x: i32, y: i32, color: &Color) -> RasterResult<()> {
         let rgba = 4; // length
         let start = (y * &self.width) + x;
         let start = start * rgba;
@@ -255,7 +250,12 @@ impl<'a> Image {
 }
 
 /// Holds histogram information.
-pub type Histogram = (HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>, HashMap<u8, u32>);
+pub type Histogram = (
+    HashMap<u8, u32>,
+    HashMap<u8, u32>,
+    HashMap<u8, u32>,
+    HashMap<u8, u32>,
+);
 
 /// Enumeration of supported raster formats.
 #[derive(Debug)]

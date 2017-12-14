@@ -5,7 +5,6 @@ use std::cmp;
 
 // from external crate
 
-
 // from local crate
 use error::RasterResult;
 use Image;
@@ -16,33 +15,36 @@ use Color;
 pub enum InterpolationMode {
     Bilinear,
     Bicubic,
-    Nearest
+    Nearest,
 }
 
 /// Resample an image into a new size using a given interpolation method.
-pub fn resample(mut src: &mut Image, w: i32, h: i32, interpolation: InterpolationMode) -> RasterResult<()> {
+pub fn resample(
+    src: &mut Image,
+    w: i32,
+    h: i32,
+    interpolation: InterpolationMode,
+) -> RasterResult<()> {
     match interpolation {
         InterpolationMode::Bilinear => bilinear(src, w, h),
         InterpolationMode::Bicubic => bilinear(src, w, h), // TODO: bicubic
-        InterpolationMode::Nearest => nearest(src, w, h)
+        InterpolationMode::Nearest => nearest(src, w, h),
     }
 }
 
 /// Interpolate using nearest neighbor.
-pub fn nearest(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
-
+pub fn nearest(src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
     let x_ratio: f64 = src.width as f64 / w as f64;
     let y_ratio: f64 = src.height as f64 / h as f64;
 
     let mut dest = Image::blank(w, h);
     for y in 0..h {
         for x in 0..w {
+            let px: i32 = (x as f64 * x_ratio).floor() as i32;
+            let py: i32 = (y as f64 * y_ratio).floor() as i32;
+            let pixel = src.get_pixel(px, py)?;
 
-            let px: i32 = ( x as f64 * x_ratio ).floor() as i32;
-            let py: i32 = ( y as f64 * y_ratio ).floor() as i32;
-            let pixel = try!(src.get_pixel(px, py));
-
-            try!(dest.set_pixel(x, y, &pixel));
+            dest.set_pixel(x, y, &pixel)?;
         }
     }
     src.width = dest.width;
@@ -53,16 +55,14 @@ pub fn nearest(mut src: &mut Image, w: i32, h: i32) -> RasterResult<()> {
 }
 
 /// Interpolate using linear function.
-pub fn bilinear(mut src: &mut Image, w2: i32, h2: i32) -> RasterResult<()> {
-    bilinear_width(src, w2)
-        .and_then(|_| bilinear_height(src, h2))
+pub fn bilinear(src: &mut Image, w2: i32, h2: i32) -> RasterResult<()> {
+    bilinear_width(src, w2).and_then(|_| bilinear_height(src, h2))
 }
 
 // Private functions
 
 /// Interpolate the width using linear function.
-fn bilinear_width(mut src: &mut Image, w2: i32) -> RasterResult<()> {
-
+fn bilinear_width(src: &mut Image, w2: i32) -> RasterResult<()> {
     let w1 = src.width;
     let h1 = src.height;
 
@@ -77,7 +77,6 @@ fn bilinear_width(mut src: &mut Image, w2: i32) -> RasterResult<()> {
 
     for y in 0..h1 {
         for x in x_start..x_end {
-
             let src_x = {
                 let src_x = x as f64 * x_ratio;
                 if src_x < 0.0 {
@@ -89,13 +88,13 @@ fn bilinear_width(mut src: &mut Image, w2: i32) -> RasterResult<()> {
 
             let src_x_int = (src_x).floor() as i32;
 
-            let src_x_int2 = cmp::min(src_x_int + 1, w1-1); // limit range within $w1-1
+            let src_x_int2 = cmp::min(src_x_int + 1, w1 - 1); // limit range within $w1-1
 
             // limit range from 0 - 1
             let t_x = src_x - src_x_int as f64;
 
-            let src_color1 = try!(src.get_pixel(src_x_int, y));
-            let src_color2 = try!(src.get_pixel(src_x_int2, y));
+            let src_color1 = src.get_pixel(src_x_int, y)?;
+            let src_color2 = src.get_pixel(src_x_int2, y)?;
 
             // red
             let red = _lerp(src_color1.r, src_color2.r, t_x);
@@ -109,8 +108,7 @@ fn bilinear_width(mut src: &mut Image, w2: i32) -> RasterResult<()> {
             // alpha
             let alpha = _lerp(src_color1.a, src_color2.a, t_x);
 
-            try!(dest.set_pixel(x+offset_x, y, &Color::rgba(red, green, blue, alpha)));
-
+            dest.set_pixel(x + offset_x, y, &Color::rgba(red, green, blue, alpha))?;
         }
     }
     src.width = dest.width;
@@ -121,8 +119,7 @@ fn bilinear_width(mut src: &mut Image, w2: i32) -> RasterResult<()> {
 }
 
 /// Interpolate the height using linear function.
-fn bilinear_height(mut src: &mut Image, h2: i32) -> RasterResult<()> {
-
+fn bilinear_height(src: &mut Image, h2: i32) -> RasterResult<()> {
     let w1 = src.width;
     let h1 = src.height;
 
@@ -137,7 +134,6 @@ fn bilinear_height(mut src: &mut Image, h2: i32) -> RasterResult<()> {
 
     for x in 0..w1 {
         for y in y_start..y_end {
-
             let src_y = {
                 let src_y = y as f64 * y_ratio;
                 if src_y < 0.0 {
@@ -149,13 +145,13 @@ fn bilinear_height(mut src: &mut Image, h2: i32) -> RasterResult<()> {
 
             let src_y_int = (src_y).floor() as i32;
 
-            let src_y_int2 = cmp::min(src_y_int + 1, h1-1); // limit range within $h1-1
+            let src_y_int2 = cmp::min(src_y_int + 1, h1 - 1); // limit range within $h1-1
 
             // limit range from 0 - 1
             let t_y = src_y - src_y_int as f64;
 
-            let src_color1 = try!(src.get_pixel(x, src_y_int));
-            let src_color2 = try!(src.get_pixel(x, src_y_int2));
+            let src_color1 = src.get_pixel(x, src_y_int)?;
+            let src_color2 = src.get_pixel(x, src_y_int2)?;
 
             // red
             let red = _lerp(src_color1.r, src_color2.r, t_y);
@@ -169,8 +165,7 @@ fn bilinear_height(mut src: &mut Image, h2: i32) -> RasterResult<()> {
             // alpha
             let alpha = _lerp(src_color1.a, src_color2.a, t_y);
 
-            try!(dest.set_pixel(x, y+offset_y, &Color::rgba(red, green, blue, alpha)));
-
+            dest.set_pixel(x, y + offset_y, &Color::rgba(red, green, blue, alpha))?;
         }
     }
     src.width = dest.width;
@@ -181,20 +176,16 @@ fn bilinear_height(mut src: &mut Image, h2: i32) -> RasterResult<()> {
 }
 
 // Simple linear function
-fn _lerp(a:u8, b:u8, t:f64) -> u8{
-
+fn _lerp(a: u8, b: u8, t: f64) -> u8 {
     let a = a as f64;
     let b = b as f64;
 
     (a + (t * (b - a))) as u8
-
 }
 
 // Linear function using difference
 fn _bilinear(a: u8, b: u8, c: u8, d: u8, x_diff: f64, y_diff: f64) -> u8 {
     // Y = A(1-w)(1-h) + B(w)(1-h) + C(h)(1-w) + Dwh
-    (
-        a as f64 * (1.0 - x_diff) * (1.0 - y_diff) + b as f64 * (x_diff) * (1.0 - y_diff) +
-        c as f64  * (y_diff) * (1.0 - x_diff) + d as f64  * (x_diff * y_diff)
-    ) as u8
+    (a as f64 * (1.0 - x_diff) * (1.0 - y_diff) + b as f64 * (x_diff) * (1.0 - y_diff)
+        + c as f64 * (y_diff) * (1.0 - x_diff) + d as f64 * (x_diff * y_diff)) as u8
 }

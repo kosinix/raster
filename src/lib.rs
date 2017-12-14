@@ -12,7 +12,8 @@
 //!
 //! raster = "x.x.x"
 //! ```
-//! Where x are version numbers of the [latest version](https://crates.io/crates/raster) of raster. Eg.: 0.1.0
+//! Where x are version numbers of the [latest version](https://crates.io/crates/raster) of
+//! raster. Eg.: 0.1.0
 //!
 //! Then add the raster crate in your main.rs:
 //!
@@ -72,7 +73,8 @@
 //!
 //! ## Rotating Images
 //!
-//! Images can be rotated both clockwise and counter-clockwise at any arbitrary angle with a custom background color.
+//! Images can be rotated both clockwise and counter-clockwise at any arbitrary angle with a
+//! custom background color.
 //!
 //! ![](https://kosinix.github.io/raster/out/test_transform_rotate_45.png)
 //! ![](https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png)
@@ -124,12 +126,12 @@ pub use interpolate::InterpolationMode;
 pub use position::PositionMode;
 pub use transform::TransformMode;
 
-
 /// Create an image from an image file.
 ///
 /// # Errors
 ///
-/// This function can return `RasterError::Io`, `RasterError::Decode`, or `RasterError::UnsupportedFormat` upon failure. 
+/// This function can return `RasterError::Io`, `RasterError::Decode`, or
+/// `RasterError::UnsupportedFormat` upon failure.
 /// See error module for more info.
 ///
 /// # Examples
@@ -140,20 +142,18 @@ pub use transform::TransformMode;
 /// println!("{:?}", image.bytes);
 /// ```
 pub fn open(image_file: &str) -> RasterResult<Image> {
-
     let path = Path::new(image_file);
-    let ext = path.extension().and_then(|s| s.to_str())
-                  .map_or("".to_string(), |s| s.to_ascii_lowercase());
+    let ext = path.extension()
+        .and_then(|s| s.to_str())
+        .map_or("".to_string(), |s| s.to_ascii_lowercase());
 
     // Open the file with basic error check
-    let file = try!(File::open(image_file));
+    let file = File::open(image_file)?;
 
     match &ext[..] {
-        "gif"  => {
-            Ok(try!(endec::decode_gif(&file)))
-        },
+        "gif" => Ok(endec::decode_gif(&file)?),
         "jpg" | "jpeg" => {
-            let src = try!(piston_image::open(image_file));
+            let src = piston_image::open(image_file)?;
             let (w, h) = src.dimensions();
             let mut bytes = Vec::with_capacity((w * h) as usize * 4);
             for y in 0..h {
@@ -162,26 +162,24 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
                     bytes.extend_from_slice(&p.data[0..4]);
                 }
             }
-            Ok(Image{
+            Ok(Image {
                 width: w as i32,
                 height: h as i32,
-                bytes: bytes
+                bytes: bytes,
             })
-        },
-        "png"  => {
-            Ok(try!(endec::decode_png(&file)))
-        },
-        _ => {
-            Err(RasterError::UnsupportedFormat(ext))
         }
-    } 
+        "png" => Ok(endec::decode_png(&file)?),
+        _ => Err(RasterError::UnsupportedFormat(ext)),
+    }
 }
 
-/// Save an image to an image file. The image type is detected from the file extension of the file name.
+/// Save an image to an image file. The image type is detected from the file extension of the file
+/// name.
 ///
 /// # Errors
 ///
-/// This function can return `RasterError::Io`, `RasterError::Encode`, or `RasterError::UnsupportedFormat` upon failure. 
+/// This function can return `RasterError::Io`, `RasterError::Encode`, or
+/// `RasterError::UnsupportedFormat` upon failure.
 /// See error module for more info.
 ///
 /// # Examples
@@ -192,29 +190,23 @@ pub fn open(image_file: &str) -> RasterResult<Image> {
 /// raster::save(&image, "tests/out/test.png").unwrap();
 /// ```
 pub fn save(image: &Image, out: &str) -> RasterResult<()> {
-
     let path = Path::new(out);
-    let ext = path.extension().and_then(|s| s.to_str())
-                  .map_or("".to_string(), |s| s.to_ascii_lowercase());
+    let ext = path.extension()
+        .and_then(|s| s.to_str())
+        .map_or("".to_string(), |s| s.to_ascii_lowercase());
 
     match &ext[..] {
-        "gif"  => {
-            Ok(try!(endec::encode_gif(&image, &path)))
-        },
+        "gif" => Ok(endec::encode_gif(&image, &path)?),
         "jpg" | "jpeg" => {
             piston_image::save_buffer(
                 &path,
                 &image.bytes,
                 image.width as u32,
                 image.height as u32,
-                piston_image::RGBA(8)
+                piston_image::RGBA(8),
             ).map_err(|_| RasterError::Encode(ImageFormat::Jpeg, "Format".to_string()))
-        },
-        "png"  => {
-            Ok(try!(endec::encode_png(&image, &path)))
-        },
-        _ => {
-            Err(RasterError::UnsupportedFormat(ext))
         }
-    } 
+        "png" => Ok(endec::encode_png(&image, &path)?),
+        _ => Err(RasterError::UnsupportedFormat(ext)),
+    }
 }

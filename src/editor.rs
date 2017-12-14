@@ -5,7 +5,6 @@ use std::cmp;
 
 // from external crate
 
-
 // from local crate
 use error::{RasterError, RasterResult};
 use blend::{self, BlendMode};
@@ -22,7 +21,8 @@ use transform;
 ///
 /// # Errors
 ///
-/// If image2 falls outside the canvas area, then this fails with `RasterError::BlendingImageFallsOutsideCanvas`.
+/// If image2 falls outside the canvas area, then this fails with
+/// `RasterError::BlendingImageFallsOutsideCanvas`.
 ///
 /// # Examples
 /// ```
@@ -32,7 +32,8 @@ use transform;
 /// let image1 = raster::open("tests/in/sample.jpg").unwrap();
 /// let image2 = raster::open("tests/in/watermark.png").unwrap();
 ///
-/// // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the center, with 0 x and 0 y offsets. whew
+/// // Blend image2 on top of image1 using normal mode, opacity of 1.0 (100%), with image2 at the
+/// // center, with 0 x and 0 y offsets. whew
 /// let normal = editor::blend(&image1, &image2, BlendMode::Normal, 1.0, PositionMode::Center, 0, 0).unwrap();
 ///
 /// // All the other blend modes
@@ -83,8 +84,15 @@ use transform;
 ///
 /// ![](https://kosinix.github.io/raster/out/test_blend_screen.png)
 ///
-pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<Image> {
-
+pub fn blend(
+    image1: &Image,
+    image2: &Image,
+    blend_mode: BlendMode,
+    opacity: f32,
+    position: PositionMode,
+    offset_x: i32,
+    offset_y: i32,
+) -> RasterResult<Image> {
     let opacity = if opacity > 1.0 {
         1.0
     } else if opacity < 0.0 {
@@ -97,17 +105,14 @@ pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32
     let positioner = Position::new(position, offset_x, offset_y);
 
     // Position is for image2, image1 is canvas.
-    let (offset_x, offset_y) = try!(positioner.get_x_y( image1.width, image1.height, image2.width, image2.height));
+    let (offset_x, offset_y) =
+        positioner.get_x_y(image1.width, image1.height, image2.width, image2.height)?;
 
     let (w1, h1) = (image1.width, image1.height);
     let (w2, h2) = (image2.width, image2.height);
 
     // Check if it overlaps
-    if (offset_x >= w1 ) ||
-        (offset_x + w2 <= 0) ||
-        (offset_y >= h1) ||
-        (offset_y + h2 <= 0) {
-
+    if (offset_x >= w1) || (offset_x + w2 <= 0) || (offset_y >= h1) || (offset_y + h2 <= 0) {
         return Err(RasterError::BlendingImageFallsOutsideCanvas);
     }
 
@@ -122,7 +127,7 @@ pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32
     // Loop end X
     let mut loop_end_x = w2;
     let canvas_end_x = offset_x + w2;
-    if canvas_end_x > w1{
+    if canvas_end_x > w1 {
         let diff = canvas_end_x - w1;
         loop_end_x -= diff;
     }
@@ -144,22 +149,69 @@ pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32
     }
 
     match blend_mode {
-        BlendMode::Normal =>
-            blend::normal(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
-        BlendMode::Difference =>
-            blend::difference(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
-        BlendMode::Multiply =>
-            blend::multiply(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
-        BlendMode::Overlay =>
-            blend::overlay(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
-        BlendMode::Screen =>
-            blend::screen(image1, image2, loop_start_y, loop_end_y, loop_start_x, loop_end_x, offset_x, offset_y, opacity),
+        BlendMode::Normal => blend::normal(
+            image1,
+            image2,
+            loop_start_y,
+            loop_end_y,
+            loop_start_x,
+            loop_end_x,
+            offset_x,
+            offset_y,
+            opacity,
+        ),
+        BlendMode::Difference => blend::difference(
+            image1,
+            image2,
+            loop_start_y,
+            loop_end_y,
+            loop_start_x,
+            loop_end_x,
+            offset_x,
+            offset_y,
+            opacity,
+        ),
+        BlendMode::Multiply => blend::multiply(
+            image1,
+            image2,
+            loop_start_y,
+            loop_end_y,
+            loop_start_x,
+            loop_end_x,
+            offset_x,
+            offset_y,
+            opacity,
+        ),
+        BlendMode::Overlay => blend::overlay(
+            image1,
+            image2,
+            loop_start_y,
+            loop_end_y,
+            loop_start_x,
+            loop_end_x,
+            offset_x,
+            offset_y,
+            opacity,
+        ),
+        BlendMode::Screen => blend::screen(
+            image1,
+            image2,
+            loop_start_y,
+            loop_end_y,
+            loop_start_x,
+            loop_end_x,
+            offset_x,
+            offset_y,
+            opacity,
+        ),
     }
 }
 
 /// Crop the image to the given dimension and position.
 ///
-/// The `offset_x` and `offset_y` are added to the final position. Can also be negative offsets. Offsets can be used to nudge the final position. Or you can set the position to `PositionMode::TopLeft` and use the offsets as a normal screen x and y coordinates.
+/// The `offset_x` and `offset_y` are added to the final position. Can also be negative offsets.
+/// Offsets can be used to nudge the final position. Or you can set the position to
+/// `PositionMode::TopLeft` and use the offsets as a normal screen x and y coordinates.
 ///
 /// # Examples
 ///
@@ -217,15 +269,21 @@ pub fn blend(image1: &Image, image2: &Image, blend_mode: BlendMode, opacity: f32
 /// ### Output
 /// The cropped images arranged in a grid, showing how you can easily set the crop position.
 ///
-/// ![](https://kosinix.github.io/raster/out/test_crop_top_left.jpg) ![](https://kosinix.github.io/raster/out/test_crop_top_center.jpg) ![](https://kosinix.github.io/raster/out/test_crop_top_right.jpg)   
-/// ![](https://kosinix.github.io/raster/out/test_crop_center_left.jpg) ![](https://kosinix.github.io/raster/out/test_crop_center.jpg) ![](https://kosinix.github.io/raster/out/test_crop_center_right.jpg)   
+/// ![](https://kosinix.github.io/raster/out/test_crop_top_left.jpg) ![](https://kosinix.github.io/raster/out/test_crop_top_center.jpg) ![](https://kosinix.github.io/raster/out/test_crop_top_right.jpg)
+/// ![](https://kosinix.github.io/raster/out/test_crop_center_left.jpg) ![](https://kosinix.github.io/raster/out/test_crop_center.jpg) ![](https://kosinix.github.io/raster/out/test_crop_center_right.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_crop_bottom_left.jpg) ![](https://kosinix.github.io/raster/out/test_crop_bottom_center.jpg) ![](https://kosinix.github.io/raster/out/test_crop_bottom_right.jpg)
-pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: PositionMode, offset_x: i32, offset_y: i32) -> RasterResult<()> {
-
+pub fn crop(
+    src: &mut Image,
+    crop_width: i32,
+    crop_height: i32,
+    position: PositionMode,
+    offset_x: i32,
+    offset_y: i32,
+) -> RasterResult<()> {
     // Turn into positioner struct
     let positioner = Position::new(position, offset_x, offset_y);
 
-    let (offset_x, offset_y) = try!(positioner.get_x_y( src.width, src.height, crop_width, crop_height));
+    let (offset_x, offset_y) = positioner.get_x_y(src.width, src.height, crop_width, crop_height)?;
     let offset_x = cmp::max(0, offset_x);
     let offset_y = cmp::max(0, offset_y);
 
@@ -239,12 +297,12 @@ pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: Po
         cmp::min(width2, src.width)
     };
 
-    let mut dest = Image::blank(width2-offset_x, height2-offset_y);
+    let mut dest = Image::blank(width2 - offset_x, height2 - offset_y);
 
     for y in 0..dest.height {
         for x in 0..dest.width {
-            let pixel = try!(src.get_pixel(offset_x + x, offset_y + y));
-            try!(dest.set_pixel(x, y, &Color::rgba(pixel.r, pixel.g, pixel.b, pixel.a)));
+            let pixel = src.get_pixel(offset_x + x, offset_y + y)?;
+            dest.set_pixel(x, y, &Color::rgba(pixel.r, pixel.g, pixel.b, pixel.a))?;
         }
     }
     src.width = dest.width;
@@ -273,11 +331,10 @@ pub fn crop(mut src: &mut Image, crop_width: i32, crop_height: i32, position: Po
 /// ```
 ///
 ///
-pub fn fill(mut src: &mut Image, color: Color) -> RasterResult<()> {
-
+pub fn fill(src: &mut Image, color: Color) -> RasterResult<()> {
     for y in 0..src.height {
         for x in 0..src.width {
-            try!(src.set_pixel(x, y, &color));
+            src.set_pixel(x, y, &color)?;
         }
     }
 
@@ -296,7 +353,7 @@ pub enum ResizeMode {
     /// Resize an image to fit within the given width and height.
     Fit,
     /// Resize image to fill all the space in the given dimension. Excess parts are cropped.
-    Fill
+    Fill,
 }
 
 /// Resize an image to a given width, height and mode.
@@ -368,7 +425,7 @@ pub enum ResizeMode {
 ///
 /// The images will have a width of 200. The height is auto-calculated.
 ///
-/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_1.jpg)  
+/// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_1.jpg)
 /// ![](https://kosinix.github.io/raster/out/test_resize_exact_width_2.jpg)
 ///
 /// ### Resize to Exact Height
@@ -411,12 +468,12 @@ pub enum ResizeMode {
 ///
 /// ![](https://kosinix.github.io/raster/out/test_resize_exact_1.jpg) ![](https://kosinix.github.io/raster/out/test_resize_exact_2.jpg)
 ///
-pub fn resize(mut src: &mut Image, w: i32, h: i32, mode: ResizeMode) -> RasterResult<()> {
+pub fn resize(src: &mut Image, w: i32, h: i32, mode: ResizeMode) -> RasterResult<()> {
     match mode {
         ResizeMode::Exact => transform::resize_exact(src, w, h),
         ResizeMode::ExactWidth => transform::resize_exact_width(src, w),
         ResizeMode::ExactHeight => transform::resize_exact_height(src, h),
         ResizeMode::Fit => transform::resize_fit(src, w, h),
-        ResizeMode::Fill => transform::resize_fill(src, w, h)
+        ResizeMode::Fill => transform::resize_fill(src, w, h),
     }
 }
