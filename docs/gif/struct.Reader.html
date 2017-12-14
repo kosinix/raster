@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'>Struct Reader</p><div class="block items"><ul><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='index.html'>gif</a></p><script>window.sidebarCurrent = {name: 'Reader', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Reader</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.next_frame_info">next_frame_info</a><a href="#method.read_next_frame">read_next_frame</a><a href="#method.read_into_buffer">read_into_buffer</a><a href="#method.fill_buffer">fill_buffer</a><a href="#method.buffer_size">buffer_size</a><a href="#method.line_length">line_length</a><a href="#method.palette">palette</a><a href="#method.global_palette">global_palette</a><a href="#method.width">width</a><a href="#method.height">height</a><a href="#method.bg_color">bg_color</a></div></div><p class='location'><a href='index.html'>gif</a></p><script>window.sidebarCurrent = {name: 'Reader', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -62,7 +62,7 @@
 
 <p>Do not call <code>Self::next_frame_info</code> beforehand.
 Deinterlaces the result.</p>
-</div><h4 id='method.read_into_buffer' class="method"><span id='read_into_buffer.v' class='invisible'><code>pub fn <a href='#method.read_into_buffer' class='fnname'>read_into_buffer</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../gif/enum.DecodingError.html" title="enum gif::DecodingError">DecodingError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gif/reader/mod.rs.html#235-251' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.read_into_buffer' class="method"><span id='read_into_buffer.v' class='invisible'><code>pub fn <a href='#method.read_into_buffer' class='fnname'>read_into_buffer</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="enum" href="../gif/enum.DecodingError.html" title="enum gif::DecodingError">DecodingError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gif/reader/mod.rs.html#235-251' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Reads the data of the current frame into a pre-allocated buffer.</p>
 
 <p><code>Self::next_frame_info</code> needs to be called beforehand.
@@ -105,13 +105,15 @@ buffer could be filled completely. Should not be called after <code>false</code>
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

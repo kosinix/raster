@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'>Struct Reader</p><div class="block items"><ul><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='index.html'>png</a></p><script>window.sidebarCurrent = {name: 'Reader', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Reader</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.info">info</a><a href="#method.next_frame">next_frame</a><a href="#method.next_row">next_row</a><a href="#method.next_interlaced_row">next_interlaced_row</a><a href="#method.output_color_type">output_color_type</a><a href="#method.output_buffer_size">output_buffer_size</a><a href="#method.output_line_size">output_line_size</a></div></div><p class='location'><a href='index.html'>png</a></p><script>window.sidebarCurrent = {name: 'Reader', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -58,7 +58,7 @@
                     </h2>
                 <h3 id='impl' class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a>&gt; <a class="struct" href="../png/struct.Reader.html" title="struct png::Reader">Reader</a>&lt;R&gt;</code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/decoder/mod.rs.html#154-447' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.info' class="method"><span id='info.v' class='invisible'><code>pub fn <a href='#method.info' class='fnname'>info</a>(&amp;self) -&gt; &amp;<a class="struct" href="../png/struct.Info.html" title="struct png::Info">Info</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/decoder/mod.rs.html#207-209' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.next_frame' class="method"><span id='next_frame.v' class='invisible'><code>pub fn <a href='#method.next_frame' class='fnname'>next_frame</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../png/enum.DecodingError.html" title="enum png::DecodingError">DecodingError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/decoder/mod.rs.html#212-234' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.next_frame' class="method"><span id='next_frame.v' class='invisible'><code>pub fn <a href='#method.next_frame' class='fnname'>next_frame</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="enum" href="../png/enum.DecodingError.html" title="enum png::DecodingError">DecodingError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/decoder/mod.rs.html#212-234' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Decodes the next frame into <code>buf</code></p>
 </div><h4 id='method.next_row' class="method"><span id='next_row.v' class='invisible'><code>pub fn <a href='#method.next_row' class='fnname'>next_row</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>&gt;, <a class="enum" href="../png/enum.DecodingError.html" title="enum png::DecodingError">DecodingError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/png/decoder/mod.rs.html#237-239' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns the next processed row of the image</p>
@@ -89,13 +89,15 @@ that is decoded using the given input transformations.</p>
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

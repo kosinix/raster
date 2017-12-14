@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'>Enum DynamicImage</p><div class="block items"><ul><li><a href="#variants">Variants</a></li><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>image</a></p><script>window.sidebarCurrent = {name: 'DynamicImage', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Enum DynamicImage</p><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.ImageLuma8">ImageLuma8</a><a href="#variant.ImageLumaA8">ImageLumaA8</a><a href="#variant.ImageRgb8">ImageRgb8</a><a href="#variant.ImageRgba8">ImageRgba8</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new_luma8">new_luma8</a><a href="#method.new_luma_a8">new_luma_a8</a><a href="#method.new_rgb8">new_rgb8</a><a href="#method.new_rgba8">new_rgba8</a><a href="#method.to_rgb">to_rgb</a><a href="#method.to_rgba">to_rgba</a><a href="#method.to_luma">to_luma</a><a href="#method.to_luma_alpha">to_luma_alpha</a><a href="#method.crop">crop</a><a href="#method.as_rgb8">as_rgb8</a><a href="#method.as_mut_rgb8">as_mut_rgb8</a><a href="#method.as_rgba8">as_rgba8</a><a href="#method.as_mut_rgba8">as_mut_rgba8</a><a href="#method.as_luma8">as_luma8</a><a href="#method.as_mut_luma8">as_mut_luma8</a><a href="#method.as_luma_alpha8">as_luma_alpha8</a><a href="#method.as_mut_luma_alpha8">as_mut_luma_alpha8</a><a href="#method.raw_pixels">raw_pixels</a><a href="#method.color">color</a><a href="#method.grayscale">grayscale</a><a href="#method.invert">invert</a><a href="#method.resize">resize</a><a href="#method.resize_exact">resize_exact</a><a href="#method.blur">blur</a><a href="#method.unsharpen">unsharpen</a><a href="#method.filter3x3">filter3x3</a><a href="#method.adjust_contrast">adjust_contrast</a><a href="#method.brighten">brighten</a><a href="#method.huerotate">huerotate</a><a href="#method.flipv">flipv</a><a href="#method.fliph">fliph</a><a href="#method.rotate90">rotate90</a><a href="#method.rotate180">rotate180</a><a href="#method.rotate270">rotate270</a><a href="#method.save">save</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-GenericImage">GenericImage</a></div></div><p class='location'><a href='index.html'>image</a></p><script>window.sidebarCurrent = {name: 'DynamicImage', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -153,7 +153,7 @@ just like the css webkit filter hue-rotate(180)</p>
 <div class='docblock'><p>Rotate this image 180 degrees clockwise.</p>
 </div><h4 id='method.rotate270' class="method"><span id='rotate270.v' class='invisible'><code>pub fn <a href='#method.rotate270' class='fnname'>rotate270</a>(&amp;self) -&gt; <a class="enum" href="../image/enum.DynamicImage.html" title="enum image::DynamicImage">DynamicImage</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/image/dynimage.rs.html#356-358' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Rotate this image 270 degrees clockwise.</p>
-</div><h4 id='method.save' class="method"><span id='save.v' class='invisible'><code>pub fn <a href='#method.save' class='fnname'>save</a>&lt;W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt;(&amp;self, w: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W, format: <a class="enum" href="../image/enum.ImageFormat.html" title="enum image::ImageFormat">ImageFormat</a>) -&gt; <a class="type" href="../image/type.ImageResult.html" title="type image::ImageResult">ImageResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/image/dynimage.rs.html#361-421' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.save' class="method"><span id='save.v' class='invisible'><code>pub fn <a href='#method.save' class='fnname'>save</a>&lt;W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt;(&amp;self, w: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W, format: <a class="enum" href="../image/enum.ImageFormat.html" title="enum image::ImageFormat">ImageFormat</a>) -&gt; <a class="type" href="../image/type.ImageResult.html" title="type image::ImageResult">ImageResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/image/dynimage.rs.html#361-421' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Encode this image and write it to <code>w</code></p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
@@ -214,13 +214,15 @@ just like the css webkit filter hue-rotate(180)</p>
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'>Trait ParallelSliceMut</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#provided-methods">Provided Methods</a></li><li><a href="#foreign-impls">Implementations on Foreign Types</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>rayon</a>::<wbr><a href='index.html'>slice</a></p><script>window.sidebarCurrent = {name: 'ParallelSliceMut', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait ParallelSliceMut</p><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.as_parallel_slice_mut">as_parallel_slice_mut</a></div><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.par_split_mut">par_split_mut</a><a href="#method.par_chunks_mut">par_chunks_mut</a><a href="#method.par_sort">par_sort</a><a href="#method.par_sort_by">par_sort_by</a><a href="#method.par_sort_by_key">par_sort_by_key</a><a href="#method.par_sort_unstable">par_sort_unstable</a><a href="#method.par_sort_unstable_by">par_sort_unstable_by</a><a href="#method.par_sort_unstable_by_key">par_sort_unstable_by_key</a></div><a class="sidebar-title" href="#foreign-impls">Implementations on Foreign Types</a><div class="sidebar-links"><a href="#impl-ParallelSliceMut%3CT%3E">[T]</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='../index.html'>rayon</a>::<wbr><a href='index.html'>slice</a></p><script>window.sidebarCurrent = {name: 'ParallelSliceMut', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -201,10 +201,10 @@ slice consists of several concatenated sorted sequences.</p>
 calls. The partitioning phase is sequential, but the two recursive calls are performed in
 parallel.</p>
 </div></div>
-                <h2 id='foreign-impls' class='section-header'>
+                <h2 id='foreign-impls' class='small-section-header'>
                   Implementations on Foreign Types<a href='#foreign-impls' class='anchor'></a>
                 </h2>
-            <h3 id='impl-ParallelSliceMut&lt;T&gt;' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>&gt; <a class="trait" href="../../rayon/slice/trait.ParallelSliceMut.html" title="trait rayon::slice::ParallelSliceMut">ParallelSliceMut</a>&lt;T&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">[</a>T<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code><a href='#impl-ParallelSliceMut&lt;T&gt;' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rayon/slice/mod.rs.html#261-266' title='goto source code'>[src]</a></span></h3>
+            <h3 id='impl-ParallelSliceMut%3CT%3E' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>&gt; <a class="trait" href="../../rayon/slice/trait.ParallelSliceMut.html" title="trait rayon::slice::ParallelSliceMut">ParallelSliceMut</a>&lt;T&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">[</a>T<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code><a href='#impl-ParallelSliceMut%3CT%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rayon/slice/mod.rs.html#261-266' title='goto source code'>[src]</a></span></h3>
 <span class='docblock autohide'><div class='impl-items'><h4 id='method.as_parallel_slice_mut' class="method"><span id='as_parallel_slice_mut.v-1' class='invisible'><code>fn <a href='#method.as_parallel_slice_mut' class='fnname'>as_parallel_slice_mut</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [T]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rayon/slice/mod.rs.html#263-265' title='goto source code'>[src]</a></span></h4>
 <h4 id='method.par_split_mut-1' class="method"><span id='par_split_mut.v-1' class='invisible'><code>fn <a href='../../rayon/slice/trait.ParallelSliceMut.html#method.par_split_mut' class='fnname'>par_split_mut</a>&lt;P&gt;(&amp;mut self, separator: P) -&gt; <a class="struct" href="../../rayon/slice/struct.SplitMut.html" title="struct rayon::slice::SplitMut">SplitMut</a>&lt;T, P&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;P: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rayon/slice/mod.rs.html#70-77' title='goto source code'>[src]</a></span></h4>
 <h4 id='method.par_chunks_mut-1' class="method"><span id='par_chunks_mut.v-1' class='invisible'><code>fn <a href='../../rayon/slice/trait.ParallelSliceMut.html#method.par_chunks_mut' class='fnname'>par_chunks_mut</a>(&amp;mut self, chunk_size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../../rayon/slice/struct.ChunksMut.html" title="struct rayon::slice::ChunksMut">ChunksMut</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rayon/slice/mod.rs.html#81-86' title='goto source code'>[src]</a></span></h4>
@@ -238,13 +238,15 @@ parallel.</p>
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
