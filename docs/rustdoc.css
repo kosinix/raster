@@ -474,11 +474,30 @@ h4 > code, h3 > code, .invisible > code {
 	margin-bottom: 15px;
 }
 
+.content .impl-items .method, .content .impl-items > .type, .impl-items > .associatedconstant {
+	margin-left: 20px;
+}
 .content .impl-items .docblock, .content .impl-items .stability {
 	margin-bottom: .6em;
 }
-.content .impl-items .method, .content .impl-items > .type, .impl-items > .associatedconstant {
+.content .docblock > .impl-items {
 	margin-left: 20px;
+	margin-top: -34px;
+}
+.content .docblock > .impl-items > h4 {
+	border-bottom: 0;
+}
+.content .docblock >.impl-items .table-display {
+	margin: 0;
+}
+.content .docblock >.impl-items table td {
+	padding: 0;
+}
+.toggle-wrapper.marg-left > .collapse-toggle {
+	left: -24px;
+}
+.content .docblock > .impl-items .table-display, .impl-items table td {
+	border: none;
 }
 
 .content .stability code {
@@ -533,20 +552,32 @@ a {
 	left: -5px;
 }
 .small-section-header > .anchor {
+	left: -20px;
+}
+.small-section-header > .anchor:not(.field) {
 	left: -28px;
 }
 .anchor:before {
 	content: '\2002\00a7\2002';
 }
 
-.docblock a:hover, .docblock-short a:hover, .stability a {
+.docblock a:not(.srclink):not(.test-arrow):hover,
+.docblock-short a:not(.srclink):not(.test-arrow):hover, .stability a {
 	text-decoration: underline;
 }
 
 .block a.current.crate { font-weight: 500; }
 
+.search-container {
+	position: relative;
+}
+.search-container > .top-button {
+	position: absolute;
+	right: 0;
+	top: 10px;
+}
 .search-input {
-	width: 100%;
+	width: calc(100% - 34px);
 	/* Override Normalize.css: we have margins and do
 	 not want to overflow - the `moz` attribute is necessary
 	 until Firefox 29, too early to drop at this point */
@@ -594,6 +625,11 @@ a {
 
 tr.result span.primitive::after {
 	content: ' (primitive type)';
+	font-style: italic;
+}
+
+tr.result span.keyword::after {
+	content: ' (keyword)';
 	font-style: italic;
 }
 
@@ -741,7 +777,7 @@ h3 > .collapse-toggle, h4 > .collapse-toggle {
 
 .toggle-wrapper {
 	position: relative;
-	margin-top: 5px;
+	margin-top: 0;
 }
 
 .toggle-wrapper.collapsed {
@@ -824,10 +860,19 @@ span.since {
 
 .attributes {
 	display: block;
-	margin: 0px 0px 0px 30px !important;
+	margin-top: 0px !important;
+	margin-right: 0px;
+	margin-bottom: 0px !important;
+	margin-left: 30px;
 }
 .toggle-attributes.collapsed {
-	margin-bottom: 5px;
+	margin-bottom: 0;
+}
+.impl-items > .toggle-attributes {
+	margin-left: 20px;
+}
+.impl-items .attributes {
+	font-weight: 500;
 }
 
 :target > code {
@@ -999,6 +1044,8 @@ span.since {
 
 pre.rust {
 	position: relative;
+	tab-width: 4;
+	-moz-tab-width: 4;
 }
 
 .search-failed {
@@ -1221,7 +1268,14 @@ kbd {
 	outline: none;
 }
 
-#theme-picker {
+#settings-menu {
+	position: absolute;
+	right: 0;
+	top: 10px;
+	outline: none;
+}
+
+#theme-picker, #settings-menu {
 	padding: 4px;
 	width: 27px;
 	height: 29px;
@@ -1290,4 +1344,22 @@ kbd {
 	position: relative;
 	font-size: 19px;
 	display: block;
+}
+
+#main > ul {
+	padding-left: 10px;
+}
+#main > ul > li {
+	list-style: none;
+}
+#all-types {
+	text-align: center;
+	border: 1px solid;
+	margin: 0 10px;
+	margin-bottom: 10px;
+	display: block;
+	border-radius: 7px;
+}
+#all-types > p {
+	margin: 5px 0;
 }
