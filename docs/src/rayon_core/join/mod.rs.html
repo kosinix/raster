@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-core-1.3.0/src/join/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-core-1.4.0/src/join/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -177,6 +189,49 @@
 <span id="132">132</span>
 <span id="133">133</span>
 <span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">latch</span>::{<span class="ident">LatchProbe</span>, <span class="ident">SpinLatch</span>};
 <span class="kw">use</span> <span class="ident">log</span>::<span class="ident">Event</span>::<span class="kw-2">*</span>;
@@ -190,8 +245,8 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span>;
 
-<span class="doccomment">/// The `join` function takes two closures and *potentially* runs them</span>
-<span class="doccomment">/// in parallel. It returns a pair of the results from those closures.</span>
+<span class="doccomment">/// Takes two closures and *potentially* runs them in parallel. It</span>
+<span class="doccomment">/// returns a pair of the results from those closures.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Conceptually, calling `join()` is similar to spawning two threads,</span>
 <span class="doccomment">/// one executing each of the two closures. However, the</span>
@@ -212,7 +267,49 @@
 <span class="doccomment">/// while waiting for the thief to fully execute closure B. (This is the</span>
 <span class="doccomment">/// typical work-stealing strategy).</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ### Warning about blocking I/O</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This example uses join to perform a quick-sort (note this is not a</span>
+<span class="doccomment">/// particularly optimized implementation: if you **actually** want to</span>
+<span class="doccomment">/// sort for real, you should prefer [the `par_sort` method] offered</span>
+<span class="doccomment">/// by Rayon).</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [the `par_sort` method]: ../slice/trait.ParallelSliceMut.html#method.par_sort</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust</span>
+<span class="doccomment">/// # use rayon_core as rayon;</span>
+<span class="doccomment">/// let mut v = vec![5, 1, 8, 22, 0, 44];</span>
+<span class="doccomment">/// quick_sort(&amp;mut v);</span>
+<span class="doccomment">/// assert_eq!(v, vec![0, 1, 5, 8, 22, 44]);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// fn quick_sort&lt;T:PartialOrd+Send&gt;(v: &amp;mut [T]) {</span>
+<span class="doccomment">///    if v.len() &gt; 1 {</span>
+<span class="doccomment">///        let mid = partition(v);</span>
+<span class="doccomment">///        let (lo, hi) = v.split_at_mut(mid);</span>
+<span class="doccomment">///        rayon::join(|| quick_sort(lo),</span>
+<span class="doccomment">///                    || quick_sort(hi));</span>
+<span class="doccomment">///    }</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Partition rearranges all items `&lt;=` to the pivot</span>
+<span class="doccomment">/// // item (arbitrary selected to be the last item in the slice)</span>
+<span class="doccomment">/// // to the first half of the slice. It then returns the</span>
+<span class="doccomment">/// // &quot;dividing point&quot; where the pivot is placed.</span>
+<span class="doccomment">/// fn partition&lt;T:PartialOrd+Send&gt;(v: &amp;mut [T]) -&gt; usize {</span>
+<span class="doccomment">///     let pivot = v.len() - 1;</span>
+<span class="doccomment">///     let mut i = 0;</span>
+<span class="doccomment">///     for j in 0..pivot {</span>
+<span class="doccomment">///         if v[j] &lt;= v[pivot] {</span>
+<span class="doccomment">///             v.swap(i, j);</span>
+<span class="doccomment">///             i += 1;</span>
+<span class="doccomment">///         }</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">///     v.swap(i, pivot);</span>
+<span class="doccomment">///     i</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Warning about blocking I/O</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The assumption is that the closures given to `join()` are</span>
 <span class="doccomment">/// CPU-bound tasks that do not perform I/O or other blocking</span>
@@ -222,7 +319,7 @@
 <span class="doccomment">/// on another (for example, using a channel), that could lead to a</span>
 <span class="doccomment">/// deadlock.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ### Panics</span>
+<span class="doccomment">/// # Panics</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// No matter what happens, both closures will always be executed.  If</span>
 <span class="doccomment">/// a single closure panics, whether it be the first or second</span>
@@ -235,15 +332,16 @@
           <span class="ident">RA</span>: <span class="ident">Send</span>,
           <span class="ident">RB</span>: <span class="ident">Send</span>
 {
-    <span class="ident">join_context</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">oper_a</span>(), <span class="op">|</span>_<span class="op">|</span> <span class="ident">oper_b</span>())
+    <span class="ident">join_context</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">oper_a</span>(), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">oper_b</span>())
 }
 
-<span class="doccomment">/// The `join_context` function is identical to `join`, except the closures</span>
-<span class="doccomment">/// have a parameter that provides context for the way the closure has been</span>
-<span class="doccomment">/// called, especially indicating whether they&#39;re executing on a different</span>
-<span class="doccomment">/// thread than where `join_context` was called.  This will occur if the second</span>
-<span class="doccomment">/// job is stolen by a different thread, or if `join_context` was called from</span>
-<span class="doccomment">/// outside the thread pool to begin with.</span>
+<span class="doccomment">/// Identical to `join`, except that the closures have a parameter</span>
+<span class="doccomment">/// that provides context for the way the closure has been called,</span>
+<span class="doccomment">/// especially indicating whether they&#39;re executing on a different</span>
+<span class="doccomment">/// thread than where `join_context` was called.  This will occur if</span>
+<span class="doccomment">/// the second job is stolen by a different thread, or if</span>
+<span class="doccomment">/// `join_context` was called from outside the thread pool to begin</span>
+<span class="doccomment">/// with.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">join_context</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">RA</span>, <span class="ident">RB</span><span class="op">&gt;</span>(<span class="ident">oper_a</span>: <span class="ident">A</span>, <span class="ident">oper_b</span>: <span class="ident">B</span>) <span class="op">-&gt;</span> (<span class="ident">RA</span>, <span class="ident">RB</span>)
     <span class="kw">where</span> <span class="ident">A</span>: <span class="ident">FnOnce</span>(<span class="ident">FnContext</span>) <span class="op">-&gt;</span> <span class="ident">RA</span> <span class="op">+</span> <span class="ident">Send</span>,
           <span class="ident">B</span>: <span class="ident">FnOnce</span>(<span class="ident">FnContext</span>) <span class="op">-&gt;</span> <span class="ident">RB</span> <span class="op">+</span> <span class="ident">Send</span>,
@@ -326,20 +424,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

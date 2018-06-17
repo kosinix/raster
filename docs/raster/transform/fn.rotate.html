@@ -10,8 +10,12 @@
     <title>raster::transform::rotate - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='../index.html'>raster</a>::<wbr><a href='index.html'>transform</a></p><script>window.sidebarCurrent = {name: 'rotate', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <div class="sidebar-elems"><p class='location'><a href='../index.html'>raster</a>::<wbr><a href='index.html'>transform</a></p><script>window.sidebarCurrent = {name: 'rotate', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -43,21 +55,16 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>raster</a>::<wbr><a href='index.html'>transform</a>::<wbr><a class="fn" href=''>rotate</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>raster</a>::<wbr><a href='index.html'>transform</a>::<wbr><a class="fn" href=''>rotate</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/raster/transform.rs.html#139-194' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn rotate(src: &amp;mut <a class="struct" href="../../raster/struct.Image.html" title="struct raster::Image">Image</a>, degree: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, bg: <a class="struct" href="../../raster/struct.Color.html" title="struct raster::Color">Color</a>) -&gt; <a class="type" href="../../raster/error/type.RasterResult.html" title="type raster::error::RasterResult">RasterResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</pre><div class='docblock'><p>Rotate an image clockwise. Negate the degrees to do a counter-clockwise rotation. Background
+               </span><a class='srclink' href='../../src/raster/transform.rs.html#139-194' title='goto source code'>[src]</a></span></h1><pre class='rust fn'>pub fn rotate(src: &amp;mut <a class="struct" href="../../raster/struct.Image.html" title="struct raster::Image">Image</a>, degree: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, bg: <a class="struct" href="../../raster/struct.Color.html" title="struct raster::Color">Color</a>) -&gt; <a class="type" href="../../raster/error/type.RasterResult.html" title="type raster::error::RasterResult">RasterResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</pre><div class='docblock'><p>Rotate an image clockwise. Negate the degrees to do a counter-clockwise rotation. Background
 color can be any color.</p>
-
 <p>Note: If you look closely, the quality for arbitrary angles is not very good due to the simple
 sampling algorithm. The 90, 180, and 270 angles looks fine because no pixels are lost. This
 will be fixed in the future with a better sampling algorithm.</p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
-<h3 id='rotate-45-degrees-with-a-black-background-color' class='section-header'><a href='#rotate-45-degrees-with-a-black-background-color'>Rotate 45 degrees with a black background color:</a></h3>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1><h3 id="rotate-45-degrees-with-a-black-background-color" class="section-header"><a href="#rotate-45-degrees-with-a-black-background-color">Rotate 45 degrees with a black background color:</a></h3>
 <pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">raster</span>::{<span class="ident">transform</span>, <span class="ident">Color</span>};
 
@@ -66,10 +73,8 @@ will be fixed in the future with a better sampling algorithm.</p>
 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">raster</span>::<span class="ident">open</span>(<span class="string">&quot;tests/in/sample.png&quot;</span>).<span class="ident">unwrap</span>();
 <span class="ident">transform</span>::<span class="ident">rotate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">image</span>, <span class="number">45</span>, <span class="ident">Color</span>::<span class="ident">rgb</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>)).<span class="ident">unwrap</span>();
 <span class="ident">raster</span>::<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="string">&quot;tests/out/test_transform_rotate_45.png&quot;</span>).<span class="ident">unwrap</span>();</pre>
-
-<p><img src="https://kosinix.github.io/raster/out/test_transform_rotate_45.png" alt=""></p>
-
-<h3 id='rotate-45-degrees-counter-clockwise-with-a-red-background-color' class='section-header'><a href='#rotate-45-degrees-counter-clockwise-with-a-red-background-color'>Rotate 45 degrees counter-clockwise with a red background color:</a></h3>
+<p><img src="https://kosinix.github.io/raster/out/test_transform_rotate_45.png" alt="" /></p>
+<h3 id="rotate-45-degrees-counter-clockwise-with-a-red-background-color" class="section-header"><a href="#rotate-45-degrees-counter-clockwise-with-a-red-background-color">Rotate 45 degrees counter-clockwise with a red background color:</a></h3>
 <pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">raster</span>::{<span class="ident">transform</span>, <span class="ident">Color</span>};
 
@@ -78,8 +83,7 @@ will be fixed in the future with a better sampling algorithm.</p>
 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">raster</span>::<span class="ident">open</span>(<span class="string">&quot;tests/in/sample.png&quot;</span>).<span class="ident">unwrap</span>();
 <span class="ident">transform</span>::<span class="ident">rotate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">image</span>, <span class="op">-</span><span class="number">45</span>, <span class="ident">Color</span>::<span class="ident">rgb</span>(<span class="number">252</span>,<span class="number">145</span>,<span class="number">145</span>)).<span class="ident">unwrap</span>();
 <span class="ident">raster</span>::<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="string">&quot;tests/out/test_transform_rotate_45cc.png&quot;</span>).<span class="ident">unwrap</span>();</pre>
-
-<p><img src="https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png" alt=""></p>
+<p><img src="https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png" alt="" /></p>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -93,20 +97,22 @@ will be fixed in the future with a better sampling algorithm.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

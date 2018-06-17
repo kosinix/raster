@@ -10,8 +10,12 @@
     <title>raster - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Crate raster</p><div class="block items"><ul><li><a href="#reexports">Reexports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'raster', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate raster</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'raster', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -43,52 +55,40 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>raster</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>raster</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/raster/lib.rs.html#1-212' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'>
-<h1 id='raster' class='section-header'><a href='#raster'>Raster</a></h1>
+               </span><a class='srclink' href='../src/raster/lib.rs.html#1-212' title='goto source code'>[src]</a></span></h1><div class='docblock'><h1 id="raster" class="section-header"><a href="#raster">Raster</a></h1>
 <p>Raster is an image processing lib for Rust.</p>
-
 <p>It provides a simplified API for processing raster images (JPEG, PNG and GIF).</p>
-
-<h2 id='installation' class='section-header'><a href='#installation'>Installation</a></h2>
+<h2 id="installation" class="section-header"><a href="#installation">Installation</a></h2>
 <p>Add this to your Cargo.toml file:</p>
 
 <div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
 [<span class="ident">dependencies</span>]
 
 <span class="ident">raster</span> <span class="op">=</span> <span class="string">&quot;x.x.x&quot;</span></pre>
-
 <p>Where x are version numbers of the <a href="https://crates.io/crates/raster">latest version</a> of
 raster. Eg.: 0.1.0</p>
-
 <p>Then add the raster crate in your main.rs:</p>
 
 <div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">raster</span>; <span class="comment">// In your main rust file</span></pre>
-
-<h2 id='creating-images' class='section-header'><a href='#creating-images'>Creating Images</a></h2>
-<h3 id='from-an-image-file' class='section-header'><a href='#from-an-image-file'>From an image file</a></h3>
+<h2 id="creating-images" class="section-header"><a href="#creating-images">Creating Images</a></h2><h3 id="from-an-image-file" class="section-header"><a href="#from-an-image-file">From an image file</a></h3>
 <div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
 <span class="comment">// Create an image from file</span>
 <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">raster</span>::<span class="ident">open</span>(<span class="string">&quot;tests/in/sample.png&quot;</span>).<span class="ident">unwrap</span>();
 </pre>
-
 <p>Raster will detect the image format based on the file name.</p>
-
-<h3 id='create-a-blank-image' class='section-header'><a href='#create-a-blank-image'>Create a blank image</a></h3>
+<h3 id="create-a-blank-image" class="section-header"><a href="#create-a-blank-image">Create a blank image</a></h3>
 <div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
 <span class="kw">use</span> <span class="ident">raster</span>::<span class="ident">Image</span>; <span class="comment">// Include the Image struct</span>
 
 <span class="comment">// Create a blank 150x100 image. Defaults to a black background.</span>
 <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">Image</span>::<span class="ident">blank</span>(<span class="number">150</span>, <span class="number">100</span>);
 </pre>
-
-<h2 id='saving-images' class='section-header'><a href='#saving-images'>Saving Images</a></h2>
+<h2 id="saving-images" class="section-header"><a href="#saving-images">Saving Images</a></h2>
 <p>Save the opened image file:</p>
 
 <pre class="rust rust-example-rendered">
@@ -98,31 +98,22 @@ raster. Eg.: 0.1.0</p>
 <span class="comment">// Save opened image</span>
 <span class="ident">raster</span>::<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="string">&quot;tests/out/test_open_save.png&quot;</span>).<span class="ident">unwrap</span>();
 </pre>
-
-<h2 id='blending-2-images' class='section-header'><a href='#blending-2-images'>Blending 2 Images</a></h2>
+<h2 id="blending-2-images" class="section-header"><a href="#blending-2-images">Blending 2 Images</a></h2>
 <p>Here are two images blended using the normal mode.</p>
-
-<p><img src="https://kosinix.github.io/raster/out/test_blend_normal.png" alt=""></p>
-
+<p><img src="https://kosinix.github.io/raster/out/test_blend_normal.png" alt="" /></p>
 <p>More blending modes and options are available, see the blend API.</p>
-
-<h2 id='resizing-images' class='section-header'><a href='#resizing-images'>Resizing Images</a></h2>
+<h2 id="resizing-images" class="section-header"><a href="#resizing-images">Resizing Images</a></h2>
 <p>An example of images resized to &quot;fit&quot; in a 200x200 box.</p>
-
-<p><img src="https://kosinix.github.io/raster/out/test_resize_fit_1.jpg" alt=""> <img src="https://kosinix.github.io/raster/out/test_resize_fit_2.jpg" alt=""></p>
-
+<p><img src="https://kosinix.github.io/raster/out/test_resize_fit_1.jpg" alt="" /> <img src="https://kosinix.github.io/raster/out/test_resize_fit_2.jpg" alt="" /></p>
 <p>More modes available, see the resize API.</p>
-
-<h2 id='rotating-images' class='section-header'><a href='#rotating-images'>Rotating Images</a></h2>
+<h2 id="rotating-images" class="section-header"><a href="#rotating-images">Rotating Images</a></h2>
 <p>Images can be rotated both clockwise and counter-clockwise at any arbitrary angle with a
 custom background color.</p>
-
-<p><img src="https://kosinix.github.io/raster/out/test_transform_rotate_45.png" alt="">
-<img src="https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png" alt=""></p>
-
-<h2 id='and-many-more' class='section-header'><a href='#and-many-more'>And Many More...</a></h2>
+<p><img src="https://kosinix.github.io/raster/out/test_transform_rotate_45.png" alt="" />
+<img src="https://kosinix.github.io/raster/out/test_transform_rotate_45cc.png" alt="" /></p>
+<h2 id="and-many-more" class="section-header"><a href="#and-many-more">And Many More...</a></h2>
 <p>More options are available, checkout the modules below.</p>
-</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
 <table><tr><td><code>pub use editor::<a class="enum" href="../raster/editor/enum.ResizeMode.html" title="enum raster::editor::ResizeMode">ResizeMode</a>;</code></td></tr><tr><td><code>pub use filter::<a class="enum" href="../raster/filter/enum.BlurMode.html" title="enum raster::filter::BlurMode">BlurMode</a>;</code></td></tr><tr><td><code>pub use filter::<a class="enum" href="../raster/filter/enum.Orientation.html" title="enum raster::filter::Orientation">Orientation</a>;</code></td></tr><tr><td><code>pub use interpolate::<a class="enum" href="../raster/interpolate/enum.InterpolationMode.html" title="enum raster::interpolate::InterpolationMode">InterpolationMode</a>;</code></td></tr><tr><td><code>pub use transform::<a class="enum" href="../raster/transform/enum.TransformMode.html" title="enum raster::transform::TransformMode">TransformMode</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -130,6 +121,7 @@ custom background color.</p>
                                   title='mod raster::compare'>compare</a></td>
                            <td class='docblock-short'>
                                 <p>A module for comparing images.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -137,6 +129,7 @@ custom background color.</p>
                                   title='mod raster::editor'>editor</a></td>
                            <td class='docblock-short'>
                                 <p>A module for common image editing operations.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -144,6 +137,7 @@ custom background color.</p>
                                   title='mod raster::error'>error</a></td>
                            <td class='docblock-short'>
                                 <p>A module for error types.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -151,6 +145,7 @@ custom background color.</p>
                                   title='mod raster::filter'>filter</a></td>
                            <td class='docblock-short'>
                                 <p>A module for filtering pixels.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -158,6 +153,7 @@ custom background color.</p>
                                   title='mod raster::interpolate'>interpolate</a></td>
                            <td class='docblock-short'>
                                 <p>A module for interpolating pixels.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -165,6 +161,7 @@ custom background color.</p>
                                   title='mod raster::transform'>transform</a></td>
                            <td class='docblock-short'>
                                 <p>A module for 2D transformation.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -173,6 +170,7 @@ custom background color.</p>
                                   title='struct raster::Color'>Color</a></td>
                            <td class='docblock-short'>
                                 <p>A struct for representing and creating color.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -180,6 +178,7 @@ custom background color.</p>
                                   title='struct raster::Image'>Image</a></td>
                            <td class='docblock-short'>
                                 <p>A struct for easily representing a raster image.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -188,6 +187,7 @@ custom background color.</p>
                                   title='enum raster::BlendMode'>BlendMode</a></td>
                            <td class='docblock-short'>
                                 <p>Enumeration for blending modes.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -195,6 +195,7 @@ custom background color.</p>
                                   title='enum raster::ImageFormat'>ImageFormat</a></td>
                            <td class='docblock-short'>
                                 <p>Enumeration of supported raster formats.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -202,6 +203,7 @@ custom background color.</p>
                                   title='enum raster::PositionMode'>PositionMode</a></td>
                            <td class='docblock-short'>
                                 <p>Enumeration for different anchor positions.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -210,6 +212,7 @@ custom background color.</p>
                                   title='fn raster::open'>open</a></td>
                            <td class='docblock-short'>
                                 <p>Create an image from an image file.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -218,6 +221,7 @@ custom background color.</p>
                            <td class='docblock-short'>
                                 <p>Save an image to an image file. The image type is detected from the file extension of the file
 name.</p>
+
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
@@ -226,6 +230,7 @@ name.</p>
                                   title='type raster::Histogram'>Histogram</a></td>
                            <td class='docblock-short'>
                                 <p>Holds histogram information.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -240,20 +245,22 @@ name.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

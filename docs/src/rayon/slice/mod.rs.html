@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-0.8.2/src/slice/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-1.0.1/src/slice/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -783,10 +795,185 @@
 <span id="738">738</span>
 <span id="739">739</span>
 <span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
 </pre><pre class="rust ">
-<span class="doccomment">//! This module contains the parallel iterator types for slices</span>
-<span class="doccomment">//! (`[T]`). You will rarely need to interact with it directly unless</span>
-<span class="doccomment">//! you have need to name one of those types.</span>
+<span class="doccomment">//! Parallel iterator types for [slices][std::slice]</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! You will rarely need to interact with this module directly unless you need</span>
+<span class="doccomment">//! to name one of the iterator types.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [std::slice]: https://doc.rust-lang.org/stable/std/slice/</span>
 
 <span class="kw">mod</span> <span class="ident">mergesort</span>;
 <span class="kw">mod</span> <span class="ident">quicksort</span>;
@@ -794,12 +981,15 @@
 <span class="kw">mod</span> <span class="ident">test</span>;
 
 <span class="kw">use</span> <span class="ident">iter</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">iter</span>::<span class="ident">internal</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">iter</span>::<span class="ident">plumbing</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="ident">mergesort</span>::<span class="ident">par_mergesort</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="ident">quicksort</span>::<span class="ident">par_quicksort</span>;
 <span class="kw">use</span> <span class="ident">split_producer</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Ordering</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Debug</span>};
+
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">math</span>::<span class="ident">div_round_up</span>;
 
 <span class="doccomment">/// Parallel extensions for slices.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ParallelSlice</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Sync</span><span class="op">&gt;</span> {
@@ -809,6 +999,17 @@
 
     <span class="doccomment">/// Returns a parallel iterator over subslices separated by elements that</span>
     <span class="doccomment">/// match the separator.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">/// let smallest = [1, 2, 3, 0, 2, 4, 8, 0, 3, 6, 9]</span>
+    <span class="doccomment">///     .par_split(|i| *i == 0)</span>
+    <span class="doccomment">///     .map(|numbers| numbers.iter().min().unwrap())</span>
+    <span class="doccomment">///     .min();</span>
+    <span class="doccomment">/// assert_eq!(Some(&amp;1), smallest);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_split</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">separator</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">Split</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">P</span><span class="op">&gt;</span>
         <span class="kw">where</span> <span class="ident">P</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span>
     {
@@ -820,6 +1021,14 @@
 
     <span class="doccomment">/// Returns a parallel iterator over all contiguous windows of</span>
     <span class="doccomment">/// length `size`. The windows overlap.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">/// let windows: Vec&lt;_&gt; = [1, 2, 3].par_windows(2).collect();</span>
+    <span class="doccomment">/// assert_eq!(vec![[1, 2], [2, 3]], windows);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_windows</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window_size</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Windows</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">Windows</span> {
             <span class="ident">window_size</span>: <span class="ident">window_size</span>,
@@ -829,7 +1038,16 @@
 
     <span class="doccomment">/// Returns a parallel iterator over at most `size` elements of</span>
     <span class="doccomment">/// `self` at a time. The chunks do not overlap.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">/// let chunks: Vec&lt;_&gt; = [1, 2, 3, 4, 5].par_chunks(2).collect();</span>
+    <span class="doccomment">/// assert_eq!(chunks, vec![&amp;[1, 2][..], &amp;[3, 4], &amp;[5]]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_chunks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">chunk_size</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Chunks</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">chunk_size</span> <span class="op">!=</span> <span class="number">0</span>, <span class="string">&quot;chunk_size must not be zero&quot;</span>);
         <span class="ident">Chunks</span> {
             <span class="ident">chunk_size</span>: <span class="ident">chunk_size</span>,
             <span class="ident">slice</span>: <span class="self">self</span>.<span class="ident">as_parallel_slice</span>(),
@@ -853,6 +1071,16 @@
 
     <span class="doccomment">/// Returns a parallel iterator over mutable subslices separated by</span>
     <span class="doccomment">/// elements that match the separator.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">/// let mut array = [1, 2, 3, 0, 2, 4, 8, 0, 3, 6, 9];</span>
+    <span class="doccomment">/// array.par_split_mut(|i| *i == 0)</span>
+    <span class="doccomment">///      .for_each(|slice| slice.reverse());</span>
+    <span class="doccomment">/// assert_eq!(array, [3, 2, 1, 0, 8, 4, 2, 0, 9, 6, 3]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_split_mut</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">separator</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">SplitMut</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">P</span><span class="op">&gt;</span>
         <span class="kw">where</span> <span class="ident">P</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span>
     {
@@ -864,7 +1092,18 @@
 
     <span class="doccomment">/// Returns a parallel iterator over at most `size` elements of</span>
     <span class="doccomment">/// `self` at a time. The chunks are mutable and do not overlap.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">/// let mut array = [1, 2, 3, 4, 5];</span>
+    <span class="doccomment">/// array.par_chunks_mut(2)</span>
+    <span class="doccomment">///      .for_each(|slice| slice.reverse());</span>
+    <span class="doccomment">/// assert_eq!(array, [2, 1, 4, 3, 5]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_chunks_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">chunk_size</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">ChunksMut</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">chunk_size</span> <span class="op">!=</span> <span class="number">0</span>, <span class="string">&quot;chunk_size must not be zero&quot;</span>);
         <span class="ident">ChunksMut</span> {
             <span class="ident">chunk_size</span>: <span class="ident">chunk_size</span>,
             <span class="ident">slice</span>: <span class="self">self</span>.<span class="ident">as_parallel_slice_mut</span>(),
@@ -893,6 +1132,17 @@
     <span class="doccomment">/// all chunks are sorted in parallel. Then, adjacent chunks that together form non-descending</span>
     <span class="doccomment">/// or descending runs are concatenated. Finally, the remaining chunks are merged together using</span>
     <span class="doccomment">/// parallel subdivision of chunks and parallel merge operation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut v = [-5, 4, 1, -3, 2];</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// v.par_sort();</span>
+    <span class="doccomment">/// assert_eq!(v, [-5, -3, 1, 2, 4]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_sort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">Ord</span>,
@@ -922,6 +1172,20 @@
     <span class="doccomment">/// all chunks are sorted in parallel. Then, adjacent chunks that together form non-descending</span>
     <span class="doccomment">/// or descending runs are concatenated. Finally, the remaining chunks are merged together using</span>
     <span class="doccomment">/// parallel subdivision of chunks and parallel merge operation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut v = [5, 4, 1, 3, 2];</span>
+    <span class="doccomment">/// v.par_sort_by(|a, b| a.cmp(b));</span>
+    <span class="doccomment">/// assert_eq!(v, [1, 2, 3, 4, 5]);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // reverse sorting</span>
+    <span class="doccomment">/// v.par_sort_by(|a, b| b.cmp(a));</span>
+    <span class="doccomment">/// assert_eq!(v, [5, 4, 3, 2, 1]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_sort_by</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">compare</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span> <span class="op">+</span> <span class="ident">Sync</span>,
@@ -951,6 +1215,17 @@
     <span class="doccomment">/// all chunks are sorted in parallel. Then, adjacent chunks that together form non-descending</span>
     <span class="doccomment">/// or descending runs are concatenated. Finally, the remaining chunks are merged together using</span>
     <span class="doccomment">/// parallel subdivision of chunks and parallel merge operation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut v = [-5i32, 4, 1, -3, 2];</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// v.par_sort_by_key(|k| k.abs());</span>
+    <span class="doccomment">/// assert_eq!(v, [1, 2, -3, 4, -5]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_sort_by_key</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
         <span class="ident">B</span>: <span class="ident">Ord</span>,
@@ -979,6 +1254,17 @@
     <span class="doccomment">/// parallel.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [pdqsort]: https://github.com/orlp/pdqsort</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut v = [-5, 4, 1, -3, 2];</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// v.par_sort_unstable();</span>
+    <span class="doccomment">/// assert_eq!(v, [-5, -3, 1, 2, 4]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_sort_unstable</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">Ord</span>,
@@ -1007,6 +1293,20 @@
     <span class="doccomment">/// parallel.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [pdqsort]: https://github.com/orlp/pdqsort</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut v = [5, 4, 1, 3, 2];</span>
+    <span class="doccomment">/// v.par_sort_unstable_by(|a, b| a.cmp(b));</span>
+    <span class="doccomment">/// assert_eq!(v, [1, 2, 3, 4, 5]);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // reverse sorting</span>
+    <span class="doccomment">/// v.par_sort_unstable_by(|a, b| b.cmp(a));</span>
+    <span class="doccomment">/// assert_eq!(v, [5, 4, 3, 2, 1]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_sort_unstable_by</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">compare</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span> <span class="op">+</span> <span class="ident">Sync</span>,
@@ -1035,6 +1335,17 @@
     <span class="doccomment">/// parallel.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [pdqsort]: https://github.com/orlp/pdqsort</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use rayon::prelude::*;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut v = [-5i32, 4, 1, -3, 2];</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// v.par_sort_unstable_by_key(|k| k.abs());</span>
+    <span class="doccomment">/// assert_eq!(v, [1, 2, -3, 4, -5]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">par_sort_unstable_by_key</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
         <span class="ident">B</span>: <span class="ident">Ord</span>,
@@ -1090,8 +1401,15 @@
 
 
 <span class="doccomment">/// Parallel iterator over immutable items in a slice</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="lifetime">&#39;data</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span> {
     <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;data</span> [<span class="ident">T</span>],
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="ident">Sync</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Iter</span> { ..<span class="kw-2">*</span><span class="self">self</span> }
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;data</span><span class="op">&gt;</span> <span class="ident">ParallelIterator</span> <span class="kw">for</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span><span class="op">&gt;</span> {
@@ -1103,7 +1421,7 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">len</span>())
     }
 }
@@ -1115,7 +1433,7 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
         <span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>()
     }
 
@@ -1146,9 +1464,16 @@
 
 
 <span class="doccomment">/// Parallel iterator over immutable non-overlapping chunks of a slice</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Chunks</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="lifetime">&#39;data</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span> {
     <span class="ident">chunk_size</span>: <span class="ident">usize</span>,
     <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;data</span> [<span class="ident">T</span>],
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="ident">Sync</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Chunks</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Chunks</span> { ..<span class="kw-2">*</span><span class="self">self</span> }
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;data</span><span class="op">&gt;</span> <span class="ident">ParallelIterator</span> <span class="kw">for</span> <span class="ident">Chunks</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span><span class="op">&gt;</span> {
@@ -1160,7 +1485,7 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">len</span>())
     }
 }
@@ -1172,8 +1497,8 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        (<span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>() <span class="op">+</span> (<span class="self">self</span>.<span class="ident">chunk_size</span> <span class="op">-</span> <span class="number">1</span>)) <span class="op">/</span> <span class="self">self</span>.<span class="ident">chunk_size</span>
+    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="ident">div_round_up</span>(<span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">chunk_size</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">with_producer</span><span class="op">&lt;</span><span class="ident">CB</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">CB</span>) <span class="op">-&gt;</span> <span class="ident">CB</span>::<span class="ident">Output</span>
@@ -1215,9 +1540,16 @@
 
 
 <span class="doccomment">/// Parallel iterator over immutable overlapping windows of a slice</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Windows</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="lifetime">&#39;data</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span> {
     <span class="ident">window_size</span>: <span class="ident">usize</span>,
     <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;data</span> [<span class="ident">T</span>],
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="ident">Sync</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Windows</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Windows</span> { ..<span class="kw-2">*</span><span class="self">self</span> }
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;data</span><span class="op">&gt;</span> <span class="ident">ParallelIterator</span> <span class="kw">for</span> <span class="ident">Windows</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span><span class="op">&gt;</span> {
@@ -1229,7 +1561,7 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">len</span>())
     }
 }
@@ -1241,7 +1573,7 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
         <span class="macro">assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">window_size</span> <span class="op">&gt;=</span> <span class="number">1</span>);
         <span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>().<span class="ident">saturating_sub</span>(<span class="self">self</span>.<span class="ident">window_size</span> <span class="op">-</span> <span class="number">1</span>)
     }
@@ -1286,6 +1618,7 @@
 
 
 <span class="doccomment">/// Parallel iterator over mutable items in a slice</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IterMut</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="lifetime">&#39;data</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> {
     <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;data</span> <span class="kw-2">mut</span> [<span class="ident">T</span>],
 }
@@ -1299,7 +1632,7 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">len</span>())
     }
 }
@@ -1311,7 +1644,7 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
         <span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>()
     }
 
@@ -1342,6 +1675,7 @@
 
 
 <span class="doccomment">/// Parallel iterator over mutable non-overlapping chunks of a slice</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChunksMut</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="lifetime">&#39;data</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> {
     <span class="ident">chunk_size</span>: <span class="ident">usize</span>,
     <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;data</span> <span class="kw-2">mut</span> [<span class="ident">T</span>],
@@ -1356,7 +1690,7 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">opt_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">len</span>())
     }
 }
@@ -1368,8 +1702,8 @@
         <span class="ident">bridge</span>(<span class="self">self</span>, <span class="ident">consumer</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        (<span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>() <span class="op">+</span> (<span class="self">self</span>.<span class="ident">chunk_size</span> <span class="op">-</span> <span class="number">1</span>)) <span class="op">/</span> <span class="self">self</span>.<span class="ident">chunk_size</span>
+    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="ident">div_round_up</span>(<span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">chunk_size</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">with_producer</span><span class="op">&lt;</span><span class="ident">CB</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">CB</span>) <span class="op">-&gt;</span> <span class="ident">CB</span>::<span class="ident">Output</span>
@@ -1414,6 +1748,20 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Split</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="lifetime">&#39;data</span>, <span class="ident">P</span><span class="op">&gt;</span> {
     <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;data</span> [<span class="ident">T</span>],
     <span class="ident">separator</span>: <span class="ident">P</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>, <span class="ident">P</span>: <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Split</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>, <span class="ident">P</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Split</span> { <span class="ident">separator</span>: <span class="self">self</span>.<span class="ident">separator</span>.<span class="ident">clone</span>(), ..<span class="kw-2">*</span><span class="self">self</span> }
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="ident">Debug</span>, <span class="ident">P</span><span class="op">&gt;</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Split</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>, <span class="ident">P</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Split&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;slice&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">slice</span>)
+            .<span class="ident">finish</span>()
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>, <span class="ident">P</span><span class="op">&gt;</span> <span class="ident">ParallelIterator</span> <span class="kw">for</span> <span class="ident">Split</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>, <span class="ident">P</span><span class="op">&gt;</span>
@@ -1472,6 +1820,14 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SplitMut</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="lifetime">&#39;data</span>, <span class="ident">P</span><span class="op">&gt;</span> {
     <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;data</span> <span class="kw-2">mut</span> [<span class="ident">T</span>],
     <span class="ident">separator</span>: <span class="ident">P</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>: <span class="ident">Debug</span>, <span class="ident">P</span><span class="op">&gt;</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">SplitMut</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>, <span class="ident">P</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;SplitMut&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;slice&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">slice</span>)
+            .<span class="ident">finish</span>()
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>, <span class="ident">P</span><span class="op">&gt;</span> <span class="ident">ParallelIterator</span> <span class="kw">for</span> <span class="ident">SplitMut</span><span class="op">&lt;</span><span class="lifetime">&#39;data</span>, <span class="ident">T</span>, <span class="ident">P</span><span class="op">&gt;</span>
@@ -1538,20 +1894,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

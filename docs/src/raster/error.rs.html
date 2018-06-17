@@ -10,8 +10,12 @@
     <title>error.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -260,7 +272,7 @@
             <span class="ident">piston_image</span>::<span class="ident">ImageError</span>::<span class="ident">UnsupportedError</span>(<span class="ident">msg</span>) <span class="op">=&gt;</span> {
                 <span class="ident">RasterError</span>::<span class="ident">Decode</span>(<span class="ident">ImageFormat</span>::<span class="ident">Jpeg</span>, <span class="ident">msg</span>)
             }
-            <span class="ident">piston_image</span>::<span class="ident">ImageError</span>::<span class="ident">UnsupportedColor</span>(_) <span class="op">=&gt;</span> {
+            <span class="ident">piston_image</span>::<span class="ident">ImageError</span>::<span class="ident">UnsupportedColor</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                 <span class="ident">RasterError</span>::<span class="ident">Decode</span>(<span class="ident">ImageFormat</span>::<span class="ident">Jpeg</span>, <span class="string">&quot;UnsupportedColor&quot;</span>.<span class="ident">to_string</span>())
             }
             <span class="ident">piston_image</span>::<span class="ident">ImageError</span>::<span class="ident">NotEnoughData</span> <span class="op">=&gt;</span> {
@@ -280,7 +292,7 @@
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">png</span>::<span class="ident">DecodingError</span>) <span class="op">-&gt;</span> <span class="ident">RasterError</span> {
         <span class="kw">match</span> <span class="ident">err</span> {
             <span class="ident">png</span>::<span class="ident">DecodingError</span>::<span class="ident">IoError</span>(<span class="ident">io_err</span>) <span class="op">=&gt;</span> <span class="ident">RasterError</span>::<span class="ident">Io</span>(<span class="ident">io_err</span>),
-            <span class="ident">png</span>::<span class="ident">DecodingError</span>::<span class="ident">Format</span>(_) <span class="op">=&gt;</span> {
+            <span class="ident">png</span>::<span class="ident">DecodingError</span>::<span class="ident">Format</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                 <span class="ident">RasterError</span>::<span class="ident">Decode</span>(<span class="ident">ImageFormat</span>::<span class="ident">Png</span>, <span class="string">&quot;Format&quot;</span>.<span class="ident">to_string</span>())
             }
             <span class="ident">png</span>::<span class="ident">DecodingError</span>::<span class="ident">InvalidSignature</span> <span class="op">=&gt;</span> {
@@ -289,7 +301,7 @@
             <span class="ident">png</span>::<span class="ident">DecodingError</span>::<span class="ident">CrcMismatch</span> { .. } <span class="op">=&gt;</span> {
                 <span class="ident">RasterError</span>::<span class="ident">Decode</span>(<span class="ident">ImageFormat</span>::<span class="ident">Png</span>, <span class="string">&quot;CrcMismatch&quot;</span>.<span class="ident">to_string</span>())
             }
-            <span class="ident">png</span>::<span class="ident">DecodingError</span>::<span class="ident">Other</span>(_) <span class="op">=&gt;</span> {
+            <span class="ident">png</span>::<span class="ident">DecodingError</span>::<span class="ident">Other</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                 <span class="ident">RasterError</span>::<span class="ident">Decode</span>(<span class="ident">ImageFormat</span>::<span class="ident">Png</span>, <span class="string">&quot;Other&quot;</span>.<span class="ident">to_string</span>())
             }
             <span class="ident">png</span>::<span class="ident">DecodingError</span>::<span class="ident">CorruptFlateStream</span> <span class="op">=&gt;</span> {
@@ -304,7 +316,7 @@
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">png</span>::<span class="ident">EncodingError</span>) <span class="op">-&gt;</span> <span class="ident">RasterError</span> {
         <span class="kw">match</span> <span class="ident">err</span> {
             <span class="ident">png</span>::<span class="ident">EncodingError</span>::<span class="ident">IoError</span>(<span class="ident">io_err</span>) <span class="op">=&gt;</span> <span class="ident">RasterError</span>::<span class="ident">Io</span>(<span class="ident">io_err</span>),
-            <span class="ident">png</span>::<span class="ident">EncodingError</span>::<span class="ident">Format</span>(_) <span class="op">=&gt;</span> {
+            <span class="ident">png</span>::<span class="ident">EncodingError</span>::<span class="ident">Format</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                 <span class="ident">RasterError</span>::<span class="ident">Encode</span>(<span class="ident">ImageFormat</span>::<span class="ident">Png</span>, <span class="string">&quot;Format&quot;</span>.<span class="ident">to_string</span>())
             }
         }
@@ -328,20 +340,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.11.0/src/utils.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/png-0.12.0/src/utils.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>utils.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -241,23 +253,6 @@
 <span id="196">196</span>
 <span id="197">197</span>
 <span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Utility functions</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">repeat</span>;
@@ -270,7 +265,7 @@
     <span class="kw">let</span> <span class="ident">extra_bits</span> <span class="op">=</span> <span class="ident">bits</span> <span class="op">%</span> <span class="number">8</span>;
     <span class="kw">let</span> <span class="ident">entries</span> <span class="op">=</span> <span class="ident">bits</span> <span class="op">/</span> <span class="number">8</span> <span class="op">+</span> <span class="kw">match</span> <span class="ident">extra_bits</span> {
         <span class="number">0</span> <span class="op">=&gt;</span> <span class="number">0</span>,
-        _ <span class="op">=&gt;</span> <span class="number">1</span>
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="number">1</span>
     };
     <span class="kw">let</span> <span class="ident">skip</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">extra_bits</span> {
         <span class="number">0</span> <span class="op">=&gt;</span> <span class="number">0</span>,
@@ -385,7 +380,7 @@
             <span class="number">5</span> <span class="op">=&gt;</span> (<span class="ident">w</span><span class="op">/</span><span class="number">2.0</span>, (<span class="ident">h</span><span class="op">-</span><span class="number">2.0</span>)<span class="op">/</span><span class="number">4.0</span>),
             <span class="number">6</span> <span class="op">=&gt;</span> ((<span class="ident">w</span><span class="op">-</span><span class="number">1.0</span>)<span class="op">/</span><span class="number">2.0</span>, <span class="ident">h</span><span class="op">/</span><span class="number">2.0</span>),
             <span class="number">7</span> <span class="op">=&gt;</span> (<span class="ident">w</span>, (<span class="ident">h</span><span class="op">-</span><span class="number">1.0</span>)<span class="op">/</span><span class="number">2.0</span>),
-            _ <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>()
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>()
         };
         <span class="self">self</span>.<span class="ident">line_width</span> <span class="op">=</span> <span class="ident">line_width</span>.<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u32</span>;
         <span class="self">self</span>.<span class="ident">lines</span> <span class="op">=</span> <span class="ident">lines</span>.<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u32</span>;
@@ -441,24 +436,7 @@
         <span class="number">5</span> <span class="op">=&gt;</span> <span class="macro">expand_pass</span><span class="macro">!</span>(<span class="ident">img</span>, <span class="ident">scanline</span>, <span class="ident">j</span>, (<span class="number">4</span><span class="kw-2">*</span><span class="ident">line_no</span><span class="op">+</span><span class="number">2</span>) <span class="op">*</span> <span class="ident">width</span> <span class="op">+</span> <span class="ident">bytes_pp</span> <span class="op">*</span> <span class="ident">j</span><span class="kw-2">*</span><span class="number">2</span>     , <span class="ident">bytes_pp</span>),
         <span class="number">6</span> <span class="op">=&gt;</span> <span class="macro">expand_pass</span><span class="macro">!</span>(<span class="ident">img</span>, <span class="ident">scanline</span>, <span class="ident">j</span>,  <span class="number">2</span><span class="kw-2">*</span><span class="ident">line_no</span>    <span class="op">*</span> <span class="ident">width</span> <span class="op">+</span> <span class="ident">bytes_pp</span> <span class="kw-2">*</span>(<span class="ident">j</span><span class="kw-2">*</span><span class="number">2</span><span class="op">+</span><span class="number">1</span>)  , <span class="ident">bytes_pp</span>),
         <span class="number">7</span> <span class="op">=&gt;</span> <span class="macro">expand_pass</span><span class="macro">!</span>(<span class="ident">img</span>, <span class="ident">scanline</span>, <span class="ident">j</span>, (<span class="number">2</span><span class="kw-2">*</span><span class="ident">line_no</span><span class="op">+</span><span class="number">1</span>) <span class="op">*</span> <span class="ident">width</span> <span class="op">+</span> <span class="ident">bytes_pp</span> <span class="op">*</span> <span class="ident">j</span>       , <span class="ident">bytes_pp</span>),
-        _ <span class="op">=&gt;</span> {}
-    }
-}
-
-<span class="comment">// Copies data from `src` to `dst`</span>
-<span class="comment">//</span>
-<span class="comment">// Panics if the length of `dst` is less than the length of `src`.</span>
-<span class="comment">// NOTE: this is copied from the stdlib (`std::slice::bytes::copy_memory`).</span>
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_memory</span>(<span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) {
-    <span class="kw">let</span> <span class="ident">len_src</span> <span class="op">=</span> <span class="ident">src</span>.<span class="ident">len</span>();
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">dst</span>.<span class="ident">len</span>() <span class="op">&gt;=</span> <span class="ident">len_src</span>);
-    <span class="comment">// `dst` is unaliasable, so we know statically it doesn&#39;t overlap</span>
-    <span class="comment">// with `src`.</span>
-    <span class="kw">unsafe</span> {
-        ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">copy_nonoverlapping</span>(<span class="ident">src</span>.<span class="ident">as_ptr</span>(),
-                                      <span class="ident">dst</span>.<span class="ident">as_mut_ptr</span>(),
-                                      <span class="ident">len_src</span>);
+        <span class="kw">_</span> <span class="op">=&gt;</span> {}
     }
 }
 
@@ -471,7 +449,7 @@
         7777
     */</span>
     <span class="kw">let</span> <span class="ident">it</span> <span class="op">=</span> <span class="ident">Adam7Iterator</span>::<span class="ident">new</span>(<span class="number">4</span>, <span class="number">4</span>);
-    <span class="kw">let</span> <span class="ident">passes</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">it</span>.<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">passes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">it</span>.<span class="ident">collect</span>();
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">passes</span>, <span class="kw-2">&amp;</span>[(<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>), (<span class="number">4</span>, <span class="number">0</span>, <span class="number">1</span>), (<span class="number">5</span>, <span class="number">0</span>, <span class="number">2</span>), (<span class="number">6</span>, <span class="number">0</span>, <span class="number">2</span>), (<span class="number">6</span>, <span class="number">1</span>, <span class="number">2</span>), (<span class="number">7</span>, <span class="number">0</span>, <span class="number">4</span>), (<span class="number">7</span>, <span class="number">1</span>, <span class="number">4</span>)]);
 }
 </pre>
@@ -488,20 +466,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

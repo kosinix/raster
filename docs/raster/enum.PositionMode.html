@@ -10,8 +10,12 @@
     <title>raster::PositionMode - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Enum PositionMode</p><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.TopLeft">TopLeft</a><a href="#variant.TopCenter">TopCenter</a><a href="#variant.TopRight">TopRight</a><a href="#variant.CenterLeft">CenterLeft</a><a href="#variant.Center">Center</a><a href="#variant.CenterRight">CenterRight</a><a href="#variant.BottomLeft">BottomLeft</a><a href="#variant.BottomCenter">BottomCenter</a><a href="#variant.BottomRight">BottomRight</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a></div></div><p class='location'><a href='index.html'>raster</a></p><script>window.sidebarCurrent = {name: 'PositionMode', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Enum PositionMode</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.TopLeft">TopLeft</a><a href="#variant.TopCenter">TopCenter</a><a href="#variant.TopRight">TopRight</a><a href="#variant.CenterLeft">CenterLeft</a><a href="#variant.Center">Center</a><a href="#variant.CenterRight">CenterRight</a><a href="#variant.BottomLeft">BottomLeft</a><a href="#variant.BottomCenter">BottomCenter</a><a href="#variant.BottomRight">BottomRight</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">Send</a><a href="#impl-Sync">Sync</a></div></div><p class='location'><a href='index.html'>raster</a></p><script>window.sidebarCurrent = {name: 'PositionMode', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -43,13 +55,11 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>raster</a>::<wbr><a class="enum" href=''>PositionMode</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>raster</a>::<wbr><a class="enum" href=''>PositionMode</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/raster/position.rs.html#12-22' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum PositionMode {
+               </span><a class='srclink' href='../src/raster/position.rs.html#12-22' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust enum'>pub enum PositionMode {
     TopLeft,
     TopCenter,
     TopRight,
@@ -59,17 +69,21 @@
     BottomLeft,
     BottomCenter,
     BottomRight,
-}</pre><div class='docblock'><p>Enumeration for different anchor positions.</p>
+}</pre></div><div class='docblock'><p>Enumeration for different anchor positions.</p>
 </div><h2 id='variants' class='variants small-section-header'>
                    Variants<a href='#variants' class='anchor'></a></h2>
 <span id="variant.TopLeft" class="variant small-section-header"><a href="#variant.TopLeft" class="anchor field"></a><span id='TopLeft.v' class='invisible'><code>TopLeft</code></span></span><span id="variant.TopCenter" class="variant small-section-header"><a href="#variant.TopCenter" class="anchor field"></a><span id='TopCenter.v' class='invisible'><code>TopCenter</code></span></span><span id="variant.TopRight" class="variant small-section-header"><a href="#variant.TopRight" class="anchor field"></a><span id='TopRight.v' class='invisible'><code>TopRight</code></span></span><span id="variant.CenterLeft" class="variant small-section-header"><a href="#variant.CenterLeft" class="anchor field"></a><span id='CenterLeft.v' class='invisible'><code>CenterLeft</code></span></span><span id="variant.Center" class="variant small-section-header"><a href="#variant.Center" class="anchor field"></a><span id='Center.v' class='invisible'><code>Center</code></span></span><span id="variant.CenterRight" class="variant small-section-header"><a href="#variant.CenterRight" class="anchor field"></a><span id='CenterRight.v' class='invisible'><code>CenterRight</code></span></span><span id="variant.BottomLeft" class="variant small-section-header"><a href="#variant.BottomLeft" class="anchor field"></a><span id='BottomLeft.v' class='invisible'><code>BottomLeft</code></span></span><span id="variant.BottomCenter" class="variant small-section-header"><a href="#variant.BottomCenter" class="anchor field"></a><span id='BottomCenter.v' class='invisible'><code>BottomCenter</code></span></span><span id="variant.BottomRight" class="variant small-section-header"><a href="#variant.BottomRight" class="anchor field"></a><span id='BottomRight.v' class='invisible'><code>BottomRight</code></span></span>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../raster/enum.PositionMode.html" title="enum raster::PositionMode">PositionMode</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/raster/position.rs.html#11' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/raster/position.rs.html#11' title='goto source code'>[src]</a></span></h4>
-<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
-</div></div></section>
+            <div id='implementations-list'>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../raster/enum.PositionMode.html" title="enum raster::PositionMode">PositionMode</a></code><a href='#impl-Debug' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/raster/position.rs.html#11' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/raster/position.rs.html#11' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div></div>
+                <h2 id='synthetic-implementations' class='small-section-header'>
+                  Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+                </h2>
+                <div id='synthetic-implementations-list'>
+            <h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="enum" href="../raster/enum.PositionMode.html" title="enum raster::PositionMode">PositionMode</a></code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="enum" href="../raster/enum.PositionMode.html" title="enum raster::PositionMode">PositionMode</a></code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -82,20 +96,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

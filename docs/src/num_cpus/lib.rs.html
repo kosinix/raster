@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/num_cpus-1.7.0/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/num_cpus-1.8.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -392,20 +404,103 @@
 <span id="347">347</span>
 <span id="348">348</span>
 <span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
 </pre><pre class="rust ">
-<span class="doccomment">//! # num_cpus</span>
-<span class="doccomment">//!</span>
 <span class="doccomment">//! A crate with utilities to determine the number of CPUs available on the</span>
 <span class="doccomment">//! current system.</span>
+<span class="doccomment">//! </span>
+<span class="doccomment">//! Sometimes the CPU will exaggerate the number of CPUs it contains, because it can use</span>
+<span class="doccomment">//! [processor tricks] to deliver increased performance when there are more threads. This </span>
+<span class="doccomment">//! crate provides methods to get both the logical and physical numbers of cores.</span>
+<span class="doccomment">//! </span>
+<span class="doccomment">//! This information can be used as a guide to how many tasks can be run in parallel.</span>
+<span class="doccomment">//! There are many properties of the system architecture that will affect parallelism,</span>
+<span class="doccomment">//! for example memory access speeds (for all the caches and RAM) and the physical</span>
+<span class="doccomment">//! architecture of the processor, so the number of CPUs should be used as a rough guide</span>
+<span class="doccomment">//! only.</span>
+<span class="doccomment">//! </span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## Example</span>
+<span class="doccomment">//! ## Examples</span>
 <span class="doccomment">//!</span>
+<span class="doccomment">//! Fetch the number of logical CPUs.</span>
+<span class="doccomment">//! </span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! let cpus = num_cpus::get();</span>
 <span class="doccomment">//! ```</span>
+<span class="doccomment">//! </span>
+<span class="doccomment">//! See [`rayon::Threadpool`] for an example of where the number of CPUs could be</span>
+<span class="doccomment">//! used when setting up parallel jobs (Where the threadpool example uses a fixed</span>
+<span class="doccomment">//! number 8, it could use the number of CPUs).</span>
+<span class="doccomment">//! </span>
+<span class="doccomment">//! [processor tricks]: https://en.wikipedia.org/wiki/Simultaneous_multithreading</span>
+<span class="doccomment">//! [`rayon::ThreadPool`]: https://docs.rs/rayon/0.8.2/rayon/struct.ThreadPool.html</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">deny</span>(<span class="ident">warnings</span>))]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
-<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/num_cpus/1.7.0&quot;</span>)]</span>
+<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/num_cpus/1.8.0&quot;</span>)]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
@@ -413,10 +508,28 @@
 
 
 <span class="doccomment">/// Returns the number of available CPUs of the current system.</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// This function will get the number of logical cores. Sometimes this is different from the number</span>
+<span class="doccomment">/// of physical cores (See [Simultaneous multithreading on Wikipedia][smt]).</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// let cpus = num_cpus::get();</span>
+<span class="doccomment">/// if cpus &gt; 1 {</span>
+<span class="doccomment">///     println!(&quot;We are on a multicore system with {} CPUs&quot;, cpus);</span>
+<span class="doccomment">/// } else {</span>
+<span class="doccomment">///     println!(&quot;We are on a single core system&quot;);</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Note</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// This will check sched affinity on Linux.</span>
+<span class="doccomment">/// This will check [sched affinity] on Linux, showing a lower number of CPUs if the current </span>
+<span class="doccomment">/// thread does not have access to all the computer&#39;s CPUs. </span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// [smt]: https://en.wikipedia.org/wiki/Simultaneous_multithreading</span>
+<span class="doccomment">/// [sched affinity]: http://www.gnu.org/software/libc/manual/html_node/CPU-Affinity.html</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>() <span class="op">-&gt;</span> <span class="ident">usize</span> {
     <span class="ident">get_num_cpus</span>()
@@ -424,8 +537,32 @@
 
 <span class="doccomment">/// Returns the number of physical cores of the current system.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// If not possible on the particular architecture, returns same as `get()`</span>
-<span class="doccomment">/// which is the logical CPUs.</span>
+<span class="doccomment">/// # Note</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Physical count is supported only on Linux, mac OS and Windows platforms.</span>
+<span class="doccomment">/// On other platforms, or if the physical count fails on supported platforms,</span>
+<span class="doccomment">/// this function returns the same as [`get()`], which is the number of logical</span>
+<span class="doccomment">/// CPUS.</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// let logical_cpus = num_cpus::get();</span>
+<span class="doccomment">/// let physical_cpus = num_cpus::get_physical();</span>
+<span class="doccomment">/// if logical_cpus &gt; physical_cpus {</span>
+<span class="doccomment">///     println!(&quot;We have simultaneous multithreading with about {:.2} \</span>
+<span class="doccomment">///               logical cores to 1 physical core.&quot;, </span>
+<span class="doccomment">///               (logical_cpus as f64) / (physical_cpus as f64));</span>
+<span class="doccomment">/// } else if logical_cpus == physical_cpus {</span>
+<span class="doccomment">///     println!(&quot;Either we don&#39;t have simultaneous multithreading, or our \</span>
+<span class="doccomment">///               system doesn&#39;t support getting the number of physical CPUs.&quot;);</span>
+<span class="doccomment">/// } else {</span>
+<span class="doccomment">///     println!(&quot;We have less logical CPUs than physical CPUs, maybe we only have access to \</span>
+<span class="doccomment">///               some of the CPUs on our system.&quot;);</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// [`get()`]: fn.get.html</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_physical</span>() <span class="op">-&gt;</span> <span class="ident">usize</span> {
     <span class="ident">get_num_physical_cpus</span>()
@@ -435,7 +572,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;windows&quot;</span>, <span class="ident">target_os</span><span class="op">=</span><span class="string">&quot;macos&quot;</span>)))]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">fn</span> <span class="ident">get_num_physical_cpus</span>() <span class="op">-&gt;</span> <span class="ident">usize</span> {
-    <span class="comment">// Not implemented, fallback</span>
+    <span class="comment">// Not implemented, fall back</span>
     <span class="ident">get_num_cpus</span>()
 }
 
@@ -531,7 +668,7 @@
 
     <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="string">&quot;/proc/cpuinfo&quot;</span>) {
         <span class="prelude-val">Ok</span>(<span class="ident">val</span>) <span class="op">=&gt;</span> <span class="ident">val</span>,
-        <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> {<span class="kw">return</span> <span class="ident">get_num_cpus</span>()},
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {<span class="kw">return</span> <span class="ident">get_num_cpus</span>()},
     };
     <span class="kw">let</span> <span class="ident">reader</span> <span class="op">=</span> <span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">file</span>);
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">set</span> <span class="op">=</span> <span class="ident">HashSet</span>::<span class="ident">new</span>();
@@ -546,12 +683,12 @@
         <span class="kw">if</span> <span class="ident">parts</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&quot;core id&quot;</span> <span class="op">||</span> <span class="ident">parts</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&quot;physical id&quot;</span> {
             <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">parts</span>[<span class="number">1</span>].<span class="ident">trim</span>().<span class="ident">parse</span>() {
               <span class="prelude-val">Ok</span>(<span class="ident">val</span>) <span class="op">=&gt;</span> <span class="ident">val</span>,
-              <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="kw">break</span>,
+              <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="kw">break</span>,
             };
             <span class="kw">match</span> <span class="ident">parts</span>[<span class="number">0</span>] {
                 <span class="string">&quot;core id&quot;</span>     <span class="op">=&gt;</span> <span class="ident">coreid</span> <span class="op">=</span> <span class="ident">value</span>,
                 <span class="string">&quot;physical id&quot;</span> <span class="op">=&gt;</span> <span class="ident">physid</span> <span class="op">=</span> <span class="ident">value</span>,
-                _ <span class="op">=&gt;</span> {},
+                <span class="kw">_</span> <span class="op">=&gt;</span> {},
             }
             <span class="ident">chgcount</span> <span class="op">+=</span> <span class="number">1</span>;
         }
@@ -608,9 +745,9 @@
         <span class="kw">unsafe</span> {
             <span class="ident">libc</span>::<span class="ident">sysctl</span>(<span class="ident">mib</span>.<span class="ident">as_mut_ptr</span>(),
                          <span class="number">2</span>,
-                         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _,
-                         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus_size</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _,
-                         <span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _,
+                         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus_size</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                         <span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
                          <span class="number">0</span>);
         }
         <span class="kw">if</span> <span class="ident">cpus</span> <span class="op">&lt;</span> <span class="number">1</span> {
@@ -629,9 +766,9 @@
     <span class="kw">unsafe</span> {
         <span class="ident">libc</span>::<span class="ident">sysctl</span>(<span class="ident">mib</span>.<span class="ident">as_mut_ptr</span>(),
                      <span class="number">2</span>,
-                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _,
-                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus_size</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _,
-                     <span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _,
+                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus_size</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                     <span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
                      <span class="number">0</span>);
     }
     <span class="kw">if</span> <span class="ident">cpus</span> <span class="op">&lt;</span> <span class="number">1</span> {
@@ -654,8 +791,8 @@
 
     <span class="kw">unsafe</span> {
         <span class="kw">if</span> <span class="number">0</span> <span class="op">!=</span> <span class="ident">libc</span>::<span class="ident">sysctlbyname</span>(<span class="ident">sysctl_name</span>.<span class="ident">as_ptr</span>(),
-                                   <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _,
-                                   <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus_size</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _,
+                                   <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                                   <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cpus_size</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
                                    <span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
                                    <span class="number">0</span>) {
             <span class="kw">return</span> <span class="ident">get_num_cpus</span>();
@@ -714,6 +851,11 @@
     <span class="number">1</span>
 }
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>, <span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;emscripten&quot;</span>)))]</span>
+<span class="kw">fn</span> <span class="ident">get_num_cpus</span>() <span class="op">-&gt;</span> <span class="ident">usize</span> {
+    <span class="number">1</span>
+}
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">fn</span> <span class="ident">env_var</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
@@ -756,20 +898,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

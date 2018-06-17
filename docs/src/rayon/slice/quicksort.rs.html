@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-0.8.2/src/slice/quicksort.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-1.0.1/src/slice/quicksort.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>quicksort.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -968,7 +980,7 @@
     <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">1</span>;
 
-    <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="ident">MAX_STEPS</span> {
+    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">MAX_STEPS</span> {
         <span class="kw">unsafe</span> {
             <span class="comment">// Find the next pair of adjacent out-of-order elements.</span>
             <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">len</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">is_less</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">i</span>), <span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">i</span> <span class="op">-</span> <span class="number">1</span>)) {
@@ -1173,7 +1185,7 @@
                 <span class="kw">let</span> <span class="ident">tmp</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">read</span>(<span class="macro">left</span><span class="macro">!</span>());
                 <span class="ident">ptr</span>::<span class="ident">copy_nonoverlapping</span>(<span class="macro">right</span><span class="macro">!</span>(), <span class="macro">left</span><span class="macro">!</span>(), <span class="number">1</span>);
 
-                <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">1</span>..<span class="ident">count</span> {
+                <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">1</span>..<span class="ident">count</span> {
                     <span class="ident">start_l</span> <span class="op">=</span> <span class="ident">start_l</span>.<span class="ident">offset</span>(<span class="number">1</span>);
                     <span class="ident">ptr</span>::<span class="ident">copy_nonoverlapping</span>(<span class="macro">left</span><span class="macro">!</span>(), <span class="macro">right</span><span class="macro">!</span>(), <span class="number">1</span>);
                     <span class="ident">start_r</span> <span class="op">=</span> <span class="ident">start_r</span>.<span class="ident">offset</span>(<span class="number">1</span>);
@@ -1590,8 +1602,8 @@
 
         <span class="kw">for</span> <span class="ident">len</span> <span class="kw">in</span> (<span class="number">0</span>..<span class="number">25</span>).<span class="ident">chain</span>(<span class="number">500</span>..<span class="number">501</span>) {
             <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">modulus</span> <span class="kw">in</span> <span class="kw-2">&amp;</span>[<span class="number">5</span>, <span class="number">10</span>, <span class="number">100</span>] {
-                <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="number">100</span> {
-                    <span class="kw">let</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_iter</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>()
+                <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">100</span> {
+                    <span class="kw">let</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_iter</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>()
                         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">%</span> <span class="ident">modulus</span>)
                         .<span class="ident">take</span>(<span class="ident">len</span>)
                         .<span class="ident">collect</span>();
@@ -1611,8 +1623,8 @@
 
         <span class="comment">// Sort using a completely random comparison function.</span>
         <span class="comment">// This will reorder the elements *somehow*, but won&#39;t panic.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">100</span>).<span class="ident">collect</span>();
-        <span class="ident">heapsort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="op">|</span>_, _<span class="op">|</span> <span class="ident">thread_rng</span>().<span class="ident">gen</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">100</span>).<span class="ident">collect</span>();
+        <span class="ident">heapsort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="ident">thread_rng</span>().<span class="ident">gen</span>());
         <span class="ident">heapsort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span> <span class="op">&lt;</span> <span class="ident">b</span>);
 
         <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">v</span>.<span class="ident">len</span>() {
@@ -1634,20 +1646,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

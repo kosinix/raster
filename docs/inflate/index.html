@@ -10,8 +10,12 @@
     <title>inflate - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Crate inflate</p><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'inflate', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate inflate</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'inflate', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -43,18 +55,14 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>inflate</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>inflate</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/inflate/lib.rs.html#10-1159' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>A <a href="http://www.gzip.org/zlib/rfc-deflate.html">DEFLATE</a> decoder written in rust.</p>
-
+               </span><a class='srclink' href='../src/inflate/lib.rs.html#10-1073' title='goto source code'>[src]</a></span></h1><div class='docblock'><p>A <a href="http://www.gzip.org/zlib/rfc-deflate.html">DEFLATE</a> decoder written in rust.</p>
 <p>This library provides functionality to decompress data compressed with the DEFLATE algorithm,
 both with and without a <a href="https://tools.ietf.org/html/rfc1950">zlib</a> header/trailer.</p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
 <p>The easiest way to get <code>std::Vec&lt;u8&gt;</code> containing the decompressed bytes is to use either
 <code>inflate::inflate_bytes</code> or <code>inflate::inflate_bytes_zlib</code> (depending on whether
 the encoded data has zlib headers and trailers or not). The following example
@@ -67,7 +75,6 @@ decodes the DEFLATE encoded string &quot;Hello, world&quot; and prints it:</p>
 <span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> [<span class="number">243</span>, <span class="number">72</span>, <span class="number">205</span>, <span class="number">201</span>, <span class="number">201</span>, <span class="number">215</span>, <span class="number">81</span>, <span class="number">40</span>, <span class="number">207</span>, <span class="number">47</span>, <span class="number">202</span>, <span class="number">73</span>, <span class="number">1</span>, <span class="number">0</span>];
 <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">inflate_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>).<span class="ident">unwrap</span>();
 <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">decoded</span>).<span class="ident">unwrap</span>()); <span class="comment">// prints &quot;Hello, world&quot;</span></pre>
-
 <p>If you need more flexibility, then the library also provides an implementation
 of <code>std::io::Writer</code> in <code>inflate::writer</code>. Below is an example using an
 <code>inflate::writer::InflateWriter</code> to decode the DEFLATE encoded string &quot;Hello, world&quot;:</p>
@@ -82,7 +89,6 @@ of <code>std::io::Writer</code> in <code>inflate::writer</code>. Below is an exa
 <span class="ident">decoder</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>).<span class="ident">unwrap</span>();
 <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">decoder</span>.<span class="ident">finish</span>().<span class="ident">unwrap</span>();
 <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">decoded</span>).<span class="ident">unwrap</span>()); <span class="comment">// prints &quot;Hello, world&quot;</span></pre>
-
 <p>Finally, if you need even more flexibility, or if you only want to depend on
 <code>core</code>, you can use the <code>inflate::InflateStream</code> API. The below example
 decodes an array of DEFLATE encoded bytes:</p>
@@ -110,6 +116,7 @@ decodes an array of DEFLATE encoded bytes:</p>
                                   title='struct inflate::DeflateDecoder'>DeflateDecoder</a></td>
                            <td class='docblock-short'>
                                 <p>A DEFLATE decoder/decompressor.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -117,6 +124,7 @@ decodes an array of DEFLATE encoded bytes:</p>
                                   title='struct inflate::DeflateDecoderBuf'>DeflateDecoderBuf</a></td>
                            <td class='docblock-short'>
                                 <p>A DEFLATE decoder/decompressor.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -131,6 +139,7 @@ decodes an array of DEFLATE encoded bytes:</p>
                                   title='struct inflate::InflateWriter'>InflateWriter</a></td>
                            <td class='docblock-short'>
                                 <p>A DEFLATE decoder.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -139,6 +148,7 @@ decodes an array of DEFLATE encoded bytes:</p>
                                   title='fn inflate::inflate_bytes'>inflate_bytes</a></td>
                            <td class='docblock-short'>
                                 <p>Decompress the given slice of DEFLATE compressed data.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -146,6 +156,7 @@ decodes an array of DEFLATE encoded bytes:</p>
                                   title='fn inflate::inflate_bytes_zlib'>inflate_bytes_zlib</a></td>
                            <td class='docblock-short'>
                                 <p>Decompress the given slice of DEFLATE compressed (with zlib headers and trailers) data.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -154,6 +165,7 @@ decodes an array of DEFLATE encoded bytes:</p>
                            <td class='docblock-short'>
                                 <p>Decompress the given slice of DEFLATE compressed (with zlib headers and trailers) data,
 without calculating and validating the checksum.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -168,20 +180,22 @@ without calculating and validating the checksum.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

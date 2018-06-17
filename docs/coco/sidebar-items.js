@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["deque","A lock-free work-stealing deque."],["epoch","Epoch-based garbage collection."],["stack","A lock-free stack."]]});

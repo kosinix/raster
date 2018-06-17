@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-core-1.3.0/src/scope/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-core-1.4.0/src/scope/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -407,7 +419,66 @@
 <span id="362">362</span>
 <span id="363">363</span>
 <span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
 </pre><pre class="rust ">
+<span class="doccomment">//! Methods for custom fork-join scopes, created by the [`scope()`]</span>
+<span class="doccomment">//! function. These are a more flexible alternative to [`join()`].</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [`scope()`]: fn.scope.html</span>
+<span class="doccomment">//! [`join()`]: ../join/join.fn.html</span>
+
 <span class="kw">use</span> <span class="ident">latch</span>::{<span class="ident">Latch</span>, <span class="ident">CountLatch</span>};
 <span class="kw">use</span> <span class="ident">log</span>::<span class="ident">Event</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">job</span>::<span class="ident">HeapJob</span>;
@@ -465,7 +536,7 @@
 <span class="doccomment">/// whereas `join()` can make exclusive use of the stack. **Prefer</span>
 <span class="doccomment">/// `join()` (or, even better, parallel iterators) where possible.**</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ### Example</span>
+<span class="doccomment">/// # Example</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The Rayon `join()` function launches two closures and waits for them</span>
 <span class="doccomment">/// to stop. One could implement `join()` using a scope like so, although</span>
@@ -489,14 +560,14 @@
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ### A note on threading</span>
+<span class="doccomment">/// # A note on threading</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The closure given to `scope()` executes in the Rayon thread-pool,</span>
 <span class="doccomment">/// as do those given to `spawn()`. This means that you can&#39;t access</span>
 <span class="doccomment">/// thread-local variables (well, you can, but they may have</span>
 <span class="doccomment">/// unexpected values).</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ### Task execution</span>
+<span class="doccomment">/// # Task execution</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Task execution potentially starts as soon as `spawn()` is called.</span>
 <span class="doccomment">/// The task will end sometime before `scope()` returns. Note that the</span>
@@ -560,7 +631,7 @@
 <span class="doccomment">/// will be joined before that scope returns, which in turn occurs</span>
 <span class="doccomment">/// before the creating task (task `s.1.1` in this case) finishes.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ### Accessing stack data</span>
+<span class="doccomment">/// # Accessing stack data</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// In general, spawned tasks may access stack data in place that</span>
 <span class="doccomment">/// outlives the scope itself. Other data must be fully owned by the</span>
@@ -650,7 +721,7 @@
 <span class="doccomment">/// });</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ### Panics</span>
+<span class="doccomment">/// # Panics</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// If a panic occurs, either in the closure given to `scope()` or in</span>
 <span class="doccomment">/// any of the spawned jobs, that panic will be propagated and the</span>
@@ -663,7 +734,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scope</span><span class="op">&lt;</span><span class="lifetime">&#39;scope</span>, <span class="ident">OP</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">op</span>: <span class="ident">OP</span>) <span class="op">-&gt;</span> <span class="ident">R</span>
     <span class="kw">where</span> <span class="ident">OP</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">Scope</span><span class="op">&lt;</span><span class="lifetime">&#39;scope</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">R</span> <span class="op">+</span> <span class="lifetime">&#39;scope</span> <span class="op">+</span> <span class="ident">Send</span>, <span class="ident">R</span>: <span class="ident">Send</span>,
 {
-    <span class="ident">in_worker</span>(<span class="op">|</span><span class="ident">owner_thread</span>, _<span class="op">|</span> {
+    <span class="ident">in_worker</span>(<span class="op">|</span><span class="ident">owner_thread</span>, <span class="kw">_</span><span class="op">|</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">scope</span>: <span class="ident">Scope</span><span class="op">&lt;</span><span class="lifetime">&#39;scope</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Scope</span> {
                 <span class="ident">owner_thread_index</span>: <span class="ident">owner_thread</span>.<span class="ident">index</span>(),
@@ -683,8 +754,55 @@
     <span class="doccomment">/// Spawns a job into the fork-join scope `self`. This job will</span>
     <span class="doccomment">/// execute sometime before the fork-join scope completes.  The</span>
     <span class="doccomment">/// job is specified as a closure, and this closure receives its</span>
-    <span class="doccomment">/// own reference to `self` as argument. This can be used to</span>
-    <span class="doccomment">/// inject new jobs into `self`.</span>
+    <span class="doccomment">/// own reference to the scope `self` as argument. This can be</span>
+    <span class="doccomment">/// used to inject new jobs into `self`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Nothing. The spawned closures cannot pass back values to the</span>
+    <span class="doccomment">/// caller directly, though they can write to local variables on</span>
+    <span class="doccomment">/// the stack (if those variables outlive the scope) or</span>
+    <span class="doccomment">/// communicate through shared channels.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// (The intention is to eventualy integrate with Rust futures to</span>
+    <span class="doccomment">/// support spawns of functions that compute a value.)</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # use rayon_core as rayon;</span>
+    <span class="doccomment">/// let mut value_a = None;</span>
+    <span class="doccomment">/// let mut value_b = None;</span>
+    <span class="doccomment">/// let mut value_c = None;</span>
+    <span class="doccomment">/// rayon::scope(|s| {</span>
+    <span class="doccomment">///     s.spawn(|s1| {</span>
+    <span class="doccomment">///           // ^ this is the same scope as `s`; this handle `s1`</span>
+    <span class="doccomment">///           //   is intended for use by the spawned task,</span>
+    <span class="doccomment">///           //   since scope handles cannot cross thread boundaries.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///         value_a = Some(22);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///         // the scope `s` will not end until all these tasks are done</span>
+    <span class="doccomment">///         s1.spawn(|_| {</span>
+    <span class="doccomment">///             value_b = Some(44);</span>
+    <span class="doccomment">///         });</span>
+    <span class="doccomment">///     });</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///     s.spawn(|_| {</span>
+    <span class="doccomment">///         value_c = Some(66);</span>
+    <span class="doccomment">///     });</span>
+    <span class="doccomment">/// });</span>
+    <span class="doccomment">/// assert_eq!(value_a, Some(22));</span>
+    <span class="doccomment">/// assert_eq!(value_b, Some(44));</span>
+    <span class="doccomment">/// assert_eq!(value_c, Some(66));</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # See also</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The [`scope` function] has more extensive documentation about</span>
+    <span class="doccomment">/// task spawning.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`scope` function]: fn.scope.html</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spawn</span><span class="op">&lt;</span><span class="ident">BODY</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">body</span>: <span class="ident">BODY</span>)
         <span class="kw">where</span> <span class="ident">BODY</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Scope</span><span class="op">&lt;</span><span class="lifetime">&#39;scope</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;scope</span>
     {
@@ -707,7 +825,7 @@
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">execute_job</span><span class="op">&lt;</span><span class="ident">FUNC</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">func</span>: <span class="ident">FUNC</span>)
         <span class="kw">where</span> <span class="ident">FUNC</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Scope</span><span class="op">&lt;</span><span class="lifetime">&#39;scope</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;scope</span>
     {
-        <span class="kw">let</span> _: <span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">execute_job_closure</span>(<span class="ident">func</span>);
+        <span class="kw">let</span> <span class="kw">_</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">execute_job_closure</span>(<span class="ident">func</span>);
     }
 
     <span class="doccomment">/// Executes `func` as a job in scope. Adjusts the &quot;job completed&quot;</span>
@@ -786,20 +904,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

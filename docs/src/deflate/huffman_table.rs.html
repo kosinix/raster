@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-0.7.17/src/huffman_table.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-0.7.18/src/huffman_table.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>huffman_table.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -3029,7 +3041,7 @@
         <span class="comment">// using the top bits to determine the code, rather than having a 32k long table of</span>
         <span class="comment">// distance codes.</span>
         <span class="number">257</span>...<span class="number">32768</span> <span class="op">=&gt;</span> <span class="ident">DISTANCE_CODES</span>[<span class="number">256</span> <span class="op">+</span> ((<span class="ident">distance</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">&gt;&gt;</span> <span class="number">7</span>)],
-        _ <span class="op">=&gt;</span> <span class="number">0</span>,
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="number">0</span>,
     }
 }
 
@@ -3343,7 +3355,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_length_table_fixed</span>() {
-        <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">build_length_count_table</span>(<span class="kw-2">&amp;</span><span class="ident">FIXED_CODE_LENGTHS</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="number">0</span>; <span class="number">16</span>]);
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">build_length_count_table</span>(<span class="kw-2">&amp;</span><span class="ident">FIXED_CODE_LENGTHS</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="number">0</span>; <span class="number">16</span>]);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -3410,20 +3422,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -42,10 +42,19 @@
 
     // On the search screen, so you remain on the last tab you opened.
     //
-    // 0 for "Types/modules"
-    // 1 for "As parameters"
-    // 2 for "As return value"
+    // 0 for "In Names"
+    // 1 for "In Parameters"
+    // 2 for "In Return Types"
     var currentTab = 0;
+
+    var themesWidth = null;
+
+    if (!String.prototype.startsWith) {
+        String.prototype.startsWith = function(searchString, position) {
+            position = position || 0;
+            return this.indexOf(searchString, position) === position;
+        };
+    }
 
     function hasClass(elem, className) {
         if (elem && className && elem.className) {
@@ -94,16 +103,47 @@
         }
     }
 
-    function onEach(arr, func) {
-        if (arr && arr.length > 0 && func) {
-            for (var i = 0; i < arr.length; i++) {
-                func(arr[i]);
+    function isHidden(elem) {
+        return (elem.offsetParent === null)
+    }
+
+    function showSidebar() {
+        var elems = document.getElementsByClassName("sidebar-elems")[0];
+        if (elems) {
+            addClass(elems, "show-it");
+        }
+        var sidebar = document.getElementsByClassName('sidebar')[0];
+        if (sidebar) {
+            addClass(sidebar, 'mobile');
+            var filler = document.getElementById("sidebar-filler");
+            if (!filler) {
+                var div = document.createElement("div");
+                div.id = "sidebar-filler";
+                sidebar.appendChild(div);
             }
+        }
+        var themePicker = document.getElementsByClassName("theme-picker");
+        if (themePicker && themePicker.length > 0) {
+            themePicker[0].style.display = "none";
         }
     }
 
-    function isHidden(elem) {
-        return (elem.offsetParent === null)
+    function hideSidebar() {
+        var elems = document.getElementsByClassName("sidebar-elems")[0];
+        if (elems) {
+            removeClass(elems, "show-it");
+        }
+        var sidebar = document.getElementsByClassName('sidebar')[0];
+        removeClass(sidebar, 'mobile');
+        var filler = document.getElementById("sidebar-filler");
+        if (filler) {
+            filler.remove();
+        }
+        document.getElementsByTagName("body")[0].style.marginTop = '';
+        var themePicker = document.getElementsByClassName("theme-picker");
+        if (themePicker && themePicker.length > 0) {
+            themePicker[0].style.display = null;
+        }
     }
 
     // used for special search precedence
@@ -119,8 +159,7 @@
             map(function(s) {
                 var pair = s.split("=");
                 params[decodeURIComponent(pair[0])] =
-                    typeof pair[1] === "undefined" ?
-                            null : decodeURIComponent(pair[1]);
+                    typeof pair[1] === "undefined" ? null : decodeURIComponent(pair[1]);
             });
         return params;
     }
@@ -131,6 +170,8 @@
     }
 
     function highlightSourceLines(ev) {
+        // If we're in mobile mode, we should add the sidebar in any case.
+        hideSidebar();
         var search = document.getElementById("search");
         var i, from, to, match = window.location.hash.match(/^#?(\d+)(?:-(\d+))?$/);
         if (match) {
@@ -205,45 +246,59 @@
         }
     }
 
-    function handleShortcut(ev) {
-        if (document.activeElement.tagName === "INPUT")
-            return;
+    function handleEscape(ev, help) {
+        hideModal();
+        var search = document.getElementById("search");
+        if (!hasClass(help, "hidden")) {
+            displayHelp(false, ev);
+        } else if (!hasClass(search, "hidden")) {
+            ev.preventDefault();
+            addClass(search, "hidden");
+            removeClass(document.getElementById("main"), "hidden");
+        }
+        defocusSearchBar();
+    }
 
+    function handleShortcut(ev) {
         // Don't interfere with browser shortcuts
-        if (ev.ctrlKey || ev.altKey || ev.metaKey)
+        if (ev.ctrlKey || ev.altKey || ev.metaKey) {
             return;
+        }
 
         var help = document.getElementById("help");
-        switch (getVirtualKey(ev)) {
-        case "Escape":
-            var search = document.getElementById("search");
-            if (!hasClass(help, "hidden")) {
+        if (document.activeElement.tagName === "INPUT") {
+            switch (getVirtualKey(ev)) {
+            case "Escape":
+                handleEscape(ev, help);
+                break;
+            }
+        } else {
+            switch (getVirtualKey(ev)) {
+            case "Escape":
+                handleEscape(ev, help);
+                break;
+
+            case "s":
+            case "S":
                 displayHelp(false, ev);
-            } else if (!hasClass(search, "hidden")) {
+                hideModal();
                 ev.preventDefault();
-                addClass(search, "hidden");
-                removeClass(document.getElementById("main"), "hidden");
+                focusSearchBar();
+                break;
+
+            case "+":
+            case "-":
+                ev.preventDefault();
+                toggleAllDocs();
+                break;
+
+            case "?":
+                if (ev.shiftKey) {
+                    hideModal();
+                    displayHelp(true, ev);
+                }
+                break;
             }
-            break;
-
-        case "s":
-        case "S":
-            displayHelp(false, ev);
-            ev.preventDefault();
-            focusSearchBar();
-            break;
-
-        case "+":
-        case "-":
-            ev.preventDefault();
-            toggleAllDocs();
-            break;
-
-        case "?":
-            if (ev.shiftKey) {
-                displayHelp(true, ev);
-            }
-            break;
         }
     }
 
@@ -251,9 +306,9 @@
     document.onkeydown = handleShortcut;
     document.onclick = function(ev) {
         if (hasClass(ev.target, 'collapse-toggle')) {
-            collapseDocs(ev.target);
+            collapseDocs(ev.target, "toggle");
         } else if (hasClass(ev.target.parentNode, 'collapse-toggle')) {
-            collapseDocs(ev.target.parentNode);
+            collapseDocs(ev.target.parentNode, "toggle");
         } else if (ev.target.tagName === 'SPAN' && hasClass(ev.target.parentNode, 'line-numbers')) {
             var prev_id = 0;
 
@@ -316,39 +371,38 @@
      * This code is an unmodified version of the code written by Marco de Wit
      * and was found at http://stackoverflow.com/a/18514751/745719
      */
-    var levenshtein = (function() {
-        var row2 = [];
-        return function(s1, s2) {
-            if (s1 === s2) {
-                return 0;
+    var levenshtein_row2 = [];
+    function levenshtein(s1, s2) {
+        if (s1 === s2) {
+            return 0;
+        }
+        var s1_len = s1.length, s2_len = s2.length;
+        if (s1_len && s2_len) {
+            var i1 = 0, i2 = 0, a, b, c, c2, row = levenshtein_row2;
+            while (i1 < s1_len) {
+                row[i1] = ++i1;
             }
-            var s1_len = s1.length, s2_len = s2.length;
-            if (s1_len && s2_len) {
-                var i1 = 0, i2 = 0, a, b, c, c2, row = row2;
-                while (i1 < s1_len) {
-                    row[i1] = ++i1;
+            while (i2 < s2_len) {
+                c2 = s2.charCodeAt(i2);
+                a = i2;
+                ++i2;
+                b = i2;
+                for (i1 = 0; i1 < s1_len; ++i1) {
+                    c = a + (s1.charCodeAt(i1) !== c2 ? 1 : 0);
+                    a = row[i1];
+                    b = b < a ? (b < c ? b + 1 : c) : (a < c ? a + 1 : c);
+                    row[i1] = b;
                 }
-                while (i2 < s2_len) {
-                    c2 = s2.charCodeAt(i2);
-                    a = i2;
-                    ++i2;
-                    b = i2;
-                    for (i1 = 0; i1 < s1_len; ++i1) {
-                        c = a + (s1.charCodeAt(i1) !== c2 ? 1 : 0);
-                        a = row[i1];
-                        b = b < a ? (b < c ? b + 1 : c) : (a < c ? a + 1 : c);
-                        row[i1] = b;
-                    }
-                }
-                return b;
             }
-            return s1_len + s2_len;
-        };
-    })();
+            return b;
+        }
+        return s1_len + s2_len;
+    }
 
     function initSearch(rawSearchIndex) {
         var currentResults, index, searchIndex;
         var MAX_LEV_DISTANCE = 3;
+        var MAX_RESULTS = 200;
         var params = getQueryStringParams();
 
         // Populate search bar with query string search term when provided,
@@ -362,24 +416,151 @@
         /**
          * Executes the query and builds an index of results
          * @param  {[Object]} query     [The user query]
-         * @param  {[type]} max         [The maximum results returned]
          * @param  {[type]} searchWords [The list of search words to query
          *                               against]
          * @return {[type]}             [A search index of results]
          */
-        function execQuery(query, max, searchWords) {
+        function execQuery(query, searchWords) {
+            function itemTypeFromName(typename) {
+                for (var i = 0; i < itemTypes.length; ++i) {
+                    if (itemTypes[i] === typename) {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+
             var valLower = query.query.toLowerCase(),
                 val = valLower,
                 typeFilter = itemTypeFromName(query.type),
-                results = {},
+                results = {}, results_in_args = {}, results_returned = {},
                 split = valLower.split("::");
 
-            // remove empty keywords
-            for (var j = 0; j < split.length; ++j) {
-                split[j].toLowerCase();
-                if (split[j] === "") {
-                    split.splice(j, 1);
+            for (var z = 0; z < split.length; ++z) {
+                if (split[z] === "") {
+                    split.splice(z, 1);
+                    z -= 1;
                 }
+            }
+
+            function transformResults(results, isType) {
+                var out = [];
+                for (i = 0; i < results.length; ++i) {
+                    if (results[i].id > -1) {
+                        var obj = searchIndex[results[i].id];
+                        obj.lev = results[i].lev;
+                        if (isType !== true || obj.type) {
+                            out.push(obj);
+                        }
+                    }
+                    if (out.length >= MAX_RESULTS) {
+                        break;
+                    }
+                }
+                return out;
+            }
+
+            function sortResults(results, isType) {
+                var ar = [];
+                for (var entry in results) {
+                    if (results.hasOwnProperty(entry)) {
+                        ar.push(results[entry]);
+                    }
+                }
+                results = ar;
+                var nresults = results.length;
+                for (var i = 0; i < nresults; ++i) {
+                    results[i].word = searchWords[results[i].id];
+                    results[i].item = searchIndex[results[i].id] || {};
+                }
+                // if there are no results then return to default and fail
+                if (results.length === 0) {
+                    return [];
+                }
+
+                results.sort(function(aaa, bbb) {
+                    var a, b;
+
+                    // Sort by non levenshtein results and then levenshtein results by the distance
+                    // (less changes required to match means higher rankings)
+                    a = (aaa.lev);
+                    b = (bbb.lev);
+                    if (a !== b) { return a - b; }
+
+                    // sort by crate (non-current crate goes later)
+                    a = (aaa.item.crate !== window.currentCrate);
+                    b = (bbb.item.crate !== window.currentCrate);
+                    if (a !== b) { return a - b; }
+
+                    // sort by exact match (mismatch goes later)
+                    a = (aaa.word !== valLower);
+                    b = (bbb.word !== valLower);
+                    if (a !== b) { return a - b; }
+
+                    // sort by item name length (longer goes later)
+                    a = aaa.word.length;
+                    b = bbb.word.length;
+                    if (a !== b) { return a - b; }
+
+                    // sort by item name (lexicographically larger goes later)
+                    a = aaa.word;
+                    b = bbb.word;
+                    if (a !== b) { return (a > b ? +1 : -1); }
+
+                    // sort by index of keyword in item name (no literal occurrence goes later)
+                    a = (aaa.index < 0);
+                    b = (bbb.index < 0);
+                    if (a !== b) { return a - b; }
+                    // (later literal occurrence, if any, goes later)
+                    a = aaa.index;
+                    b = bbb.index;
+                    if (a !== b) { return a - b; }
+
+                    // special precedence for primitive pages
+                    if ((aaa.item.ty === TY_PRIMITIVE) && (bbb.item.ty !== TY_PRIMITIVE)) {
+                        return -1;
+                    }
+                    if ((bbb.item.ty === TY_PRIMITIVE) && (aaa.item.ty !== TY_PRIMITIVE)) {
+                        return 1;
+                    }
+
+                    // sort by description (no description goes later)
+                    a = (aaa.item.desc === '');
+                    b = (bbb.item.desc === '');
+                    if (a !== b) { return a - b; }
+
+                    // sort by type (later occurrence in `itemTypes` goes later)
+                    a = aaa.item.ty;
+                    b = bbb.item.ty;
+                    if (a !== b) { return a - b; }
+
+                    // sort by path (lexicographically larger goes later)
+                    a = aaa.item.path;
+                    b = bbb.item.path;
+                    if (a !== b) { return (a > b ? +1 : -1); }
+
+                    // que sera, sera
+                    return 0;
+                });
+
+                for (var i = 0; i < results.length; ++i) {
+                    var result = results[i];
+
+                    // this validation does not make sense when searching by types
+                    if (result.dontValidate) {
+                        continue;
+                    }
+                    var name = result.item.name.toLowerCase(),
+                        path = result.item.path.toLowerCase(),
+                        parent = result.item.parent;
+
+                    if (isType !== true &&
+                        validateResult(name, path, split, parent) === false)
+                    {
+                        result.id = -1;
+                    }
+                }
+                return transformResults(results);
             }
 
             function extractGenerics(val) {
@@ -402,13 +583,13 @@
                 // match as well.
                 var lev_distance = MAX_LEV_DISTANCE + 1;
                 if (val.generics.length > 0) {
-                    if (obj.generics &&
-                        obj.generics.length >= val.generics.length) {
+                    if (obj.generics && obj.generics.length >= val.generics.length) {
                         var elems = obj.generics.slice(0);
-                        for (var y = 0;
-                             y < val.generics.length;
-                             ++y) {
-                            // The point here is to find the type that matches the most.
+                        var total = 0;
+                        var done = 0;
+                        // We need to find the type that matches the most to remove it in order
+                        // to move forward.
+                        for (var y = 0; y < val.generics.length; ++y) {
                             var lev = { pos: -1, lev: MAX_LEV_DISTANCE + 1};
                             for (var x = 0; x < elems.length; ++x) {
                                 var tmp_lev = levenshtein(elems[x], val.generics[y]);
@@ -420,14 +601,14 @@
                             if (lev.pos !== -1) {
                                 elems.splice(lev.pos, 1);
                                 lev_distance = Math.min(lev.lev, lev_distance);
+                                total += lev.lev;
+                                done += 1;
                             } else {
                                 return MAX_LEV_DISTANCE + 1;
                             }
                         }
-                        return lev_distance;
+                        return lev_distance;//Math.ceil(total / done);
                     }
-                } else {
-                    return 0;
                 }
                 return MAX_LEV_DISTANCE + 1;
             }
@@ -437,7 +618,7 @@
                 var lev_distance = MAX_LEV_DISTANCE + 1;
                 if (obj.name === val.name) {
                     if (literalSearch === true) {
-                        if (val.generics.length !== 0) {
+                        if (val.generics && val.generics.length !== 0) {
                             if (obj.generics && obj.length >= val.generics.length) {
                                 var elems = obj.generics.slice(0);
                                 var allFound = true;
@@ -463,14 +644,18 @@
                     }
                     // If the type has generics but don't match, then it won't return at this point.
                     // Otherwise, `checkGenerics` will return 0 and it'll return.
-                    var tmp_lev = checkGenerics(obj, val);
-                    if (tmp_lev <= MAX_LEV_DISTANCE) {
-                        return tmp_lev;
+                    if (obj.generics && obj.generics.length !== 0) {
+                        var tmp_lev = checkGenerics(obj, val);
+                        if (tmp_lev <= MAX_LEV_DISTANCE) {
+                            return tmp_lev;
+                        }
+                    } else {
+                        return 0;
                     }
                 }
                 // Names didn't match so let's check if one of the generic types could.
                 if (literalSearch === true) {
-                     if (obj.generics.length > 0) {
+                     if (obj.generics && obj.generics.length > 0) {
                         for (var x = 0; x < obj.generics.length; ++x) {
                             if (obj.generics[x] === val.name) {
                                 return true;
@@ -479,12 +664,11 @@
                     }
                     return false;
                 }
-                var new_lev = levenshtein(obj.name, val.name);
-                if (new_lev < lev_distance) {
-                    if ((lev = checkGenerics(obj, val)) <= MAX_LEV_DISTANCE) {
-                        lev_distance = Math.min(Math.min(new_lev, lev), lev_distance);
-                    }
+                var lev_distance = Math.min(levenshtein(obj.name, val.name), lev_distance);
+                if (lev_distance <= MAX_LEV_DISTANCE) {
+                    lev_distance = Math.min(checkGenerics(obj, val), lev_distance);
                 } else if (obj.generics && obj.generics.length > 0) {
+                    // We can check if the type we're looking for is inside the generics!
                     for (var x = 0; x < obj.generics.length; ++x) {
                         lev_distance = Math.min(levenshtein(obj.generics[x], val.name),
                                                 lev_distance);
@@ -529,6 +713,41 @@
                 return literalSearch === true ? false : lev_distance;
             }
 
+            function checkPath(startsWith, lastElem, ty) {
+                if (startsWith.length === 0) {
+                    return 0;
+                }
+                var ret_lev = MAX_LEV_DISTANCE + 1;
+                var path = ty.path.split("::");
+
+                if (ty.parent && ty.parent.name) {
+                    path.push(ty.parent.name.toLowerCase());
+                }
+
+                if (startsWith.length > path.length) {
+                    return MAX_LEV_DISTANCE + 1;
+                }
+                for (var i = 0; i < path.length; ++i) {
+                    if (i + startsWith.length > path.length) {
+                        break;
+                    }
+                    var lev_total = 0;
+                    var aborted = false;
+                    for (var x = 0; x < startsWith.length; ++x) {
+                        var lev = levenshtein(path[i + x], startsWith[x]);
+                        if (lev > MAX_LEV_DISTANCE) {
+                            aborted = true;
+                            break;
+                        }
+                        lev_total += lev;
+                    }
+                    if (aborted === false) {
+                        ret_lev = Math.min(ret_lev, Math.round(lev_total / startsWith.length));
+                    }
+                }
+                return ret_lev;
+            }
+
             function typePassesFilter(filter, type) {
                 // No filter
                 if (filter < 0) return true;
@@ -551,18 +770,24 @@
                 return false;
             }
 
+            function generateId(ty) {
+                if (ty.parent && ty.parent.name) {
+                    return itemTypes[ty.ty] + ty.path + ty.parent.name + ty.name;
+                }
+                return itemTypes[ty.ty] + ty.path + ty.name;
+            }
+
             // quoted values mean literal search
             var nSearchWords = searchWords.length;
             if ((val.charAt(0) === "\"" || val.charAt(0) === "'") &&
                 val.charAt(val.length - 1) === val.charAt(0))
             {
-                var results_length = 0;
                 val = extractGenerics(val.substr(1, val.length - 2));
                 for (var i = 0; i < nSearchWords; ++i) {
                     var in_args = findArg(searchIndex[i], val, true);
                     var returned = checkReturned(searchIndex[i], val, true);
                     var ty = searchIndex[i];
-                    var fullId = itemTypes[ty.ty] + ty.path + ty.name;
+                    var fullId = generateId(ty);
 
                     if (searchWords[i] === val.name) {
                         // filter type: ... queries
@@ -570,30 +795,31 @@
                             results[fullId] === undefined)
                         {
                             results[fullId] = {id: i, index: -1};
-                            results_length += 1;
                         }
                     } else if ((in_args === true || returned === true) &&
                                typePassesFilter(typeFilter, searchIndex[i].ty)) {
-                        if (results[fullId] === undefined) {
+                        if (in_args === true || returned === true) {
+                            if (in_args === true) {
+                                results_in_args[fullId] = {
+                                    id: i,
+                                    index: -1,
+                                    dontValidate: true,
+                                };
+                            }
+                            if (returned === true) {
+                                results_returned[fullId] = {
+                                    id: i,
+                                    index: -1,
+                                    dontValidate: true,
+                                };
+                            }
+                        } else {
                             results[fullId] = {
                                 id: i,
                                 index: -1,
                                 dontValidate: true,
-                                in_args: in_args,
-                                returned: returned,
                             };
-                            results_length += 1;
-                        } else {
-                            if (in_args === true) {
-                                results[fullId].in_args = true;
-                            }
-                            if (returned === true) {
-                                results[fullId].returned = true;
-                            }
                         }
-                    }
-                    if (results_length === max) {
-                        break;
                     }
                 }
                 query.inputs = [val];
@@ -617,7 +843,7 @@
                     if (!type) {
                         continue;
                     }
-                    var fullId = itemTypes[ty.ty] + ty.path + ty.name;
+                    var fullId = generateId(ty);
 
                     // allow searching for void (no output) functions as well
                     var typeOutput = type.output ? type.output.name : "";
@@ -635,23 +861,26 @@
                             }
                             in_args = allFound;
                         }
-                        if (in_args === true || returned === true || module === true) {
-                            if (results[fullId] !== undefined) {
-                                if (returned === true) {
-                                    results[fullId].returned = true;
-                                }
-                                if (in_args === true) {
-                                    results[fullId].in_args = true;
-                                }
-                            } else {
-                                results[fullId] = {
-                                    id: i,
-                                    index: -1,
-                                    dontValidate: true,
-                                    returned: returned,
-                                    in_args: in_args,
-                                };
-                            }
+                        if (in_args === true) {
+                            results_in_args[fullId] = {
+                                id: i,
+                                index: -1,
+                                dontValidate: true,
+                            };
+                        }
+                        if (returned === true) {
+                            results_returned[fullId] = {
+                                id: i,
+                                index: -1,
+                                dontValidate: true,
+                            };
+                        }
+                        if (module === true) {
+                            results[fullId] = {
+                                id: i,
+                                index: -1,
+                                dontValidate: true,
+                            };
                         }
                     }
                 }
@@ -665,189 +894,121 @@
                 query.search = val;
                 // gather matching search results up to a certain maximum
                 val = val.replace(/\_/g, "");
-                var valGenerics = extractGenerics(val);
-                var results_length = 0;
-                for (var i = 0; i < split.length; ++i) {
-                    for (var j = 0; j < nSearchWords; ++j) {
-                        var lev_distance;
-                        var ty = searchIndex[j];
-                        if (!ty) {
-                            continue;
-                        }
-                        var returned = false;
-                        var in_args = false;
-                        var index = -1;
-                        // we want lev results to go lower than others
-                        var lev = MAX_LEV_DISTANCE;
-                        var fullId = itemTypes[ty.ty] + ty.path + ty.name;
 
-                        if (searchWords[j].indexOf(split[i]) > -1 ||
-                            searchWords[j].indexOf(val) > -1 ||
-                            searchWords[j].replace(/_/g, "").indexOf(val) > -1)
-                        {
-                            // filter type: ... queries
-                            if (typePassesFilter(typeFilter, ty) &&
-                                results[fullId] === undefined) {
-                                index = searchWords[j].replace(/_/g, "").indexOf(val);
-                            }
+                var valGenerics = extractGenerics(val);
+
+                var paths = valLower.split("::");
+                var j;
+                for (j = 0; j < paths.length; ++j) {
+                    if (paths[j] === "") {
+                        paths.splice(j, 1);
+                        j -= 1;
+                    }
+                }
+                val = paths[paths.length - 1];
+                var startsWith = paths.slice(0, paths.length > 1 ? paths.length - 1 : 1);
+
+                for (j = 0; j < nSearchWords; ++j) {
+                    var lev_distance;
+                    var ty = searchIndex[j];
+                    if (!ty) {
+                        continue;
+                    }
+                    var lev_add = 0;
+                    if (paths.length > 1) {
+                        var lev = checkPath(startsWith, paths[paths.length - 1], ty);
+                        if (lev > MAX_LEV_DISTANCE) {
+                            continue;
+                        } else if (lev > 0) {
+                            lev_add = 1;
                         }
-                        if ((lev_distance = levenshtein(searchWords[j], val)) <= MAX_LEV_DISTANCE) {
-                            if (typePassesFilter(typeFilter, ty) &&
-                                (results[fullId] === undefined ||
-                                 results[fullId].lev > lev_distance)) {
-                                lev = Math.min(lev, lev_distance);
-                                index = Math.max(0, index);
-                            }
+                    }
+
+                    var returned = MAX_LEV_DISTANCE + 1;
+                    var in_args = MAX_LEV_DISTANCE + 1;
+                    var index = -1;
+                    // we want lev results to go lower than others
+                    var lev = MAX_LEV_DISTANCE + 1;
+                    var fullId = generateId(ty);
+
+                    if (searchWords[j].indexOf(split[i]) > -1 ||
+                        searchWords[j].indexOf(val) > -1 ||
+                        searchWords[j].replace(/_/g, "").indexOf(val) > -1)
+                    {
+                        // filter type: ... queries
+                        if (typePassesFilter(typeFilter, ty.ty) && results[fullId] === undefined) {
+                            index = searchWords[j].replace(/_/g, "").indexOf(val);
                         }
-                        if ((lev_distance = findArg(searchIndex[j], valGenerics))
-                            <= MAX_LEV_DISTANCE) {
-                            if (typePassesFilter(typeFilter, ty) &&
-                                (results[fullId] === undefined ||
-                                 results[fullId].lev > lev_distance)) {
-                                in_args = true;
-                                lev = Math.min(lev_distance, lev);
-                                index = Math.max(0, index);
-                            }
+                    }
+                    if ((lev = levenshtein(searchWords[j], val)) <= MAX_LEV_DISTANCE) {
+                        if (typePassesFilter(typeFilter, ty.ty) === false) {
+                            lev = MAX_LEV_DISTANCE + 1;
+                        } else {
+                            lev += 1;
                         }
-                        if ((lev_distance = checkReturned(searchIndex[j], valGenerics)) <=
-                            MAX_LEV_DISTANCE) {
-                            if (typePassesFilter(typeFilter, ty) &&
-                                (results[fullId] === undefined ||
-                                 results[fullId].lev > lev_distance)) {
-                                returned = true;
-                                lev = Math.min(lev_distance, lev);
-                                index = Math.max(0, index);
-                            }
+                    }
+                    if ((in_args = findArg(ty, valGenerics)) <= MAX_LEV_DISTANCE) {
+                        if (typePassesFilter(typeFilter, ty.ty) === false) {
+                            in_args = MAX_LEV_DISTANCE + 1;
                         }
+                    }
+                    if ((returned = checkReturned(ty, valGenerics)) <= MAX_LEV_DISTANCE) {
+                        if (typePassesFilter(typeFilter, ty.ty) === false) {
+                            returned = MAX_LEV_DISTANCE + 1;
+                        }
+                    }
+
+                    lev += lev_add;
+                    if (lev > 0 && val.length > 3 && searchWords[j].startsWith(val)) {
+                        if (val.length < 6) {
+                            lev -= 1;
+                        } else {
+                            lev = 0;
+                        }
+                    }
+                    if (in_args <= MAX_LEV_DISTANCE) {
+                        if (results_in_args[fullId] === undefined) {
+                            results_in_args[fullId] = {
+                                id: j,
+                                index: index,
+                                lev: in_args,
+                            };
+                        }
+                        results_in_args[fullId].lev =
+                            Math.min(results_in_args[fullId].lev, in_args);
+                    }
+                    if (returned <= MAX_LEV_DISTANCE) {
+                        if (results_returned[fullId] === undefined) {
+                            results_returned[fullId] = {
+                                id: j,
+                                index: index,
+                                lev: returned,
+                            };
+                        }
+                        results_returned[fullId].lev =
+                            Math.min(results_returned[fullId].lev, returned);
+                    }
+                    if (index !== -1 || lev <= MAX_LEV_DISTANCE) {
                         if (index !== -1) {
-                            if (results[fullId] === undefined) {
-                                results[fullId] = {
-                                    id: j,
-                                    index: index,
-                                    lev: lev,
-                                    in_args: in_args,
-                                    returned: returned,
-                                };
-                                results_length += 1;
-                            } else {
-                                if (results[fullId].lev > lev) {
-                                    results[fullId].lev = lev;
-                                }
-                                if (in_args === true) {
-                                    results[fullId].in_args = true;
-                                }
-                                if (returned === true) {
-                                    results[fullId].returned = true;
-                                }
-                            }
+                            lev = 0;
                         }
-                        if (results_length === max) {
-                            break;
+                        if (results[fullId] === undefined) {
+                            results[fullId] = {
+                                id: j,
+                                index: index,
+                                lev: lev,
+                            };
                         }
+                        results[fullId].lev = Math.min(results[fullId].lev, lev);
                     }
                 }
             }
 
-            var ar = [];
-            for (var entry in results) {
-                if (results.hasOwnProperty(entry)) {
-                    ar.push(results[entry]);
-                }
-            }
-            results = ar;
-            var nresults = results.length;
-            for (var i = 0; i < nresults; ++i) {
-                results[i].word = searchWords[results[i].id];
-                results[i].item = searchIndex[results[i].id] || {};
-            }
-            // if there are no results then return to default and fail
-            if (results.length === 0) {
-                return [];
-            }
-
-            results.sort(function sortResults(aaa, bbb) {
-                var a, b;
-
-                // Sort by non levenshtein results and then levenshtein results by the distance
-                // (less changes required to match means higher rankings)
-                a = (aaa.lev);
-                b = (bbb.lev);
-                if (a !== b) { return a - b; }
-
-                // sort by crate (non-current crate goes later)
-                a = (aaa.item.crate !== window.currentCrate);
-                b = (bbb.item.crate !== window.currentCrate);
-                if (a !== b) { return a - b; }
-
-                // sort by exact match (mismatch goes later)
-                a = (aaa.word !== valLower);
-                b = (bbb.word !== valLower);
-                if (a !== b) { return a - b; }
-
-                // sort by item name length (longer goes later)
-                a = aaa.word.length;
-                b = bbb.word.length;
-                if (a !== b) { return a - b; }
-
-                // sort by item name (lexicographically larger goes later)
-                a = aaa.word;
-                b = bbb.word;
-                if (a !== b) { return (a > b ? +1 : -1); }
-
-                // sort by index of keyword in item name (no literal occurrence goes later)
-                a = (aaa.index < 0);
-                b = (bbb.index < 0);
-                if (a !== b) { return a - b; }
-                // (later literal occurrence, if any, goes later)
-                a = aaa.index;
-                b = bbb.index;
-                if (a !== b) { return a - b; }
-
-                // special precedence for primitive pages
-                if ((aaa.item.ty === TY_PRIMITIVE) && (bbb.item.ty !== TY_PRIMITIVE)) {
-                    return -1;
-                }
-                if ((bbb.item.ty === TY_PRIMITIVE) && (aaa.item.ty !== TY_PRIMITIVE)) {
-                    return 1;
-                }
-
-                // sort by description (no description goes later)
-                a = (aaa.item.desc === '');
-                b = (bbb.item.desc === '');
-                if (a !== b) { return a - b; }
-
-                // sort by type (later occurrence in `itemTypes` goes later)
-                a = aaa.item.ty;
-                b = bbb.item.ty;
-                if (a !== b) { return a - b; }
-
-                // sort by path (lexicographically larger goes later)
-                a = aaa.item.path;
-                b = bbb.item.path;
-                if (a !== b) { return (a > b ? +1 : -1); }
-
-                // que sera, sera
-                return 0;
-            });
-
-            for (var i = 0; i < results.length; ++i) {
-                var result = results[i];
-
-                // this validation does not make sense when searching by types
-                if (result.dontValidate) {
-                    continue;
-                }
-                var name = result.item.name.toLowerCase(),
-                    path = result.item.path.toLowerCase(),
-                    parent = result.item.parent;
-
-                if (result.returned === false && result.param === false &&
-                    validateResult(name, path, split, parent) === false)
-                {
-                    result.id = -1;
-                }
-            }
-            return results;
+            return {
+                'in_args': sortResults(results_in_args, true),
+                'returned': sortResults(results_returned, true),
+                'others': sortResults(results),
+            };
         }
 
         /**
@@ -884,9 +1045,8 @@
             return true;
         }
 
-        function getQuery() {
-            var matches, type, query, raw =
-                document.getElementsByClassName('search-input')[0].value;
+        function getQuery(raw) {
+            var matches, type, query;
             query = raw;
 
             matches = query.match(/^(fn|mod|struct|enum|trait|type|const|macro)\s*:\s*/i);
@@ -995,6 +1155,10 @@
                     e.preventDefault();
                 } else if (e.which === 16) { // shift
                     // Does nothing, it's just to avoid losing "focus" on the highlighted element.
+                } else if (e.which === 27) { // escape
+                    removeClass(actives[currentTab][0], 'highlighted');
+                    document.getElementsByClassName('search-input')[0].value = '';
+                    defocusSearchBar();
                 } else if (actives[currentTab].length > 0) {
                     removeClass(actives[currentTab][0], 'highlighted');
                 }
@@ -1005,6 +1169,10 @@
             var h1 = document.createElement('h1');
             h1.textContent = content;
             return h1.innerHTML;
+        }
+
+        function pathSplitter(path) {
+            return '<span>' + path.replace(/::/g, '::</span><span>');
         }
 
         function addTab(array, query, display) {
@@ -1061,7 +1229,7 @@
 
                     output += '<tr class="' + type + ' result"><td>' +
                               '<a href="' + href + '">' +
-                              displayPath + '<span class="' + type + '">' +
+                              pathSplitter(displayPath) + '<span class="' + type + '">' +
                               name + '</span></a></td><td>' +
                               '<a href="' + href + '">' +
                               '<span class="desc">' + escape(item.desc) +
@@ -1086,15 +1254,15 @@
         }
 
         function showResults(results) {
-            var output, query = getQuery();
+            var output, query = getQuery(document.getElementsByClassName('search-input')[0].value);
 
             currentResults = query.id;
             output = '<h1>Results for ' + escape(query.query) +
                 (query.type ? ' (type: ' + escape(query.type) + ')' : '') + '</h1>' +
                 '<div id="titles">' +
-                makeTabHeader(0, "Types/modules", results['others'].length) +
-                makeTabHeader(1, "As parameters", results['in_args'].length) +
-                makeTabHeader(2, "As return value", results['returned'].length) +
+                makeTabHeader(0, "In Names", results['others'].length) +
+                makeTabHeader(1, "In Parameters", results['in_args'].length) +
+                makeTabHeader(2, "In Return Types", results['returned'].length) +
                 '</div><div id="results">';
 
             output += addTab(results['others'], query);
@@ -1125,14 +1293,12 @@
 
         function search(e) {
             var query,
-                filterdata = [],
                 obj, i, len,
                 results = {"in_args": [], "returned": [], "others": []},
-                maxResults = 200,
                 resultIndex;
             var params = getQueryStringParams();
 
-            query = getQuery();
+            query = getQuery(document.getElementsByClassName('search-input')[0].value);
             if (e) {
                 e.preventDefault();
             }
@@ -1154,50 +1320,8 @@
                 }
             }
 
-            resultIndex = execQuery(query, 20000, index);
-            len = resultIndex.length;
-            for (i = 0; i < len; ++i) {
-                if (resultIndex[i].id > -1) {
-                    var added = false;
-                    obj = searchIndex[resultIndex[i].id];
-                    filterdata.push([obj.name, obj.ty, obj.path, obj.desc]);
-                    if (obj.type) {
-                        if (results['returned'].length < maxResults &&
-                            resultIndex[i].returned === true)
-                        {
-                            results['returned'].push(obj);
-                            added = true;
-                        }
-                        if (results['in_args'].length < maxResults &&
-                            resultIndex[i].in_args === true)
-                        {
-                            results['in_args'].push(obj);
-                            added = true;
-                        }
-                    }
-                    if (results['others'].length < maxResults &&
-                        (added === false ||
-                         (query.search && obj.name.indexOf(query.search) !== -1))) {
-                        results['others'].push(obj);
-                    }
-                }
-                if (results['others'].length >= maxResults &&
-                    results['in_args'].length >= maxResults &&
-                    results['returned'].length >= maxResults) {
-                    break;
-                }
-            }
-
+            results = execQuery(query, index);
             showResults(results);
-        }
-
-        function itemTypeFromName(typename) {
-            for (var i = 0; i < itemTypes.length; ++i) {
-                if (itemTypes[i] === typename) {
-                    return i;
-                }
-            }
-            return -1;
         }
 
         function buildIndex(rawSearchIndex) {
@@ -1353,37 +1477,39 @@
 
         // Draw a convenient sidebar of known crates if we have a listing
         if (rootPath === '../') {
-            var sidebar = document.getElementsByClassName('sidebar')[0];
-            var div = document.createElement('div');
-            div.className = 'block crate';
-            div.innerHTML = '<h3>Crates</h3>';
-            var ul = document.createElement('ul');
-            div.appendChild(ul);
+            var sidebar = document.getElementsByClassName('sidebar-elems')[0];
+            if (sidebar) {
+                var div = document.createElement('div');
+                div.className = 'block crate';
+                div.innerHTML = '<h3>Crates</h3>';
+                var ul = document.createElement('ul');
+                div.appendChild(ul);
 
-            var crates = [];
-            for (var crate in rawSearchIndex) {
-                if (!rawSearchIndex.hasOwnProperty(crate)) {
-                    continue;
+                var crates = [];
+                for (var crate in rawSearchIndex) {
+                    if (!rawSearchIndex.hasOwnProperty(crate)) {
+                        continue;
+                    }
+                    crates.push(crate);
                 }
-                crates.push(crate);
-            }
-            crates.sort();
-            for (var i = 0; i < crates.length; ++i) {
-                var klass = 'crate';
-                if (crates[i] === window.currentCrate) {
-                    klass += ' current';
-                }
-                var link = document.createElement('a');
-                link.href = '../' + crates[i] + '/index.html';
-                link.title = rawSearchIndex[crates[i]].doc;
-                link.className = klass;
-                link.textContent = crates[i];
+                crates.sort();
+                for (var i = 0; i < crates.length; ++i) {
+                    var klass = 'crate';
+                    if (crates[i] === window.currentCrate) {
+                        klass += ' current';
+                    }
+                    var link = document.createElement('a');
+                    link.href = '../' + crates[i] + '/index.html';
+                    link.title = rawSearchIndex[crates[i]].doc;
+                    link.className = klass;
+                    link.textContent = crates[i];
 
-                var li = document.createElement('li');
-                li.appendChild(link);
-                ul.appendChild(li);
+                    var li = document.createElement('li');
+                    li.appendChild(link);
+                    ul.appendChild(li);
+                }
+                sidebar.appendChild(div);
             }
-            sidebar.appendChild(div);
         }
     }
 
@@ -1391,7 +1517,7 @@
 
     // delayed sidebar rendering.
     function initSidebarItems(items) {
-        var sidebar = document.getElementsByClassName('sidebar')[0];
+        var sidebar = document.getElementsByClassName('sidebar-elems')[0];
         var current = window.sidebarCurrent;
 
         function block(shortty, longty) {
@@ -1430,7 +1556,9 @@
                 ul.appendChild(li);
             }
             div.appendChild(ul);
-            sidebar.appendChild(div);
+            if (sidebar) {
+                sidebar.appendChild(div);
+            }
         }
 
         block("primitive", "Primitive Types");
@@ -1450,14 +1578,31 @@
     window.initSidebarItems = initSidebarItems;
 
     window.register_implementors = function(imp) {
-        var list = document.getElementById('implementors-list');
+        var implementors = document.getElementById('implementors-list');
+        var synthetic_implementors = document.getElementById('synthetic-implementors-list');
+
         var libs = Object.getOwnPropertyNames(imp);
         for (var i = 0; i < libs.length; ++i) {
             if (libs[i] === currentCrate) { continue; }
             var structs = imp[libs[i]];
+
+            struct_loop:
             for (var j = 0; j < structs.length; ++j) {
+                var struct = structs[j];
+
+                var list = struct.synthetic ? synthetic_implementors : implementors;
+
+                if (struct.synthetic) {
+                    for (var k = 0; k < struct.types.length; k++) {
+                        if (window.inlined_types.has(struct.types[k])) {
+                            continue struct_loop;
+                        }
+                        window.inlined_types.add(struct.types[k]);
+                    }
+                }
+
                 var code = document.createElement('code');
-                code.innerHTML = structs[j];
+                code.innerHTML = struct.text;
 
                 var x = code.getElementsByTagName('a');
                 for (var k = 0; k < x.length; k++) {
@@ -1501,81 +1646,155 @@
     function toggleAllDocs() {
         var toggle = document.getElementById("toggle-all-docs");
         if (hasClass(toggle, "will-expand")) {
+            updateLocalStorage("rustdoc-collapse", "false");
             removeClass(toggle, "will-expand");
             onEveryMatchingChild(toggle, "inner", function(e) {
                 e.innerHTML = labelForToggleButton(false);
             });
             toggle.title = "collapse all docs";
-            onEach(document.getElementsByClassName("docblock"), function(e) {
-                e.style.display = 'block';
-            });
-            onEach(document.getElementsByClassName("toggle-label"), function(e) {
-                e.style.display = 'none';
-            });
-            onEach(document.getElementsByClassName("toggle-wrapper"), function(e) {
-                removeClass(e, "collapsed");
-            });
             onEach(document.getElementsByClassName("collapse-toggle"), function(e) {
-                onEveryMatchingChild(e, "inner", function(i_e) {
-                    i_e.innerHTML = labelForToggleButton(false);
-                });
+                collapseDocs(e, "show");
             });
         } else {
+            updateLocalStorage("rustdoc-collapse", "true");
             addClass(toggle, "will-expand");
             onEveryMatchingChild(toggle, "inner", function(e) {
                 e.innerHTML = labelForToggleButton(true);
             });
             toggle.title = "expand all docs";
-            onEach(document.getElementsByClassName("docblock"), function(e) {
-                e.style.display = 'none';
-            });
-            onEach(document.getElementsByClassName("toggle-label"), function(e) {
-                e.style.display = 'inline-block';
-            });
-            onEach(document.getElementsByClassName("toggle-wrapper"), function(e) {
-                addClass(e, "collapsed");
-            });
+
             onEach(document.getElementsByClassName("collapse-toggle"), function(e) {
-                onEveryMatchingChild(e, "inner", function(i_e) {
-                    i_e.innerHTML = labelForToggleButton(true);
-                });
+                collapseDocs(e, "hide");
             });
         }
     }
 
-    function collapseDocs(toggle) {
+    function collapseDocs(toggle, mode) {
         if (!toggle || !toggle.parentNode) {
             return;
         }
-        var relatedDoc = toggle.parentNode.nextElementSibling;
-        if (hasClass(relatedDoc, "stability")) {
-            relatedDoc = relatedDoc.nextElementSibling;
-        }
-        if (hasClass(relatedDoc, "docblock")) {
-            if (!isHidden(relatedDoc)) {
-                relatedDoc.style.display = 'none';
-                onEach(toggle.childNodes, function(e) {
-                    if (hasClass(e, 'toggle-label')) {
+
+        function adjustToggle(arg) {
+            return function(e) {
+                if (hasClass(e, 'toggle-label')) {
+                    if (arg) {
                         e.style.display = 'inline-block';
-                    }
-                    if (hasClass(e, 'inner')) {
-                        e.innerHTML = labelForToggleButton(true);
-                    }
-                });
-                addClass(toggle.parentNode, 'collapsed');
-            } else {
-                relatedDoc.style.display = 'block';
-                removeClass(toggle.parentNode, 'collapsed');
-                onEach(toggle.childNodes, function(e) {
-                    if (hasClass(e, 'toggle-label')) {
+                    } else {
                         e.style.display = 'none';
                     }
-                    if (hasClass(e, 'inner')) {
-                        e.innerHTML = labelForToggleButton(false);
+                }
+                if (hasClass(e, 'inner')) {
+                    e.innerHTML = labelForToggleButton(arg);
+                }
+            };
+        };
+
+        if (!hasClass(toggle.parentNode, "impl")) {
+            var relatedDoc = toggle.parentNode.nextElementSibling;
+            if (hasClass(relatedDoc, "stability")) {
+                relatedDoc = relatedDoc.nextElementSibling;
+            }
+            if (hasClass(relatedDoc, "docblock")) {
+                var action = mode;
+                if (action === "toggle") {
+                    if (hasClass(relatedDoc, "hidden-by-usual-hider")) {
+                        action = "show";
+                    } else {
+                        action = "hide";
+                    }
+                }
+                if (action === "hide") {
+                    addClass(relatedDoc, "hidden-by-usual-hider");
+                    onEach(toggle.childNodes, adjustToggle(true));
+                    addClass(toggle.parentNode, 'collapsed');
+                } else if (action === "show") {
+                    removeClass(relatedDoc, "hidden-by-usual-hider");
+                    removeClass(toggle.parentNode, 'collapsed');
+                    onEach(toggle.childNodes, adjustToggle(false));
+                }
+            }
+        } else {
+            // we are collapsing the impl block
+            function implHider(addOrRemove) {
+                return function(n) {
+                    var is_method = hasClass(n, "method");
+                    if (is_method || hasClass(n, "type")) {
+                        if (is_method === true) {
+                            if (addOrRemove) {
+                                addClass(n, "hidden-by-impl-hider");
+                            } else {
+                                removeClass(n, "hidden-by-impl-hider");
+                            }
+                        }
+                        var ns = n.nextElementSibling;
+                        while (true) {
+                            if (ns && (
+                                    hasClass(ns, "docblock") ||
+                                    hasClass(ns, "stability"))) {
+                                if (addOrRemove) {
+                                    addClass(ns, "hidden-by-impl-hider");
+                                } else {
+                                    removeClass(ns, "hidden-by-impl-hider");
+                                }
+                                ns = ns.nextElementSibling;
+                                continue;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            var relatedDoc = toggle.parentNode;
+            var docblock = relatedDoc.nextElementSibling;
+
+            while (!hasClass(relatedDoc, "impl-items")) {
+                relatedDoc = relatedDoc.nextElementSibling;
+            }
+
+            if (!relatedDoc && !hasClass(docblock, "docblock")) {
+                return;
+            }
+
+            // Hide all functions, but not associated types/consts
+
+            var action = mode;
+            if (action === "toggle") {
+                if (hasClass(relatedDoc, "fns-now-collapsed") ||
+                    hasClass(docblock,  "hidden-by-impl-hider")) {
+                    action = "show";
+                } else {
+                    action = "hide";
+                }
+            }
+
+            if (action === "show") {
+                removeClass(relatedDoc, "fns-now-collapsed");
+                removeClass(docblock, "hidden-by-usual-hider");
+                onEach(toggle.childNodes, adjustToggle(false));
+                onEach(relatedDoc.childNodes, implHider(false));
+            } else if (action === "hide") {
+                addClass(relatedDoc, "fns-now-collapsed");
+                addClass(docblock, "hidden-by-usual-hider");
+                onEach(toggle.childNodes, adjustToggle(true));
+                onEach(relatedDoc.childNodes, implHider(true));
+            }
+        }
+    }
+
+    function autoCollapseAllImpls() {
+        // Automatically minimize all non-inherent impls
+        onEach(document.getElementsByClassName('impl'), function(n) {
+            // inherent impl ids are like 'impl' or impl-<number>'
+            var inherent = (n.id.match(/^impl(?:-\d+)?$/) !== null);
+            if (!inherent) {
+                onEach(n.childNodes, function(m) {
+                    if (hasClass(m, "collapse-toggle")) {
+                        collapseDocs(m, "hide");
                     }
                 });
             }
-        }
+        });
     }
 
     var x = document.getElementById('toggle-all-docs');
@@ -1587,32 +1806,55 @@
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
 
+    function checkIfThereAreMethods(elems) {
+        var areThereMethods = false;
+
+        onEach(elems, function(e) {
+            if (hasClass(e, "method")) {
+                areThereMethods = true;
+                return true;
+            }
+        });
+        return areThereMethods;
+    }
+
     var toggle = document.createElement('a');
     toggle.href = 'javascript:void(0)';
     toggle.className = 'collapse-toggle';
-    toggle.innerHTML = "[<span class='inner'>"+labelForToggleButton(false)+"</span>]";
+    toggle.innerHTML = "[<span class='inner'>" + labelForToggleButton(false) + "</span>]";
 
     var func = function(e) {
         var next = e.nextElementSibling;
+        if (hasClass(e, 'impl') && next && hasClass(next, 'docblock')) {
+            next = next.nextElementSibling;
+        }
         if (!next) {
             return;
         }
-        if (hasClass(next, 'docblock') ||
-            (hasClass(next, 'stability') &&
-             hasClass(next.nextElementSibling, 'docblock'))) {
+        if ((checkIfThereAreMethods(next.childNodes) || hasClass(e, 'method')) &&
+            (hasClass(next, 'docblock') ||
+             hasClass(e, 'impl') ||
+             (hasClass(next, 'stability') &&
+              hasClass(next.nextElementSibling, 'docblock')))) {
             insertAfter(toggle.cloneNode(true), e.childNodes[e.childNodes.length - 1]);
         }
     }
     onEach(document.getElementsByClassName('method'), func);
+    onEach(document.getElementsByClassName('impl'), func);
     onEach(document.getElementsByClassName('impl-items'), function(e) {
         onEach(e.getElementsByClassName('associatedconstant'), func);
     });
 
-    function createToggle() {
+    function createToggle(otherMessage) {
         var span = document.createElement('span');
         span.className = 'toggle-label';
         span.style.display = 'none';
-        span.innerHTML = '&nbsp;Expand&nbsp;description';
+        if (!otherMessage) {
+            span.innerHTML = '&nbsp;Expand&nbsp;description';
+        } else {
+            span.innerHTML = otherMessage;
+            span.style.fontSize = '20px';
+        }
 
         var mainToggle = toggle.cloneNode(true);
         mainToggle.appendChild(span);
@@ -1625,7 +1867,14 @@
 
     onEach(document.getElementById('main').getElementsByClassName('docblock'), function(e) {
         if (e.parentNode.id === "main") {
-            e.parentNode.insertBefore(createToggle(), e);
+            var otherMessage;
+            if (hasClass(e, "type-decl")) {
+                otherMessage = '&nbsp;Show&nbsp;type&nbsp;declaration';
+            }
+            e.parentNode.insertBefore(createToggle(otherMessage), e);
+            if (otherMessage) {
+                collapseDocs(e.previousSibling.childNodes[0], "toggle");
+            }
         }
     });
 
@@ -1650,6 +1899,8 @@
             }
         }
     })
+
+    autoCollapseAllImpls();
 
     function createToggleWrapper() {
         var span = document.createElement('span');
@@ -1691,7 +1942,7 @@
     onEach(document.getElementById('main').getElementsByTagName('pre'), function(e) {
         onEach(e.getElementsByClassName('attributes'), function(i_e) {
             i_e.parentNode.insertBefore(createToggleWrapper(), i_e);
-            collapseDocs(i_e.previousSibling.childNodes[0]);
+            collapseDocs(i_e.previousSibling.childNodes[0], "toggle");
         });
     });
 
@@ -1713,6 +1964,31 @@
         }
     });
 
+    function showModal(content) {
+        var modal = document.createElement('div');
+        modal.id = "important";
+        addClass(modal, 'modal');
+        modal.innerHTML = '<div class="modal-content"><div class="close" id="modal-close">✕</div>' +
+                          '<div class="whiter"></div><span class="docblock">' + content +
+                          '</span></div>';
+        document.getElementsByTagName('body')[0].appendChild(modal);
+        document.getElementById('modal-close').onclick = hideModal;
+        modal.onclick = hideModal;
+    }
+
+    function hideModal() {
+        var modal = document.getElementById("important");
+        if (modal) {
+            modal.parentNode.removeChild(modal);
+        }
+    }
+
+    onEach(document.getElementsByClassName('important-traits'), function(e) {
+        e.onclick = function() {
+            showModal(e.lastElementChild.innerHTML);
+        };
+    });
+
     var search_input = document.getElementsByClassName("search-input")[0];
 
     if (search_input) {
@@ -1728,9 +2004,42 @@
             }
         };
     }
+
+    var params = getQueryStringParams();
+    if (params && params.search) {
+        addClass(document.getElementById("main"), "hidden");
+        var search = document.getElementById("search");
+        removeClass(search, "hidden");
+        search.innerHTML = '<h3 style="text-align: center;">Loading search results...</h3>';
+    }
+
+    var sidebar_menu = document.getElementsByClassName("sidebar-menu")[0];
+    if (sidebar_menu) {
+        sidebar_menu.onclick = function() {
+            var sidebar = document.getElementsByClassName('sidebar')[0];
+            if (hasClass(sidebar, "mobile") === true) {
+                hideSidebar();
+            } else {
+                showSidebar();
+            }
+        };
+    }
+
+    window.onresize = function() {
+        hideSidebar();
+    };
+
+    if (getCurrentValue("rustdoc-collapse") === "true") {
+        toggleAllDocs();
+    }
 }());
 
 // Sets the focus on the search bar at the top of the page
 function focusSearchBar() {
     document.getElementsByClassName('search-input')[0].focus();
+}
+
+// Removes the focus from the search bar
+function defocusSearchBar() {
+    document.getElementsByClassName('search-input')[0].blur();
 }

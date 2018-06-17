@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-core-1.3.0/src/thread_pool/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rayon-core-1.4.0/src/thread_pool/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -347,8 +359,29 @@
 <span id="302">302</span>
 <span id="303">303</span>
 <span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
 </pre><pre class="rust ">
+<span class="doccomment">//! Contains support for user-managed thread pools, represented by the</span>
+<span class="doccomment">//! the [`ThreadPool`] type (see that struct for details).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [`ThreadPool`]: struct.ThreadPool.html</span>
+
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
 <span class="kw">use</span> <span class="ident">Configuration</span>;
+<span class="kw">use</span> {<span class="ident">ThreadPoolBuilder</span>, <span class="ident">ThreadPoolBuildError</span>};
 <span class="kw">use</span> <span class="ident">join</span>;
 <span class="kw">use</span> {<span class="ident">scope</span>, <span class="ident">Scope</span>};
 <span class="kw">use</span> <span class="ident">spawn</span>;
@@ -359,20 +392,21 @@
 
 <span class="kw">mod</span> <span class="ident">internal</span>;
 <span class="kw">mod</span> <span class="ident">test</span>;
-<span class="doccomment">/// # ThreadPool</span>
+
+<span class="doccomment">/// Represents a user created [thread-pool].</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// The [`ThreadPool`] struct represents a user created [thread-pool]. [`ThreadPool::new()`]</span>
-<span class="doccomment">/// takes a [`Configuration`] struct that you can use to specify the number and/or</span>
-<span class="doccomment">/// names of threads in the pool. You can then execute functions explicitly within</span>
-<span class="doccomment">/// this [`ThreadPool`] using [`ThreadPool::install()`]. By contrast, top level</span>
-<span class="doccomment">/// rayon functions (like `join()`)  will execute implicitly within the current thread-pool.</span>
+<span class="doccomment">/// Use a [`ThreadPoolBuilder`] to specify the number and/or names of threads</span>
+<span class="doccomment">/// in the pool. After calling [`ThreadPoolBuilder::build()`], you can then</span>
+<span class="doccomment">/// execute functions explicitly within this [`ThreadPool`] using</span>
+<span class="doccomment">/// [`ThreadPool::install()`]. By contrast, top level rayon functions</span>
+<span class="doccomment">/// (like `join()`) will execute implicitly within the current thread-pool.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ## Creating a ThreadPool</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```rust</span>
 <span class="doccomment">/// # use rayon_core as rayon;</span>
-<span class="doccomment">/// let pool = rayon::ThreadPool::new(rayon::Configuration::new().num_threads(8)).unwrap();</span>
+<span class="doccomment">/// let pool = rayon::ThreadPoolBuilder::new().num_threads(8).build().unwrap();</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`install()`][`ThreadPool::install()`] executes a closure in one of the `ThreadPool`&#39;s</span>
@@ -387,19 +421,24 @@
 <span class="doccomment">/// [thread-pool]: https://en.wikipedia.org/wiki/Thread_pool</span>
 <span class="doccomment">/// [`ThreadPool`]: struct.ThreadPool.html</span>
 <span class="doccomment">/// [`ThreadPool::new()`]: struct.ThreadPool.html#method.new</span>
-<span class="doccomment">/// [`Configuration`]: struct.Configuration.html</span>
+<span class="doccomment">/// [`ThreadPoolBuilder`]: struct.ThreadPoolBuilder.html</span>
+<span class="doccomment">/// [`ThreadPoolBuilder::build()`]: struct.ThreadPoolBuilder.html#method.build</span>
 <span class="doccomment">/// [`ThreadPool::install()`]: struct.ThreadPool.html#method.install</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ThreadPool</span> {
     <span class="ident">registry</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Registry</span><span class="op">&gt;</span>,
 }
 
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="ident">builder</span>: <span class="ident">ThreadPoolBuilder</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ThreadPool</span>, <span class="ident">ThreadPoolBuildError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">registry</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Registry</span>::<span class="ident">new</span>(<span class="ident">builder</span>));
+    <span class="prelude-val">Ok</span>(<span class="ident">ThreadPool</span> { <span class="ident">registry</span>: <span class="ident">registry</span> })
+}
+
 <span class="kw">impl</span> <span class="ident">ThreadPool</span> {
-    <span class="doccomment">/// Constructs a new thread pool with the given configuration. If</span>
-    <span class="doccomment">/// the configuration is not valid, returns a suitable `Err`</span>
-    <span class="doccomment">/// result.  See `InitError` for more details.</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Use `ThreadPoolBuilder::build`&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+    <span class="doccomment">/// Deprecated in favor of `ThreadPoolBuilder::build`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">configuration</span>: <span class="ident">Configuration</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ThreadPool</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span> {
-        <span class="kw">let</span> <span class="ident">registry</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Registry</span>::<span class="ident">new</span>(<span class="ident">configuration</span>));
-        <span class="prelude-val">Ok</span>(<span class="ident">ThreadPool</span> { <span class="ident">registry</span>: <span class="ident">registry</span> })
+        <span class="ident">build</span>(<span class="ident">configuration</span>.<span class="ident">into_builder</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>())
     }
 
     <span class="doccomment">/// Returns a handle to the global thread pool. This is the pool</span>
@@ -441,7 +480,7 @@
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">///    # use rayon_core as rayon;</span>
     <span class="doccomment">///    fn main() {</span>
-    <span class="doccomment">///         let pool = rayon::ThreadPool::new(rayon::Configuration::new().num_threads(8)).unwrap();</span>
+    <span class="doccomment">///         let pool = rayon::ThreadPoolBuilder::new().num_threads(8).build().unwrap();</span>
     <span class="doccomment">///         let n = pool.install(|| fib(20));</span>
     <span class="doccomment">///         println!(&quot;{}&quot;, n);</span>
     <span class="doccomment">///    }</span>
@@ -458,19 +497,20 @@
         <span class="kw">where</span> <span class="ident">OP</span>: <span class="ident">FnOnce</span>() <span class="op">-&gt;</span> <span class="ident">R</span> <span class="op">+</span> <span class="ident">Send</span>,
               <span class="ident">R</span>: <span class="ident">Send</span>
     {
-        <span class="self">self</span>.<span class="ident">registry</span>.<span class="ident">in_worker</span>(<span class="op">|</span>_, _<span class="op">|</span> <span class="ident">op</span>())
+        <span class="self">self</span>.<span class="ident">registry</span>.<span class="ident">in_worker</span>(<span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="ident">op</span>())
     }
 
     <span class="doccomment">/// Returns the (current) number of threads in the thread pool.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Future compatibility note</span>
+    <span class="doccomment">/// # Future compatibility note</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note that unless this thread-pool was created with a</span>
-    <span class="doccomment">/// configuration that specifies the number of threads, then this</span>
-    <span class="doccomment">/// number may vary over time in future versions (see [the</span>
+    <span class="doccomment">/// [`ThreadPoolBuilder`] that specifies the number of threads,</span>
+    <span class="doccomment">/// then this number may vary over time in future versions (see [the</span>
     <span class="doccomment">/// `num_threads()` method for details][snt]).</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [snt]: struct.Configuration.html#method.num_threads</span>
+    <span class="doccomment">/// [snt]: struct.ThreadPoolBuilder.html#method.num_threads</span>
+    <span class="doccomment">/// [`ThreadPoolBuilder`]: struct.ThreadPoolBuilder.html</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_num_threads</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
         <span class="self">self</span>.<span class="ident">registry</span>.<span class="ident">num_threads</span>()
@@ -485,7 +525,7 @@
     <span class="doccomment">/// lifetime. However, multiple threads may share the same index if</span>
     <span class="doccomment">/// they are in distinct thread-pools.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ### Future compatibility note</span>
+    <span class="doccomment">/// # Future compatibility note</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Currently, every thread-pool (including the global</span>
     <span class="doccomment">/// thread-pool) has a fixed number of threads, but this may</span>
@@ -495,7 +535,7 @@
     <span class="doccomment">/// indices may wind up being reused if threads are terminated and</span>
     <span class="doccomment">/// restarted.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [snt]: struct.Configuration.html#method.num_threads</span>
+    <span class="doccomment">/// [snt]: struct.ThreadPoolBuilder.html#method.num_threads</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_thread_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
@@ -612,7 +652,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [m]: struct.ThreadPool.html#method.current_thread_index</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ### Future compatibility note</span>
+<span class="doccomment">/// # Future compatibility note</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Currently, every thread-pool (including the global</span>
 <span class="doccomment">/// thread-pool) has a fixed number of threads, but this may</span>
@@ -622,7 +662,7 @@
 <span class="doccomment">/// indices may wind up being reused if threads are terminated and</span>
 <span class="doccomment">/// restarted.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// [snt]: struct.Configuration.html#method.num_threads</span>
+<span class="doccomment">/// [snt]: struct.ThreadPoolBuilder.html#method.num_threads</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_thread_index</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="kw">unsafe</span> {
@@ -666,20 +706,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

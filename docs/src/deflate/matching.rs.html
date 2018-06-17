@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-0.7.17/src/matching.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-0.7.18/src/matching.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>matching.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -316,6 +328,158 @@
 <span id="271">271</span>
 <span id="272">272</span>
 <span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>;
 
@@ -443,7 +607,7 @@
     <span class="comment">// The position of the previous value in the hash chain.</span>
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_head</span>;
 
-    <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="ident">max_hash_checks</span> {
+    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">max_hash_checks</span> {
         <span class="ident">prev_head</span> <span class="op">=</span> <span class="ident">current_head</span>;
         <span class="ident">current_head</span> <span class="op">=</span> <span class="ident">hash_table</span>.<span class="ident">get_prev</span>(<span class="ident">current_head</span>) <span class="kw">as</span> <span class="ident">usize</span>;
         <span class="kw">if</span> <span class="ident">current_head</span> <span class="op">&gt;=</span> <span class="ident">prev_head</span> <span class="op">||</span> <span class="ident">current_head</span> <span class="op">&lt;</span> <span class="ident">limit</span> {
@@ -487,6 +651,116 @@
     }
 }
 
+<span class="doccomment">/// Try finding the position and length of the longest match in the input data using fast zlib</span>
+<span class="doccomment">/// hash skipping algorithm.</span>
+<span class="doccomment">/// # Returns</span>
+<span class="doccomment">/// (length, distance from position)</span>
+<span class="doccomment">/// If no match is found that was better than `prev_length` or at all, or we are at the start,</span>
+<span class="doccomment">/// the length value returned will be 2.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Arguments:</span>
+<span class="doccomment">/// `data`: The data to search in.</span>
+<span class="doccomment">/// `hash_table`: Hash table to use for searching.</span>
+<span class="doccomment">/// `position`: The position in the data to match against.</span>
+<span class="doccomment">/// `prev_length`: The length of the previous `longest_match` check to compare against.</span>
+<span class="doccomment">/// `max_hash_checks`: The maximum number of matching hash chain positions to check.</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">longest_match_fast</span>(
+    <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+    <span class="ident">hash_table</span>: <span class="kw-2">&amp;</span><span class="ident">ChainedHashTable</span>,
+    <span class="ident">position</span>: <span class="ident">usize</span>,
+    <span class="ident">prev_length</span>: <span class="ident">usize</span>,
+    <span class="ident">max_hash_checks</span>: <span class="ident">u16</span>,
+) <span class="op">-&gt;</span> (<span class="ident">usize</span>, <span class="ident">usize</span>) {
+
+    <span class="comment">// debug_assert_eq!(position, hash_table.current_head() as usize);</span>
+
+    <span class="comment">// If we already have a match at the maximum length,</span>
+    <span class="comment">// or we can&#39;t grow further, we stop here.</span>
+    <span class="kw">if</span> <span class="ident">prev_length</span> <span class="op">&gt;=</span> <span class="ident">MAX_MATCH</span> <span class="op">||</span> <span class="ident">position</span> <span class="op">+</span> <span class="ident">prev_length</span> <span class="op">&gt;=</span> <span class="ident">data</span>.<span class="ident">len</span>() {
+        <span class="kw">return</span> (<span class="number">0</span>, <span class="number">0</span>);
+    }
+
+    <span class="kw">let</span> <span class="ident">limit</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">position</span> <span class="op">&gt;</span> <span class="ident">WINDOW_SIZE</span> {
+        <span class="ident">position</span> <span class="op">-</span> <span class="ident">WINDOW_SIZE</span>
+    } <span class="kw">else</span> {
+        <span class="number">0</span>
+    };
+
+    <span class="comment">// Make sure the length is at least one to simplify the matching code, as</span>
+    <span class="comment">// otherwise the matching code might underflow.</span>
+    <span class="kw">let</span> <span class="ident">prev_length</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">max</span>(<span class="ident">prev_length</span>, <span class="number">1</span>);
+
+    <span class="kw">let</span> <span class="ident">max_length</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">min</span>((<span class="ident">data</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">position</span>), <span class="ident">MAX_MATCH</span>);
+
+    <span class="comment">// The position in the hash chain we are currently checking.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current_head</span> <span class="op">=</span> <span class="ident">position</span>;
+
+    <span class="comment">// The best match length we&#39;ve found so far, and it&#39;s distance.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_length</span> <span class="op">=</span> <span class="ident">prev_length</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_distance</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="comment">// The offset from the start of the match of the hash chain we are traversing.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">offset</span> <span class="op">=</span> <span class="number">0</span>;
+
+    <span class="comment">// The position of the previous value in the hash chain.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_head</span>;
+
+    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">max_hash_checks</span> {
+        <span class="ident">prev_head</span> <span class="op">=</span> <span class="ident">current_head</span>;
+        <span class="ident">current_head</span> <span class="op">=</span> <span class="ident">hash_table</span>.<span class="ident">get_prev</span>(<span class="ident">current_head</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">if</span> <span class="ident">current_head</span> <span class="op">&gt;=</span> <span class="ident">prev_head</span> <span class="op">||</span> <span class="ident">current_head</span> <span class="op">&lt;</span> <span class="ident">limit</span> <span class="op">+</span> <span class="ident">offset</span> {
+            <span class="comment">// If the current hash chain value refers to itself, or is referring to</span>
+            <span class="comment">// a value that&#39;s higher (we only move backwars through the chain),</span>
+            <span class="comment">// we are at the end and can stop.</span>
+            <span class="kw">break</span>;
+        }
+
+        <span class="kw">let</span> <span class="ident">offset_head</span> <span class="op">=</span> <span class="ident">current_head</span> <span class="op">-</span> <span class="ident">offset</span>;
+
+        <span class="comment">// We only check further if the match length can actually increase</span>
+        <span class="comment">// Checking if the end byte and the potential next byte matches is generally</span>
+        <span class="comment">// more likely to give a quick answer rather than checking from the start first, given</span>
+        <span class="comment">// that the hashes match.</span>
+        <span class="comment">// If there is no previous match, best_length will be 1 and the two first bytes will</span>
+        <span class="comment">// be checked instead.</span>
+        <span class="comment">// Since we&#39;ve made sure best_length is always at least 1, this shouldn&#39;t underflow.</span>
+        <span class="kw">if</span> <span class="ident">data</span>[<span class="ident">position</span> <span class="op">+</span> <span class="ident">best_length</span> <span class="op">-</span> <span class="number">1</span>..<span class="ident">position</span> <span class="op">+</span> <span class="ident">best_length</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">==</span>
+            <span class="ident">data</span>[<span class="ident">offset_head</span> <span class="op">+</span> <span class="ident">best_length</span> <span class="op">-</span> <span class="number">1</span>..<span class="ident">offset_head</span> <span class="op">+</span> <span class="ident">best_length</span> <span class="op">+</span> <span class="number">1</span>]
+        {
+            <span class="comment">// Actually check how many bytes match.</span>
+            <span class="comment">// At the moment this will check the two bytes we just checked again,</span>
+            <span class="comment">// though adding code for skipping these bytes may not result in any speed</span>
+            <span class="comment">// gain due to the added complexity.</span>
+            <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">get_match_length</span>(<span class="ident">data</span>, <span class="ident">position</span>, <span class="ident">offset_head</span>);
+            <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="ident">best_length</span> {
+                <span class="ident">best_length</span> <span class="op">=</span> <span class="ident">length</span>;
+                <span class="ident">best_distance</span> <span class="op">=</span> <span class="ident">position</span> <span class="op">-</span> <span class="ident">offset_head</span>;
+                <span class="kw">if</span> <span class="ident">length</span> <span class="op">==</span> <span class="ident">max_length</span> {
+                    <span class="comment">// We are at the max length, so there is no point</span>
+                    <span class="comment">// searching any longer</span>
+                    <span class="kw">break</span>;
+                }
+
+                <span class="comment">// Find the position in the match where the next has position is the furthest away.</span>
+                <span class="comment">// By moving to a different hash chain we can potentially skip a lot of checks,</span>
+                <span class="comment">// saving time.</span>
+                <span class="comment">// We avoid doing this for matches that extend past the starting position, as</span>
+                <span class="comment">// those will contain positions that are not in the hash table yet.</span>
+                <span class="kw">if</span> <span class="ident">best_distance</span> <span class="op">&gt;</span> <span class="ident">best_length</span> {
+                    <span class="ident">offset</span> <span class="op">=</span> <span class="ident">hash_table</span>.<span class="ident">farthest_next</span>(<span class="ident">offset_head</span>, <span class="ident">length</span>);
+                    <span class="ident">current_head</span> <span class="op">=</span> <span class="ident">offset_head</span> <span class="op">+</span> <span class="ident">offset</span>;
+                }
+            }
+        }
+    }
+
+    <span class="kw">if</span> <span class="ident">best_length</span> <span class="op">&gt;</span> <span class="ident">prev_length</span> {
+        (<span class="ident">best_length</span>, <span class="ident">best_distance</span>)
+    } <span class="kw">else</span> {
+        (<span class="number">0</span>, <span class="number">0</span>)
+    }
+}
+
 <span class="comment">// Get the longest match from the current position of the hash table.</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -504,7 +778,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
     <span class="kw">use</span> <span class="ident">chained_hash_table</span>::{<span class="ident">filled_hash_table</span>, <span class="ident">HASH_BYTES</span>, <span class="ident">ChainedHashTable</span>};
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">get_match_length</span>, <span class="ident">longest_match</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">get_match_length</span>, <span class="ident">longest_match</span>, <span class="ident">longest_match_fast</span>};
 
     <span class="doccomment">/// Test that match lengths are calculated correctly</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -569,6 +843,36 @@
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">match_dist</span>, <span class="number">1</span>);
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">match_length</span> <span class="op">==</span> <span class="number">6</span>);
     }
+
+    <span class="doccomment">/// Test for fast_zlib algorithm.</span>
+    <span class="doccomment">/// Check that it doesn&#39;t give worse matches than the default one.</span>
+    <span class="doccomment">/// ignored by default as it&#39;s slow, and best ran in release mode.</span>
+    <span class="attribute">#[<span class="ident">ignore</span>]</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">fast_match_at_least_equal</span>() {
+        <span class="kw">use</span> <span class="ident">test_utils</span>::<span class="ident">get_test_data</span>;
+        <span class="kw">for</span> <span class="ident">start_pos</span> <span class="kw">in</span> <span class="number">10000</span>..<span class="number">50000</span> {
+            <span class="kw">const</span> <span class="ident">NUM_CHECKS</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">400</span>;
+            <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">get_test_data</span>();
+            <span class="kw">let</span> <span class="ident">hash_table</span> <span class="op">=</span> <span class="ident">filled_hash_table</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..<span class="ident">start_pos</span> <span class="op">+</span> <span class="number">1</span>]);
+            <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">hash_table</span>.<span class="ident">current_head</span>() <span class="kw">as</span> <span class="ident">usize</span>;
+
+            <span class="kw">let</span> <span class="ident">naive_match</span> <span class="op">=</span> <span class="ident">longest_match</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..], <span class="kw-2">&amp;</span><span class="ident">hash_table</span>, <span class="ident">pos</span>, <span class="number">0</span>, <span class="ident">NUM_CHECKS</span>);
+            <span class="kw">let</span> <span class="ident">fast_match</span> <span class="op">=</span> <span class="ident">longest_match_fast</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..], <span class="kw-2">&amp;</span><span class="ident">hash_table</span>, <span class="ident">pos</span>, <span class="number">0</span>, <span class="ident">NUM_CHECKS</span>);
+
+            <span class="kw">if</span> <span class="ident">fast_match</span>.<span class="number">0</span> <span class="op">&gt;</span> <span class="ident">naive_match</span>.<span class="number">0</span> {
+                <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Fast match found better match!&quot;</span>);
+            }
+
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">fast_match</span>.<span class="number">0</span> <span class="op">&gt;=</span> <span class="ident">naive_match</span>.<span class="number">0</span>,
+                    <span class="string">&quot;naive match had better length! start_pos: {}, naive: {:?}, fast {:?}&quot;</span>
+                    , <span class="ident">start_pos</span>, <span class="ident">naive_match</span>, <span class="ident">fast_match</span>);
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">fast_match</span>.<span class="number">1</span> <span class="op">&gt;=</span> <span class="ident">naive_match</span>.<span class="number">1</span>,
+                <span class="string">&quot;naive match had better dist! start_pos: {} naive {:?}, fast {:?}&quot;</span>
+                    , <span class="ident">start_pos</span>, <span class="ident">naive_match</span>, <span class="ident">fast_match</span>);
+        }
+
+    }
 }
 
 
@@ -577,16 +881,28 @@
     <span class="kw">use</span> <span class="ident">test_std</span>::<span class="ident">Bencher</span>;
     <span class="kw">use</span> <span class="ident">test_utils</span>::<span class="ident">get_test_data</span>;
     <span class="kw">use</span> <span class="ident">chained_hash_table</span>::<span class="ident">filled_hash_table</span>;
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">longest_match</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">longest_match</span>, <span class="ident">longest_match_fast</span>};
     <span class="attribute">#[<span class="ident">bench</span>]</span>
     <span class="kw">fn</span> <span class="ident">matching</span>(<span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Bencher</span>) {
-        <span class="kw">const</span> <span class="ident">POS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">20011</span>;
+        <span class="kw">const</span> <span class="ident">POS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">29000</span>;
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">get_test_data</span>();
         <span class="kw">let</span> <span class="ident">hash_table</span> <span class="op">=</span> <span class="ident">filled_hash_table</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..<span class="ident">POS</span> <span class="op">+</span> <span class="number">1</span>]);
         <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">hash_table</span>.<span class="ident">current_head</span>() <span class="kw">as</span> <span class="ident">usize</span>;
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;M: {:?}&quot;</span>, <span class="ident">longest_match</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..], <span class="kw-2">&amp;</span><span class="ident">hash_table</span>, <span class="ident">pos</span>, <span class="number">0</span>, <span class="number">4096</span>));
         <span class="ident">b</span>.<span class="ident">iter</span>( <span class="op">||</span>
           <span class="ident">longest_match</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..], <span class="kw-2">&amp;</span><span class="ident">hash_table</span>, <span class="ident">pos</span>, <span class="number">0</span>, <span class="number">4096</span>)
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">bench</span>]</span>
+    <span class="kw">fn</span> <span class="ident">fast_matching</span>(<span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Bencher</span>) {
+        <span class="kw">const</span> <span class="ident">POS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">29000</span>;
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">get_test_data</span>();
+        <span class="kw">let</span> <span class="ident">hash_table</span> <span class="op">=</span> <span class="ident">filled_hash_table</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..<span class="ident">POS</span> <span class="op">+</span> <span class="number">1</span>]);
+        <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">hash_table</span>.<span class="ident">current_head</span>() <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;M: {:?}&quot;</span>, <span class="ident">longest_match_fast</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..], <span class="kw-2">&amp;</span><span class="ident">hash_table</span>, <span class="ident">pos</span>, <span class="number">0</span>, <span class="number">4096</span>));
+        <span class="ident">b</span>.<span class="ident">iter</span>( <span class="op">||</span>
+          <span class="ident">longest_match_fast</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..], <span class="kw-2">&amp;</span><span class="ident">hash_table</span>, <span class="ident">pos</span>, <span class="number">0</span>, <span class="number">4096</span>)
         );
     }
 }
@@ -604,20 +920,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

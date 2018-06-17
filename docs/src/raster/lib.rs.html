@@ -10,8 +10,12 @@
     <title>lib.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -427,7 +439,7 @@
             })
         }
         <span class="string">&quot;png&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">endec</span>::<span class="ident">decode_png</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>)<span class="question-mark">?</span>),
-        _ <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RasterError</span>::<span class="ident">UnsupportedFormat</span>(<span class="ident">ext</span>)),
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RasterError</span>::<span class="ident">UnsupportedFormat</span>(<span class="ident">ext</span>)),
     }
 }
 
@@ -462,10 +474,10 @@
                 <span class="ident">image</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>,
                 <span class="ident">image</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>,
                 <span class="ident">piston_image</span>::<span class="ident">RGBA</span>(<span class="number">8</span>),
-            ).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">RasterError</span>::<span class="ident">Encode</span>(<span class="ident">ImageFormat</span>::<span class="ident">Jpeg</span>, <span class="string">&quot;Format&quot;</span>.<span class="ident">to_string</span>()))
+            ).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">RasterError</span>::<span class="ident">Encode</span>(<span class="ident">ImageFormat</span>::<span class="ident">Jpeg</span>, <span class="string">&quot;Format&quot;</span>.<span class="ident">to_string</span>()))
         }
         <span class="string">&quot;png&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">endec</span>::<span class="ident">encode_png</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="kw-2">&amp;</span><span class="ident">path</span>)<span class="question-mark">?</span>),
-        _ <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RasterError</span>::<span class="ident">UnsupportedFormat</span>(<span class="ident">ext</span>)),
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RasterError</span>::<span class="ident">UnsupportedFormat</span>(<span class="ident">ext</span>)),
     }
 }
 </pre>
@@ -482,20 +494,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
