@@ -1,5 +1,0 @@
-use_try_shorthand = true
-
-# This was merged, but doesn't seem to work? https://github.com/rust-lang-nursery/rustfmt/pull/1869
-# error_on_line_overflow_comments = false
-error_on_line_overflow = false
