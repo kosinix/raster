@@ -12,4 +12,8 @@ script:
   - cargo test
   - cargo doc
 after_success:
-  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash deploy-docs.sh
+  - |
+    [ $TRAVIS_BRANCH = master ] &&
+    [ $TRAVIS_PULL_REQUEST = false ] &&
+    bash deploy-docs.sh &&
+    cargo publish --token ${CRATESIO_TOKEN}
