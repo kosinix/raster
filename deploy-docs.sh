@@ -7,8 +7,8 @@ set -o errexit -o nounset
 rev=$(git rev-parse --short HEAD)
 
 git init
-git config user.name "Francesca Sunshine"
-git config user.email "francesca@comfy.love"
+git config user.name "Francesca Frangipane"
+git config user.email "francesca@comfysoft.net"
 
 git remote add upstream "https://$GH_TOKEN@github.com/kosinix/raster.git"
 git fetch upstream
