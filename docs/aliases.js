@@ -28,7 +28,6 @@ ALIASES['num_traits'] = {};
 ALIASES['png'] = {};
 ALIASES['proc_macro2'] = {};
 ALIASES['quote'] = {};
-ALIASES['rand'] = {};
 ALIASES['raster'] = {};
 ALIASES['rayon'] = {};
 ALIASES['rayon_core'] = {};

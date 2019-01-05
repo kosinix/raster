@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["MulAdd","The fused multiply-add operation. Computes (self * a) + b with only one rounding error. This produces a more accurate result with better performance than a separate multiplication operation followed by an add."],["MulAddAssign","The fused multiply-add assignment operation."]]});
+initSidebarItems({"trait":[["MulAdd","Fused multiply-add. Computes `(self * a) + b` with only one rounding error, yielding a more accurate result than an unfused multiply-add."],["MulAddAssign","The fused multiply-add assignment operation."]]});

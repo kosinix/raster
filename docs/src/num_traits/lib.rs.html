@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.2.4/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.2.6/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -474,6 +474,21 @@
 <span id="474">474</span>
 <span id="475">475</span>
 <span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2013-2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution and at</span>
@@ -492,53 +507,51 @@
 <span class="doccomment">//! The `num-traits` crate is tested for rustc 1.8 and greater.</span>
 
 <span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/num-traits/0.2&quot;</span>)]</span>
-
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">unconditional_recursion</span>)]</span>
-
 <span class="attribute">#![<span class="ident">no_std</span>]</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">std</span>;
 
-<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">ops</span>::{<span class="ident">Add</span>, <span class="ident">Sub</span>, <span class="ident">Mul</span>, <span class="ident">Div</span>, <span class="ident">Rem</span>};
-<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">ops</span>::{<span class="ident">AddAssign</span>, <span class="ident">SubAssign</span>, <span class="ident">MulAssign</span>, <span class="ident">DivAssign</span>, <span class="ident">RemAssign</span>};
-<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">num</span>::<span class="ident">Wrapping</span>;
 <span class="kw">use</span> <span class="ident">core</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">num</span>::<span class="ident">Wrapping</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">ops</span>::{<span class="ident">Add</span>, <span class="ident">Div</span>, <span class="ident">Mul</span>, <span class="ident">Rem</span>, <span class="ident">Sub</span>};
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">ops</span>::{<span class="ident">AddAssign</span>, <span class="ident">DivAssign</span>, <span class="ident">MulAssign</span>, <span class="ident">RemAssign</span>, <span class="ident">SubAssign</span>};
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">bounds</span>::<span class="ident">Bounded</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">float</span>::<span class="ident">Float</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">float</span>::<span class="ident">FloatConst</span>;
 <span class="comment">// pub use real::{FloatCore, Real}; // NOTE: Don&#39;t do this, it breaks `use num_traits::*;`.</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">identities</span>::{<span class="ident">Zero</span>, <span class="ident">One</span>, <span class="ident">zero</span>, <span class="ident">one</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">cast</span>::{<span class="ident">cast</span>, <span class="ident">AsPrimitive</span>, <span class="ident">FromPrimitive</span>, <span class="ident">NumCast</span>, <span class="ident">ToPrimitive</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">identities</span>::{<span class="ident">one</span>, <span class="ident">zero</span>, <span class="ident">One</span>, <span class="ident">Zero</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">int</span>::<span class="ident">PrimInt</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ops</span>::<span class="ident">checked</span>::{
+    <span class="ident">CheckedAdd</span>, <span class="ident">CheckedDiv</span>, <span class="ident">CheckedMul</span>, <span class="ident">CheckedNeg</span>, <span class="ident">CheckedRem</span>, <span class="ident">CheckedShl</span>, <span class="ident">CheckedShr</span>, <span class="ident">CheckedSub</span>,
+};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ops</span>::<span class="ident">inv</span>::<span class="ident">Inv</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ops</span>::<span class="ident">checked</span>::{<span class="ident">CheckedAdd</span>, <span class="ident">CheckedSub</span>, <span class="ident">CheckedMul</span>, <span class="ident">CheckedDiv</span>,
-                       <span class="ident">CheckedRem</span>, <span class="ident">CheckedNeg</span>, <span class="ident">CheckedShl</span>, <span class="ident">CheckedShr</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ops</span>::<span class="ident">wrapping</span>::{<span class="ident">WrappingAdd</span>, <span class="ident">WrappingMul</span>, <span class="ident">WrappingSub</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ops</span>::<span class="ident">mul_add</span>::{<span class="ident">MulAdd</span>, <span class="ident">MulAddAssign</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ops</span>::<span class="ident">saturating</span>::<span class="ident">Saturating</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sign</span>::{<span class="ident">Signed</span>, <span class="ident">Unsigned</span>, <span class="ident">abs</span>, <span class="ident">abs_sub</span>, <span class="ident">signum</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">cast</span>::{<span class="ident">AsPrimitive</span>, <span class="ident">FromPrimitive</span>, <span class="ident">ToPrimitive</span>, <span class="ident">NumCast</span>, <span class="ident">cast</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">int</span>::<span class="ident">PrimInt</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pow</span>::{<span class="ident">Pow</span>, <span class="ident">pow</span>, <span class="ident">checked_pow</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ops</span>::<span class="ident">wrapping</span>::{<span class="ident">WrappingAdd</span>, <span class="ident">WrappingMul</span>, <span class="ident">WrappingShl</span>, <span class="ident">WrappingShr</span>, <span class="ident">WrappingSub</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pow</span>::{<span class="ident">checked_pow</span>, <span class="ident">pow</span>, <span class="ident">Pow</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sign</span>::{<span class="ident">abs</span>, <span class="ident">abs_sub</span>, <span class="ident">signum</span>, <span class="ident">Signed</span>, <span class="ident">Unsigned</span>};
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">mod</span> <span class="ident">macros</span>;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">identities</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">sign</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ops</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">bounds</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">cast</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">float</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">identities</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">int</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ops</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pow</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">real</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">cast</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">int</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pow</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">sign</span>;
 
 <span class="doccomment">/// The base trait for numeric types, covering `0` and `1` values,</span>
 <span class="doccomment">/// comparisons, basic numeric operations, and string conversion.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Num</span>: <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Zero</span> <span class="op">+</span> <span class="ident">One</span> <span class="op">+</span> <span class="ident">NumOps</span>
-{
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Num</span>: <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Zero</span> <span class="op">+</span> <span class="ident">One</span> <span class="op">+</span> <span class="ident">NumOps</span> {
     <span class="kw">type</span> <span class="ident">FromStrRadixErr</span>;
 
     <span class="doccomment">/// Convert from a string and radix &lt;= 36.</span>
@@ -560,68 +573,81 @@
 <span class="doccomment">/// The trait for types implementing basic numeric operations</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is automatically implemented for types which implement the operators.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NumOps</span><span class="op">&lt;</span><span class="ident">Rhs</span> <span class="op">=</span> <span class="self">Self</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="self">Self</span><span class="op">&gt;</span>
-    : <span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NumOps</span><span class="op">&lt;</span><span class="ident">Rhs</span> <span class="op">=</span> <span class="self">Self</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="self">Self</span><span class="op">&gt;</span>:
+    <span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
     <span class="op">+</span> <span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
     <span class="op">+</span> <span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
     <span class="op">+</span> <span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
     <span class="op">+</span> <span class="ident">Rem</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
-{}
+{
+}
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Rhs</span>, <span class="ident">Output</span><span class="op">&gt;</span> <span class="ident">NumOps</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span>
-<span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
-       <span class="op">+</span> <span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
-       <span class="op">+</span> <span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
-       <span class="op">+</span> <span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
-       <span class="op">+</span> <span class="ident">Rem</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
-{}
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">Rem</span><span class="op">&lt;</span><span class="ident">Rhs</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Output</span><span class="op">&gt;</span>,
+{
+}
 
 <span class="doccomment">/// The trait for `Num` types which also implement numeric operations taking</span>
 <span class="doccomment">/// the second operand by reference.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is automatically implemented for types which implement the operators.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NumRef</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="ident">NumOps</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="self">Self</span><span class="op">&gt;</span> {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NumRef</span> <span class="kw">for</span> <span class="ident">T</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="ident">NumOps</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">T</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NumRef</span> <span class="kw">for</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="ident">NumOps</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">T</span><span class="op">&gt;</span>,
+{
+}
 
 <span class="doccomment">/// The trait for references which implement numeric operations, taking the</span>
 <span class="doccomment">/// second operand either by value or by reference.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is automatically implemented for types which implement the operators.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RefNum</span><span class="op">&lt;</span><span class="ident">Base</span><span class="op">&gt;</span>: <span class="ident">NumOps</span><span class="op">&lt;</span><span class="ident">Base</span>, <span class="ident">Base</span><span class="op">&gt;</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="ident">NumOps</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">Base</span>, <span class="ident">Base</span><span class="op">&gt;</span> {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Base</span><span class="op">&gt;</span> <span class="ident">RefNum</span><span class="op">&lt;</span><span class="ident">Base</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">NumOps</span><span class="op">&lt;</span><span class="ident">Base</span>, <span class="ident">Base</span><span class="op">&gt;</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="ident">NumOps</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">Base</span>, <span class="ident">Base</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Base</span><span class="op">&gt;</span> <span class="ident">RefNum</span><span class="op">&lt;</span><span class="ident">Base</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">NumOps</span><span class="op">&lt;</span><span class="ident">Base</span>, <span class="ident">Base</span><span class="op">&gt;</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="ident">NumOps</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">Base</span>, <span class="ident">Base</span><span class="op">&gt;</span>,
+{
+}
 
 <span class="doccomment">/// The trait for types implementing numeric assignment operators (like `+=`).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is automatically implemented for types which implement the operators.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NumAssignOps</span><span class="op">&lt;</span><span class="ident">Rhs</span> <span class="op">=</span> <span class="self">Self</span><span class="op">&gt;</span>
-    : <span class="ident">AddAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-    <span class="op">+</span> <span class="ident">SubAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-    <span class="op">+</span> <span class="ident">MulAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-    <span class="op">+</span> <span class="ident">DivAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-    <span class="op">+</span> <span class="ident">RemAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-{}
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NumAssignOps</span><span class="op">&lt;</span><span class="ident">Rhs</span> <span class="op">=</span> <span class="self">Self</span><span class="op">&gt;</span>:
+    <span class="ident">AddAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">SubAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">MulAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">DivAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">RemAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
+{
+}
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Rhs</span><span class="op">&gt;</span> <span class="ident">NumAssignOps</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span>
-<span class="kw">where</span> <span class="ident">T</span>: <span class="ident">AddAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-       <span class="op">+</span> <span class="ident">SubAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-       <span class="op">+</span> <span class="ident">MulAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-       <span class="op">+</span> <span class="ident">DivAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-       <span class="op">+</span> <span class="ident">RemAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>
-{}
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">AddAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">SubAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">MulAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">DivAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">RemAssign</span><span class="op">&lt;</span><span class="ident">Rhs</span><span class="op">&gt;</span>,
+{
+}
 
 <span class="doccomment">/// The trait for `Num` types which also implement assignment operators.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is automatically implemented for types which implement the operators.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NumAssign</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">NumAssignOps</span> {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NumAssign</span> <span class="kw">for</span> <span class="ident">T</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">NumAssignOps</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NumAssign</span> <span class="kw">for</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">Num</span> <span class="op">+</span> <span class="ident">NumAssignOps</span>,
+{
+}
 
 <span class="doccomment">/// The trait for `NumAssign` types which also implement assignment operations</span>
 <span class="doccomment">/// taking the second operand by reference.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is automatically implemented for types which implement the operators.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NumAssignRef</span>: <span class="ident">NumAssign</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="ident">NumAssignOps</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="self">Self</span><span class="op">&gt;</span> {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NumAssignRef</span> <span class="kw">for</span> <span class="ident">T</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">NumAssign</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="ident">NumAssignOps</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">T</span><span class="op">&gt;</span> {}
-
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NumAssignRef</span> <span class="kw">for</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">NumAssign</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span><span class="op">&gt;</span> <span class="ident">NumAssignOps</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;r</span> <span class="ident">T</span><span class="op">&gt;</span>,
+{
+}
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">int_trait_impl</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="kw">for</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ty</span>)<span class="kw-2">*</span>) <span class="op">=&gt;</span> ($(
@@ -641,16 +667,18 @@
 <span class="macro">int_trait_impl</span><span class="macro">!</span>(<span class="ident">Num</span> <span class="kw">for</span> <span class="ident">u128</span> <span class="ident">i128</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Num</span><span class="op">&gt;</span> <span class="ident">Num</span> <span class="kw">for</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-    <span class="kw">where</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>:
-          <span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span> <span class="op">+</span> <span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>
-        <span class="op">+</span> <span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span> <span class="op">+</span> <span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span> <span class="op">+</span> <span class="ident">Rem</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>: <span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>
+        <span class="op">+</span> <span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>
+        <span class="op">+</span> <span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>
+        <span class="op">+</span> <span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>
+        <span class="op">+</span> <span class="ident">Rem</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Wrapping</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>,
 {
     <span class="kw">type</span> <span class="ident">FromStrRadixErr</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">FromStrRadixErr</span>;
     <span class="kw">fn</span> <span class="ident">from_str_radix</span>(<span class="ident">str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">radix</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="ident">FromStrRadixErr</span><span class="op">&gt;</span> {
         <span class="ident">T</span>::<span class="ident">from_str_radix</span>(<span class="ident">str</span>, <span class="ident">radix</span>).<span class="ident">map</span>(<span class="ident">Wrapping</span>)
     }
 }
-
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FloatErrorKind</span> {
@@ -919,7 +947,8 @@
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">check_refnum_ops</span>() {
     <span class="kw">fn</span> <span class="ident">compute</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Copy</span><span class="op">&gt;</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="ident">y</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">T</span>
-        <span class="kw">where</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span>: <span class="ident">RefNum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span>: <span class="ident">RefNum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     {
         <span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>(<span class="ident">x</span> <span class="op">*</span> <span class="ident">y</span>) <span class="op">/</span> <span class="ident">y</span>) <span class="op">%</span> <span class="ident">y</span>) <span class="op">+</span> <span class="ident">y</span>) <span class="op">-</span> <span class="ident">y</span>
     }
@@ -929,7 +958,8 @@
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">check_refref_ops</span>() {
     <span class="kw">fn</span> <span class="ident">compute</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="ident">y</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">T</span>
-        <span class="kw">where</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span>: <span class="ident">RefNum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span>: <span class="ident">RefNum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     {
         <span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>(<span class="ident">x</span> <span class="op">*</span> <span class="ident">y</span>) <span class="op">/</span> <span class="ident">y</span>) <span class="op">%</span> <span class="ident">y</span>) <span class="op">+</span> <span class="ident">y</span>) <span class="op">-</span> <span class="ident">y</span>
     }
