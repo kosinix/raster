@@ -68,14 +68,13 @@ pub fn decode_png(image_file: &File) -> RasterResult<Image> {
     if info.color_type == png::ColorType::RGB {
         // Applies only to RGB
 
-        let mut insert_count = 0;
         let len = (info.width * info.height) as usize;
+        let mut bytes_extended = vec![0; len * 4];
         for i in 0..len {
-            // TODO: This is slow!
-            let insert_pos = 3 * (i + 1) + insert_count;
-            bytes.insert(insert_pos, 255);
-            insert_count += 1;
+            bytes_extended[4 * i..=4 * i + 2].copy_from_slice(&bytes[3 * i..=3 * i + 2]);
+            bytes_extended[4 * i + 3] = 255;
         }
+        bytes = bytes_extended;
     } //  TODO other ::ColorType
     Ok(Image {
         width: info.width as i32,
