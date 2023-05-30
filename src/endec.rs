@@ -1,9 +1,9 @@
 //!  A module for encoding/decoding.
 
 // from rust
-use std::path::Path;
 use std::fs::File;
 use std::io::BufWriter;
+use std::path::Path;
 
 // from external crate
 use gif;
@@ -16,13 +16,13 @@ use ImageFormat;
 
 // Decode GIF
 pub fn decode_gif(image_file: &File) -> RasterResult<Image> {
-    let mut decoder = gif::Decoder::new(image_file);
+    let mut decoder = gif::DecodeOptions::new();
 
     // Configure the decoder such that it will expand the image to RGBA.
-    gif::SetParameter::set(&mut decoder, gif::ColorOutput::RGBA);
+    decoder.set_color_output(gif::ColorOutput::RGBA);
 
     // Read the file header
-    let mut reader = decoder.read_info()?;
+    let mut reader = decoder.read_info(image_file)?;
 
     // Read frame 1.
     // TODO: Work on all frames
@@ -52,20 +52,24 @@ pub fn encode_gif(image: &Image, path: &Path) -> RasterResult<()> {
         image.height as u16,
         &mut image.bytes.clone(),
     ); // TODO: Perf issue?
-    let mut encoder = gif::Encoder::new(writer, frame.width, frame.height, &[])?;
-    encoder.write_frame(&frame).map_err(RasterError::Io)?;
+    let mut encoder = gif::Encoder::new(writer, frame.width, frame.height, &[])
+        .map_err(|e| RasterError::Encode(ImageFormat::Gif, e.to_string()))?;
+    encoder
+        .write_frame(&frame)
+        .map_err(|e| RasterError::Encode(ImageFormat::Gif, e.to_string()))?;
     Ok(())
 }
 
 // Decode PNG
 pub fn decode_png(image_file: &File) -> RasterResult<Image> {
     let decoder = png::Decoder::new(image_file);
-    let (info, mut reader) = decoder.read_info()?;
-    let mut bytes = vec![0; info.buffer_size()];
+    let mut reader = decoder.read_info()?;
+    let mut bytes = vec![0; reader.output_buffer_size()];
 
     reader.next_frame(&mut bytes)?;
 
-    if info.color_type == png::ColorType::RGB {
+    let info = reader.info();
+    if info.color_type == png::ColorType::Rgb {
         // Applies only to RGB
 
         let mut insert_count = 0;
@@ -91,8 +95,8 @@ pub fn encode_png(image: &Image, path: &Path) -> RasterResult<()> {
     let ref mut w = BufWriter::new(file);
 
     let mut encoder = png::Encoder::new(w, image.width as u32, image.height as u32);
-    png::HasParameters::set(&mut encoder, png::ColorType::RGBA);
-    png::HasParameters::set(&mut encoder, png::BitDepth::Eight);
+    encoder.set_color(png::ColorType::Rgba);
+    encoder.set_depth(png::BitDepth::Eight);
     let mut writer = encoder.write_header()?;
     Ok(writer.write_image_data(&image.bytes)?)
 }

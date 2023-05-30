@@ -6,8 +6,8 @@ use std::collections::HashMap;
 // from external crate
 
 // from local crate
-use error::{RasterError, RasterResult};
 use color::Color;
+use error::{RasterError, RasterResult};
 
 /// A struct for easily representing a raster image.
 #[derive(Debug, Clone)]
@@ -263,4 +263,48 @@ pub enum ImageFormat {
     Gif,
     Jpeg,
     Png,
+}
+
+impl std::convert::TryFrom<piston_image::ImageFormat> for ImageFormat {
+    type Error = RasterError;
+
+    fn try_from(value: piston_image::ImageFormat) -> Result<Self, Self::Error> {
+        match value {
+            piston_image::ImageFormat::Png => Ok(Self::Png),
+            piston_image::ImageFormat::Jpeg => Ok(Self::Jpeg),
+            piston_image::ImageFormat::Gif => Ok(Self::Gif),
+            format => Err(Self::Error::UnsupportedFormat(
+                format.extensions_str().join(", "),
+            )),
+        }
+    }
+}
+
+impl std::convert::TryFrom<piston_image::error::ImageFormatHint> for ImageFormat {
+    type Error = RasterError;
+
+    fn try_from(value: piston_image::error::ImageFormatHint) -> Result<Self, Self::Error> {
+        let from_str = |x: &str| match x.to_lowercase().as_str() {
+            name if name.ends_with("gif") => Ok(Self::Gif),
+            name if name.ends_with("png") => Ok(Self::Png),
+            name if name.ends_with("jpg") || name.ends_with("jpeg") => Ok(Self::Jpeg),
+            name => Err(Self::Error::UnsupportedFormat(name.to_string())),
+        };
+        match value {
+            piston_image::error::ImageFormatHint::Exact(format) => match format {
+                image::ImageFormat::Gif => Ok(Self::Gif),
+                image::ImageFormat::Png => Ok(Self::Png),
+                image::ImageFormat::Jpeg => Ok(Self::Jpeg),
+                format => Err(Self::Error::UnsupportedFormat(
+                    format.extensions_str().join(", "),
+                )),
+            },
+            piston_image::error::ImageFormatHint::Name(name) => from_str(name.as_str()),
+            piston_image::error::ImageFormatHint::PathExtension(path) => {
+                from_str(path.to_string_lossy().as_ref())
+            }
+            piston_image::error::ImageFormatHint::Unknown => Err(Self::Error::Unexpected),
+            _ => Err(Self::Error::Unexpected),
+        }
+    }
 }
