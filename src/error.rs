@@ -1,5 +1,6 @@
 //!  A module for error types.
 
+use std::convert::TryInto;
 // from rust
 use std::io::Error as IoError;
 use std::num::ParseIntError;
@@ -54,9 +55,6 @@ impl From<gif::DecodingError> for RasterError {
             gif::DecodingError::Format(msg) => {
                 RasterError::Decode(ImageFormat::Gif, msg.to_string())
             }
-            gif::DecodingError::Internal(msg) => {
-                RasterError::Decode(ImageFormat::Gif, msg.to_string())
-            }
             gif::DecodingError::Io(io_err) => RasterError::Io(io_err),
         }
     }
@@ -69,26 +67,53 @@ impl From<gif::DecodingError> for RasterError {
 // raster::open
 impl From<piston_image::ImageError> for RasterError {
     fn from(err: piston_image::ImageError) -> RasterError {
-        match err {
-            piston_image::ImageError::FormatError(msg) => {
-                RasterError::Decode(ImageFormat::Jpeg, msg)
+        if let piston_image::ImageError::Parameter(_) = err {
+            return RasterError::Unexpected;
+        }
+        if let piston_image::ImageError::IoError(io_err) = err {
+            return RasterError::Io(io_err);
+        }
+        if let piston_image::ImageError::Limits(limit_err) = err {
+            match limit_err.kind() {
+                piston_image::error::LimitErrorKind::DimensionError => {
+                    return RasterError::Unexpected; // TODO: where to get dimensions from ?
+                }
+                piston_image::error::LimitErrorKind::InsufficientMemory => {
+                    return RasterError::Io(std::io::Error::new(
+                        std::io::ErrorKind::OutOfMemory,
+                        "insufficient memory",
+                    ))
+                }
+                piston_image::error::LimitErrorKind::Unsupported { limits, .. } => {
+                    match (limits.max_image_width, limits.max_image_height) {
+                        (Some(w), Some(h)) => {
+                            return RasterError::PixelOutOfBounds(w as i32, h as i32)
+                        }
+                        _ => return RasterError::Unexpected, // TODO: where to get dimensions from ?
+                    }
+                }
+                _ => return RasterError::Unexpected,
             }
-            piston_image::ImageError::DimensionError => {
-                RasterError::Decode(ImageFormat::Jpeg, "DimensionError".to_string())
+        }
+        let hint: piston_image::error::ImageFormatHint = match &err {
+            piston_image::ImageError::Encoding(encoding_err) => encoding_err.format_hint(),
+            piston_image::ImageError::Decoding(decoding_err) => decoding_err.format_hint(),
+            _ => unreachable!(), // processed above
+        };
+        let format: Result<ImageFormat, RasterError> = match &err {
+            piston_image::ImageError::Decoding(_) => hint.try_into(),
+            piston_image::ImageError::Encoding(_) => hint.try_into(),
+            _ => unreachable!(), // processed above
+        };
+        match (&err, format) {
+            (_, Err(raster_err)) => raster_err,
+            (piston_image::ImageError::Encoding(_), Ok(format)) => {
+                return RasterError::Encode(format, err.to_string())
             }
-            piston_image::ImageError::UnsupportedError(msg) => {
-                RasterError::Decode(ImageFormat::Jpeg, msg)
+            (piston_image::ImageError::Decoding(_), Ok(format)) => {
+                return RasterError::Decode(format, err.to_string())
             }
-            piston_image::ImageError::UnsupportedColor(_) => {
-                RasterError::Decode(ImageFormat::Jpeg, "UnsupportedColor".to_string())
-            }
-            piston_image::ImageError::NotEnoughData => {
-                RasterError::Decode(ImageFormat::Jpeg, "NotEnoughData".to_string())
-            }
-            piston_image::ImageError::IoError(io_err) => RasterError::Io(io_err),
-            piston_image::ImageError::ImageEnd => {
-                RasterError::Decode(ImageFormat::Jpeg, "ImageEnd".to_string())
-            }
+            _ => unreachable!(), // processed above
         }
     }
 }
@@ -102,18 +127,8 @@ impl From<png::DecodingError> for RasterError {
             png::DecodingError::Format(_) => {
                 RasterError::Decode(ImageFormat::Png, "Format".to_string())
             }
-            png::DecodingError::InvalidSignature => {
-                RasterError::Decode(ImageFormat::Png, "InvalidSignature".to_string())
-            }
-            png::DecodingError::CrcMismatch { .. } => {
-                RasterError::Decode(ImageFormat::Png, "CrcMismatch".to_string())
-            }
-            png::DecodingError::Other(_) => {
-                RasterError::Decode(ImageFormat::Png, "Other".to_string())
-            }
-            png::DecodingError::CorruptFlateStream => {
-                RasterError::Decode(ImageFormat::Png, "CorruptFlateStream".to_string())
-            }
+            png::DecodingError::Parameter(_) => RasterError::Unexpected,
+            png::DecodingError::LimitsExceeded => RasterError::Unexpected, // TODO: where to get dimensions from ?
         }
     }
 }
@@ -126,6 +141,8 @@ impl From<png::EncodingError> for RasterError {
             png::EncodingError::Format(_) => {
                 RasterError::Encode(ImageFormat::Png, "Format".to_string())
             }
+            png::EncodingError::Parameter(_) => RasterError::Unexpected,
+            png::EncodingError::LimitsExceeded => RasterError::Unexpected, // TODO: where to get dimensions from ?
         }
     }
 }
