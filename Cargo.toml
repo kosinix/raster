@@ -18,12 +18,12 @@ homepage = "https://github.com/kosinix/raster"
 repository = "https://github.com/kosinix/raster.git"
 
 [dependencies.image]
-version = "0.19"
+version = "0.24"
 default-features = false
 features = ["jpeg", "jpeg_rayon"]
 
 [dependencies.gif]
-version = "0.10"
+version = "0.12"
 
 [dependencies.png]
-version = "0.12"
+version = "0.17"
