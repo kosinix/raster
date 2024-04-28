@@ -51,6 +51,36 @@ impl<'a> Image {
         }
     }
 
+    // Create a blank image. Default color is white. 
+    pub fn white(w: i32, h: i32) -> Image {
+        let mut bytes = Vec::with_capacity((w * h) as usize * 4);
+        for _ in 0..h {
+            for _ in 0..w {
+                bytes.extend_from_slice(&[255, 255, 255, 255]);
+            }
+        }
+        Image {
+            width: w,
+            height: h,
+            bytes: bytes,
+        }
+    }
+
+    // Create a blank image. Default color is white. 
+    pub fn rand_color(w: i32, h: i32,color: Color) -> Image {
+        let mut bytes = Vec::with_capacity((w * h) as usize * 4);
+        for _ in 0..h {
+            for _ in 0..w {
+                bytes.extend_from_slice(&[color.r, color.g, color.b, 255]);
+            }
+        }
+        Image {
+            width: w,
+            height: h,
+            bytes: bytes,
+        }
+    }
+    
     /// Check if there is a pixel at this location given by x and y.
     ///
     /// # Examples
