@@ -6,8 +6,8 @@ use std::collections::HashMap;
 // from external crate
 
 // from local crate
-use error::{RasterError, RasterResult};
 use color::Color;
+use error::{RasterError, RasterResult};
 
 /// A struct for easily representing a raster image.
 #[derive(Debug, Clone)]
@@ -64,12 +64,14 @@ impl<'a> Image {
     /// assert_eq!(image.check_pixel(3, 3), false);
     /// ```
     pub fn check_pixel(&self, x: i32, y: i32) -> bool {
-        if y < 0 || y > self.height {
-            // TODO: check on actual vectors and not just width and height?
-            false
-        } else {
-            !(x < 0 || x > self.width)
-        }
+        // Step 1: check coordinate bounds
+        if y < 0 || y > self.height { // TODO: check on actual vectors and not just width and height? -> Done by Blob_01
+            return false;
+        } 
+
+        // Step 2: check if bytes vector contains this pixel
+        let start = ((y * self.width + x) * 4) as usize; // safe now
+        start + 4 <= self.bytes.len()
     }
 
     /// Get the histogram of the image.
